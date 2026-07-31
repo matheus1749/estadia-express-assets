@@ -1,0 +1,42 @@
+/* ============================================
+     ESTADIA EXPRESS — DESIGN SYSTEM V2
+     Tokens globais + fundação tipográfica
+   ============================================ */
+
+:root{
+    /* Cores */
+    --ee-color-primary:#EEA67F;
+    --ee-color-secondary:#243746;
+  --ee-color-neutral-dark:#3F4347;
+  --ee-color-bg:#F7F5F2;
+      --ee-color-white:#FFFFFF;
+      --ee-color-gray-light:#E8E5E1;
+
+  /* Radius */
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:16px;
+  --radius-xl:24px;
+
+  /* Sombras */
+  --shadow-1:0 2px 8px rgba(0,0,0,.04);
+  --shadow-2:0 10px 24px rgba(0,0,0,.08);
+  --shadow-3:0 18px 48px rgba(0,0,0,.12);
+
+  /* Espaçamentos */
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:32px;
+  --space-5:48px;
+  --space-6:64px;
+  --space-7:96px;
+
+  /* Transições / microinteração */
+  --transition-fast:180ms ease;
+  --lift-sm:-4px;
+}
+
+/* Tipografia base — escopo body.__page_index (preservado do estado anterior, sem mudança visual) */
+body.__page_index :is(h1,h2,h3,h4,h5,h6){font-family:'Fraunces',serif}
+body.__page_index,body.__page_index :is(p,a,li,button,input,select){font-family:'Inter',sans-serif}
