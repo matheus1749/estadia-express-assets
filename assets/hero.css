@@ -1,0 +1,113 @@
+/* ============================================
+ESTADIA EXPRESS — HERO.CSS
+Premium Hero Section (Typography-driven, no images)
+============================================ */
+
+@keyframes ee-fadeInUp {
+    from {
+          opacity: 0;
+          transform: translateY(20px);
+    }
+    to {
+          opacity: 1;
+          transform: translateY(0);
+    }
+}
+
+.ee-hero {
+    background: linear-gradient(135deg, var(--ee-color-bg) 0%, rgba(238, 166, 127, 0.06) 100%);
+    padding: var(--space-7) var(--space-4);
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.ee-hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.ee-hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    color: var(--ee-color-secondary);
+    margin: 0 0 var(--space-2) 0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    animation: ee-fadeInUp 0.8s ease-out;
+}
+
+.ee-hero-subtitle {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    color: var(--ee-color-primary);
+    font-weight: 500;
+    margin: 0 0 var(--space-4) 0;
+    animation: ee-fadeInUp 0.8s ease-out 0.1s backwards;
+    letter-spacing: -0.01em;
+}
+
+.ee-hero-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.0625rem;
+    color: var(--ee-color-neutral-dark);
+    font-weight: 400;
+    line-height: 1.7;
+    margin: 0 0 var(--space-7) 0;
+    opacity: 0.9;
+    animation: ee-fadeInUp 0.8s ease-out 0.2s backwards;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Search box integration */
+.ee-hero .hotel-datepicker,
+.ee-hero [class*="search-block"],
+.ee-hero .search-section {
+    animation: ee-fadeInUp 0.8s ease-out 0.3s backwards;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2);
+    margin-top: var(--space-4);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .ee-hero {
+          padding: var(--space-5) var(--space-3);
+    }
+
+    .ee-hero-title {
+          font-size: 2rem;
+          margin-bottom: var(--space-1);
+    }
+
+    .ee-hero-subtitle {
+          font-size: 1.1rem;
+          margin-bottom: var(--space-3);
+    }
+
+    .ee-hero-description {
+          font-size: 1rem;
+          margin-bottom: var(--space-5);
+    }
+}
+
+@media (max-width: 480px) {
+    .ee-hero {
+          padding: var(--space-4) var(--space-2);
+    }
+
+    .ee-hero-title {
+          font-size: 1.75rem;
+    }
+
+    .ee-hero-subtitle {
+          font-size: 1rem;
+    }
+
+    .ee-hero-description {
+          font-size: 0.9375rem;
+          line-height: 1.6;
+    }
+}
