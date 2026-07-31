@@ -1,0 +1,15 @@
+/* ============================================
+   ESTADIA EXPRESS - ANIMATIONS.CSS
+      Keyframes e prefers-reduced-motion
+         Ainda vazio - sera populado conforme novas
+            microinteracoes forem desenhadas nos proximos ciclos
+               ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+    }
+}
