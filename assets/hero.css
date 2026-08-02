@@ -164,10 +164,17 @@
   border-top:1px solid var(--eex-hairline);
   list-style:none;
 }
+/* Grade 2-up: a 3a credencial cai na segunda linha, portanto os filetes sao
+   posicionais (nth-child) e nao por irmao adjacente. Com "+" a terceira
+   herdava um filete a esquerda solto no inicio da linha. */
 .eex-hero__fact{ padding:0 var(--eex-s5) 0 0; }
-.eex-hero__fact + .eex-hero__fact{
+.eex-hero__fact:nth-child(even){
   padding-left:var(--eex-s5);
   border-left:1px solid var(--eex-hairline);
+}
+.eex-hero__fact:nth-child(n+3){
+  padding-top:var(--eex-s5);
+  border-top:1px solid var(--eex-hairline);
 }
 .eex-hero__fact-value{
   display:block;
@@ -198,7 +205,7 @@
    ========================================================================== */
 .eex-hero__console{
   position:relative;
-  max-width:1000px;
+  max-width:900px;
   margin:clamp(40px,6vh,72px) 0 0;
   background:var(--eex-surface);
   border:1px solid var(--eex-hairline);
@@ -509,13 +516,28 @@ html.eex-hero-active .bs-container.persons > .dropdown-menu{
     padding-top:clamp(72px,10vh,132px);
   }
   /* Composicao assimetrica: copy a esquerda, rail hairline a direita.
-     Centralizar tudo e o que faz uma hero parecer template. */
-  .eex-hero__head{
+     Centralizar tudo e o que faz uma hero parecer template.
+
+     As grid-areas desacoplam a composicao da ordem do DOM. No mobile a ordem
+     natural do documento coloca o console imediatamente abaixo do titulo,
+     acima da dobra, e o rail depois; aqui o rail volta para a coluna da
+     direita sem que o HTML precise mudar. */
+  .eex-hero__inner{
     display:grid;
     grid-template-columns:minmax(0,1fr) minmax(210px,290px);
-    gap:var(--eex-s9);
+    grid-template-areas:
+      "copy    rail"
+      "console console"
+      "foot    foot"
+      "cue     cue";
+    column-gap:var(--eex-s9);
     align-items:end;
   }
+  .eex-hero__copy   { grid-area:copy; }
+  .eex-hero__console{ grid-area:console; }
+  .eex-hero__rail   { grid-area:rail; }
+  .eex-hero__foot   { grid-area:foot; }
+  .eex-hero__cue    { grid-area:cue; }
   .eex-hero__rail{
     grid-template-columns:1fr;
     gap:0;
@@ -524,14 +546,17 @@ html.eex-hero-active .bs-container.persons > .dropdown-menu{
     border-top:0;
     border-left:1px solid var(--eex-hairline);
   }
-  .eex-hero__fact{ padding:var(--eex-s5) 0 var(--eex-s5) var(--eex-s6); }
-  .eex-hero__fact:first-child{ padding-top:0; }
-  .eex-hero__fact:last-child{ padding-bottom:0; }
-  .eex-hero__fact + .eex-hero__fact{
-    padding-left:var(--eex-s6);
+  /* Os seletores repetem os nth-child do mobile para empatar especificidade
+     e vencer por ordem, evitando !important. */
+  .eex-hero__fact,
+  .eex-hero__fact:nth-child(even),
+  .eex-hero__fact:nth-child(n+3){
+    padding:var(--eex-s5) 0 var(--eex-s5) var(--eex-s6);
     border-left:0;
     border-top:1px solid var(--eex-hairline);
   }
+  .eex-hero__fact:first-child{ padding-top:0; border-top:0; }
+  .eex-hero__fact:last-child{ padding-bottom:0; }
   .eex-hero__cue{
     display:block;
     width:1px;
@@ -544,8 +569,8 @@ html.eex-hero-active .bs-container.persons > .dropdown-menu{
 }
 
 @media (min-width:1440px){
-  .eex-hero__head{ gap:var(--eex-s10); }
-  .eex-hero__console{ max-width:1060px; }
+  .eex-hero__inner{ column-gap:var(--eex-s10); }
+  .eex-hero__console{ max-width:940px; }
 }
 
 /* == 08. ACESSIBILIDADE, MOVIMENTO REDUZIDO, IMPRESSAO ===================== */
