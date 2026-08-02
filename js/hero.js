@@ -42,12 +42,12 @@
     note:        '',
     consoleLabel:'Buscar disponibilidade',
     fieldLabels: {
-      dates:  'Check-in \u2014 Check-out',
+      dates:  'Datas',
       guests: 'H\u00f3spedes'
     },
     facts: {
       countKey:   'Im\u00f3veis dispon\u00edveis',
-      priceKey:   'A partir de, por noite',
+      priceKey:   'A partir de / noite',
       placeValue: 'Goi\u00e2nia',
       placeKey:   'Goi\u00e1s \u00b7 Brasil'
     },
@@ -149,33 +149,35 @@
 
     hero.innerHTML =
       '<div class="eex-hero__bg" aria-hidden="true"></div>' +
+      /* Ordem do DOM = ordem do mobile: titulo, console, credenciais, rodape.
+         O console vem antes do rail de proposito, para ficar acima da dobra
+         no telefone. No desktop as grid-areas do hero.css recolocam o rail
+         na coluna da direita sem mexer neste HTML. */
       '<div class="eex-hero__inner">' +
-        '<div class="eex-hero__head">' +
-          '<div class="eex-hero__copy">' +
-            '<p class="eex-hero__eyebrow" data-eex-reveal style="--eex-i:0">' +
-              '<span class="eex-hero__dot" aria-hidden="true"></span>' +
-              esc(CONTENT.eyebrow) +
-            '</p>' +
-            '<h1 class="eex-hero__title" id="eex-hero-title">' +
-              '<span class="eex-hero__title-line" data-eex-reveal style="--eex-i:1">' +
-                esc(CONTENT.titleTop) +
-              '</span>' +
-              '<span class="eex-hero__title-line eex-hero__title-line--soft" data-eex-reveal style="--eex-i:2">' +
-                esc(CONTENT.titleBottom) +
-              '</span>' +
-            '</h1>' +
-            '<p class="eex-hero__lede" data-eex-reveal style="--eex-i:3">' + esc(CONTENT.lede) + '</p>' +
-          '</div>' +
-          '<ul class="eex-hero__rail" data-eex-reveal style="--eex-i:4">' +
-            factHTML('count', CONTENT.emptyValue, CONTENT.facts.countKey, true) +
-            factHTML('price', CONTENT.emptyValue, CONTENT.facts.priceKey, true) +
-            factHTML('place', CONTENT.facts.placeValue, CONTENT.facts.placeKey, false) +
-          '</ul>' +
+        '<div class="eex-hero__copy">' +
+          '<p class="eex-hero__eyebrow" data-eex-reveal style="--eex-i:0">' +
+            '<span class="eex-hero__dot" aria-hidden="true"></span>' +
+            esc(CONTENT.eyebrow) +
+          '</p>' +
+          '<h1 class="eex-hero__title" id="eex-hero-title">' +
+            '<span class="eex-hero__title-line" data-eex-reveal style="--eex-i:1">' +
+              esc(CONTENT.titleTop) +
+            '</span>' +
+            '<span class="eex-hero__title-line eex-hero__title-line--soft" data-eex-reveal style="--eex-i:2">' +
+              esc(CONTENT.titleBottom) +
+            '</span>' +
+          '</h1>' +
+          '<p class="eex-hero__lede" data-eex-reveal style="--eex-i:3">' + esc(CONTENT.lede) + '</p>' +
         '</div>' +
-        '<div class="eex-hero__console" data-eex-reveal style="--eex-i:5">' +
+        '<div class="eex-hero__console" data-eex-reveal style="--eex-i:4">' +
           '<h2 class="eex-hero__sr">' + esc(CONTENT.consoleLabel) + '</h2>' +
           '<div class="eex-hero__slot"></div>' +
         '</div>' +
+        '<ul class="eex-hero__rail" data-eex-reveal style="--eex-i:5">' +
+          factHTML('count', CONTENT.emptyValue, CONTENT.facts.countKey, true) +
+          factHTML('price', CONTENT.emptyValue, CONTENT.facts.priceKey, true) +
+          factHTML('place', CONTENT.facts.placeValue, CONTENT.facts.placeKey, false) +
+        '</ul>' +
         '<div class="eex-hero__foot" data-eex-reveal style="--eex-i:6"></div>' +
         '<div class="eex-hero__cue" aria-hidden="true"></div>' +
       '</div>';
