@@ -139,7 +139,10 @@
   }
 
   function buildShell() {
-    var hero = make('section', 'eex-hero');
+    /* 'is-ready' ja nasce na classe: a animacao de entrada comeca na primeira
+       resolucao de estilo, sem depender de requestAnimationFrame (que fica
+       congelado em abas de fundo) e sem nenhum frame de flicker. */
+    var hero = make('section', 'eex-hero is-ready');
     hero.id = 'eex-hero';
     hero.setAttribute('aria-labelledby', 'eex-hero-title');
     hero.setAttribute('data-eex-version', VERSION);
@@ -333,11 +336,6 @@
         if (t && t.hasAttribute && t.hasAttribute('data-eex-reveal')) {
           t.style.willChange = 'auto';
         }
-      });
-
-      /* Dois frames: garante que a entrada parta de um layout ja estavel. */
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () { hero.classList.add('is-ready'); });
       });
 
       hydrateRail(hero);
