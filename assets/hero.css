@@ -44,12 +44,14 @@
   /* Tipografia: Fraunces no display, Inter na interface */
   --eex-font-display: "Fraunces", "Lora", Georgia, "Times New Roman", serif;
   --eex-font-ui: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --eex-fs-micro:   0.6875rem;
-  --eex-fs-small:   0.8125rem;
-  --eex-fs-field:   0.9375rem;
-  --eex-fs-body:    clamp(1rem, 0.35vw + 0.92rem, 1.1875rem);
-  --eex-fs-display: clamp(2.375rem, 6.2vw, 5.25rem);
-  --eex-fs-fact:    clamp(1.5rem, 1.4vw + 1.1rem, 2.125rem);
+  /* Escala em PX de proposito. A plataforma define html{font-size:10px},
+     portanto rem aqui produziria toda a escala ~37% menor. */
+  --eex-fs-micro:   11px;
+  --eex-fs-small:   13px;
+  --eex-fs-field:   15px;
+  --eex-fs-body:    clamp(16px, 0.35vw + 14.7px, 19px);
+  --eex-fs-display: clamp(38px, 6.2vw, 84px);
+  --eex-fs-fact:    clamp(24px, 1.4vw + 17px, 34px);
   --eex-track-micro:   0.2em;
   --eex-track-display: -0.022em;
   --eex-lh-display:    0.99;
@@ -283,18 +285,9 @@
   align-items:center;
   width:100% !important;
 }
-.eex-hero .eex-cell .input-group-addon{
-  width:auto !important;
-  padding:0 10px 0 0 !important;
-  font-size:13px !important;
-  line-height:1 !important;
-  background:transparent !important;
-  border:0 !important;
-  border-radius:0 !important;
-  color:var(--eex-stone-2) !important;
-  transition:color var(--eex-d2) var(--eex-ease);
-}
-.eex-hero .eex-cell:focus-within .input-group-addon{ color:var(--eex-accent) !important; }
+/* Os icones (fa-calendar / fa-users) saem. Com rotulo explicito acima de
+   cada campo eles viram ruido, e o CSS da plataforma os pinta de branco. */
+.eex-hero .eex-cell .input-group-addon{ display:none !important; }
 .eex-hero .eex-cell .form-control{
   height:auto !important;
   min-height:0 !important;
@@ -468,14 +461,13 @@ html.eex-hero-active .bs-container.persons > .dropdown-menu{
 /* Entrada encenada. Sem chevron pulando: apenas opacidade + 14px de subida,
    escalonados por --eex-i. So dispara quando hero.js adiciona .is-ready,
    garantindo que nada anime antes de estar posicionado. */
-.eex-hero [data-eex-reveal]{
-  opacity:0;
-  transform:translate3d(0,14px,0);
-  will-change:opacity, transform;
-}
+/* Sem estado inicial fora da animacao: se .is-ready nunca chegar (JS falho,
+   rAF congelado em aba de fundo), o conteudo simplesmente aparece visivel.
+   O fill-mode "both" e quem aplica o opacity:0 durante o delay. */
 .eex-hero.is-ready [data-eex-reveal]{
   animation:eex-rise var(--eex-d4) var(--eex-ease-out) both;
   animation-delay:calc(var(--eex-i, 0) * 85ms);
+  will-change:opacity, transform;
 }
 @keyframes eex-rise{
   from{ opacity:0; transform:translate3d(0,14px,0); }
@@ -587,3 +579,69 @@ html.eex-hero-active .bs-container.persons > .dropdown-menu{
   .eex-hero__cue,
   .eex-hero__console{ display:none !important; }
 }
+
+/* == 09. CONVIVENCIA COM O CSS DA PLATAFORMA ===============================
+   Bloco isolado de propósito: tudo aqui existe apenas para vencer regras de
+   terceiros. Quando o legacy.css for desmontado, esta secao deve encolher.
+   ========================================================================== */
+
+/* 09.1 - Titulo
+   O legacy.css declara "#maincontent h2,#maincontent h1" com !important
+   (font-size clamp em rem, font-weight 700 e color var(--texto)).
+   Especificidade 1-1-0 + !important vence 1-0-1 + !important. */
+#eex-hero .eex-hero__title{
+  font-family:var(--eex-font-display) !important;
+  font-size:var(--eex-fs-display) !important;
+  font-weight:400 !important;
+  line-height:var(--eex-lh-display) !important;
+  letter-spacing:var(--eex-track-display) !important;
+  color:var(--eex-ink) !important;
+}
+#eex-hero .eex-hero__title-line--soft{ color:var(--eex-stone-2) !important; }
+
+/* 09.2 - Titulo oculto do console (h2) cai na mesma regra do legacy.
+   Como e apenas para leitor de tela, basta garantir que nao ocupe espaco. */
+#eex-hero .eex-hero__sr{
+  font-size:0 !important;
+  line-height:0 !important;
+}
+
+/* 09.3 - Interior do bootstrap-select
+   A marcacao real e:
+     button > div.filter-option > div.filter-option-inner > div...inner-inner
+     button > span.bs-caret > span.caret
+     button > div.filter-expand   (elemento so de medicao)
+   O .filter-option nasce position:absolute; dentro de um container flex isso
+   fazia o caret cair em cima do texto. */
+#eex-hero .eex-cell .bootstrap-select .filter-option{
+  position:static !important;
+  flex:1 1 auto;
+  min-width:0;
+  padding:0 !important;
+  text-align:left;
+}
+#eex-hero .eex-cell .bootstrap-select .filter-option-inner,
+#eex-hero .eex-cell .bootstrap-select .filter-option-inner-inner{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#eex-hero .eex-cell .bootstrap-select .bs-caret{
+  display:inline-flex;
+  align-items:center;
+  margin-left:auto;
+  padding-left:12px;
+}
+#eex-hero .eex-cell .bootstrap-select .filter-expand{
+  position:absolute !important;
+  width:0 !important;
+  height:0 !important;
+  overflow:hidden !important;
+  opacity:0 !important;
+  pointer-events:none;
+}
+
+/* 09.4 - Respiro do console e do rodape da hero */
+#eex-hero .eex-cell{ padding:18px 24px !important; }
+#eex-hero .eex-cell--cta{ padding:12px !important; }
+#eex-hero .eex-hero__foot{ margin-top:var(--eex-s6); }
