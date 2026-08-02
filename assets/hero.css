@@ -1,113 +1,589 @@
-/* ============================================
-ESTADIA EXPRESS — HERO.CSS
-Premium Hero Section (Typography-driven, no images)
-============================================ */
+/* =============================================================================
+   ESTADIA EXPRESS - DESIGN SYSTEM
+   Modulo: assets/hero.css
+   Fase 2 - Hero Premium. Implementacao nova: nenhuma regra herdada da hero
+   anterior (.ee-hero*), que era codigo morto comprovado e foi descartada.
 
-@keyframes ee-fadeInUp {
-    from {
-          opacity: 0;
-          transform: translateY(20px);
-    }
-    to {
-          opacity: 1;
-          transform: translateY(0);
-    }
+   Sumario
+     01. Tokens          :root --eex-*   (semente do design system)
+     02. Escopo e canvas .eex-hero
+     03. Tipografia editorial
+     04. Rail de credenciais
+     05. Console de busca (widget nativo da Stays, re-parenteado)
+     06. Microinteracoes e entrada
+     07. Breakpoints
+     08. Acessibilidade, movimento reduzido, impressao
+
+   Convivencia com o legado
+     - Nenhum seletor de elemento global. Tudo escopado em .eex-hero ou em
+       html.eex-hero-active.
+     - Os tokens sao custom properties NOVAS: nao ha nome colidente no
+       legacy.css nem no CSS da plataforma, logo nada existente muda.
+     - !important aparece somente para vencer CSS de ID gerado pela Stays
+       dentro do widget de busca. Toda ocorrencia esta comentada.
+   ============================================================================= */
+
+/* == 01. TOKENS ============================================================ */
+:root{
+  /* Cor: canvas quente (bone), tinta quente, terracota da marca */
+  --eex-canvas:      #FBF9F6;
+  --eex-canvas-2:    #F5F1EB;
+  --eex-canvas-3:    #F7F3ED;
+  --eex-surface:     #FFFFFF;
+  --eex-ink:         #141210;
+  --eex-ink-2:       #2A241F;
+  --eex-stone:       #6B635C;
+  --eex-stone-2:     #948B82;
+  --eex-hairline:    #E4DED6;
+  --eex-hairline-2:  #EFEAE3;
+  --eex-accent:      #C4744A;  /* terracota aprofundada: passa AA sobre o canvas */
+  --eex-accent-soft: #EEA67F;  /* terracota original da marca, preservada */
+  --eex-accent-tint: #F7E7DC;
+  --eex-cool:        #879DAE;  /* cinza-azul herdado do widget da plataforma */
+
+  /* Tipografia: Fraunces no display, Inter na interface */
+  --eex-font-display: "Fraunces", "Lora", Georgia, "Times New Roman", serif;
+  --eex-font-ui: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --eex-fs-micro:   0.6875rem;
+  --eex-fs-small:   0.8125rem;
+  --eex-fs-field:   0.9375rem;
+  --eex-fs-body:    clamp(1rem, 0.35vw + 0.92rem, 1.1875rem);
+  --eex-fs-display: clamp(2.375rem, 6.2vw, 5.25rem);
+  --eex-fs-fact:    clamp(1.5rem, 1.4vw + 1.1rem, 2.125rem);
+  --eex-track-micro:   0.2em;
+  --eex-track-display: -0.022em;
+  --eex-lh-display:    0.99;
+
+  /* Espaco: escala 4pt */
+  --eex-s1:4px;  --eex-s2:8px;  --eex-s3:12px; --eex-s4:16px; --eex-s5:24px;
+  --eex-s6:32px; --eex-s7:48px; --eex-s8:64px; --eex-s9:96px; --eex-s10:128px;
+
+  /* Forma */
+  --eex-r-sm:2px; --eex-r-md:6px; --eex-r-lg:12px; --eex-r-pill:999px;
+
+  /* Elevacao: duas camadas (contato + difusa) */
+  --eex-e1:0 1px 2px rgba(20,18,16,.04);
+  --eex-e2:0 1px 2px rgba(20,18,16,.04), 0 10px 24px -12px rgba(20,18,16,.14);
+  --eex-e3:0 2px 4px rgba(20,18,16,.05), 0 28px 60px -22px rgba(20,18,16,.22);
+
+  /* Movimento */
+  --eex-d1:140ms; --eex-d2:220ms; --eex-d3:420ms; --eex-d4:760ms;
+  --eex-ease:cubic-bezier(.2,.8,.2,1);
+  --eex-ease-out:cubic-bezier(.16,1,.3,1);
+
+  /* Grade */
+  --eex-maxw:1280px;
+  --eex-gutter:clamp(20px, 5vw, 72px);
 }
 
-.ee-hero {
-    background: linear-gradient(135deg, var(--ee-color-bg) 0%, rgba(238, 166, 127, 0.06) 100%);
-    padding: var(--space-7) var(--space-4);
-    text-align: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+/* == 02. ESCOPO E CANVAS =================================================== */
+.eex-hero{
+  position:relative;
+  isolation:isolate;
+  box-sizing:border-box;
+  padding:clamp(56px,9vh,112px) var(--eex-gutter) clamp(48px,7vh,88px);
+  background:var(--eex-canvas);
+  border-bottom:1px solid var(--eex-hairline);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.eex-hero *,
+.eex-hero *::before,
+.eex-hero *::after{ box-sizing:border-box; }
+
+/* Wash ambiente 100% CSS: zero requisicao de imagem, zero custo de rede.
+   Duas fontes de luz (terracota quente na origem, cinza-azul fria a direita)
+   sobre um degrade vertical muito curto. */
+.eex-hero__bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(115% 85% at 6% -12%,  rgba(238,166,127,.22), rgba(238,166,127,0) 56%),
+    radial-gradient(85% 70% at 102% -6%,  rgba(135,157,174,.15), rgba(135,157,174,0) 58%),
+    linear-gradient(180deg, var(--eex-canvas) 58%, var(--eex-canvas-3) 100%);
+}
+.eex-hero__inner{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:var(--eex-maxw);
+  margin:0 auto;
 }
 
-.ee-hero-content {
-    max-width: 900px;
-    margin: 0 auto;
+/* == 03. TIPOGRAFIA EDITORIAL ============================================== */
+.eex-hero__eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 var(--eex-s5);
+  font:500 var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone);
+}
+.eex-hero__dot{
+  flex:0 0 auto;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:var(--eex-accent);
+  box-shadow:0 0 0 4px var(--eex-accent-tint);
+}
+.eex-hero__title{
+  margin:0;
+  font-family:var(--eex-font-display);
+  font-weight:400;                       /* peso leve em corpo grande = luxo */
+  font-size:var(--eex-fs-display);
+  line-height:var(--eex-lh-display);
+  letter-spacing:var(--eex-track-display);
+  color:var(--eex-ink);
+}
+.eex-hero__title-line{ display:block; }
+/* Hierarquia tonal dentro do proprio titulo: a segunda linha recua em cor,
+   nao em tamanho. Cria profundidade sem quebrar a escala. */
+.eex-hero__title-line--soft{ color:var(--eex-stone-2); }
+
+.eex-hero__lede{
+  margin:var(--eex-s5) 0 0;
+  max-width:46ch;
+  font:400 var(--eex-fs-body)/1.65 var(--eex-font-ui);
+  color:var(--eex-stone);
+  text-wrap:pretty;
 }
 
-.ee-hero-title {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
-    color: var(--ee-color-secondary);
-    margin: 0 0 var(--space-2) 0;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    animation: ee-fadeInUp 0.8s ease-out;
+/* == 04. RAIL DE CREDENCIAIS =============================================== */
+.eex-hero__rail{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--eex-s5) 0;
+  margin:var(--eex-s7) 0 0;
+  padding:var(--eex-s5) 0 0;
+  border-top:1px solid var(--eex-hairline);
+  list-style:none;
+}
+.eex-hero__fact{ padding:0 var(--eex-s5) 0 0; }
+.eex-hero__fact + .eex-hero__fact{
+  padding-left:var(--eex-s5);
+  border-left:1px solid var(--eex-hairline);
+}
+.eex-hero__fact-value{
+  display:block;
+  font:400 var(--eex-fs-fact)/1 var(--eex-font-display);
+  letter-spacing:-.01em;
+  color:var(--eex-ink);
+  font-variant-numeric:lining-nums tabular-nums;
+  transition:opacity var(--eex-d3) var(--eex-ease);
+}
+/* Estado de espera: o valor ja ocupa a altura final, entao preencher com o
+   dado real nao gera nenhum deslocamento de layout (CLS zero). */
+.eex-hero__fact--pending .eex-hero__fact-value{ opacity:.26; }
+.eex-hero__fact-key{
+  display:block;
+  margin-top:var(--eex-s2);
+  font:500 var(--eex-fs-micro)/1.35 var(--eex-font-ui);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
 }
 
-.ee-hero-subtitle {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    color: var(--ee-color-primary);
-    font-weight: 500;
-    margin: 0 0 var(--space-4) 0;
-    animation: ee-fadeInUp 0.8s ease-out 0.1s backwards;
-    letter-spacing: -0.01em;
+/* == 05. CONSOLE DE BUSCA ==================================================
+   O console NAO reimplementa a busca. O widget nativo da Stays
+   (#basic_availability_search) e movido por hero.js para dentro de
+   .eex-hero__slot. Como o no do DOM e movido e nunca recriado, todos os
+   listeners, o datepicker e o bootstrap-select continuam intactos.
+   As regras abaixo apenas neutralizam a pele da plataforma.
+   ========================================================================== */
+.eex-hero__console{
+  position:relative;
+  max-width:1000px;
+  margin:clamp(40px,6vh,72px) 0 0;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  box-shadow:var(--eex-e2);
+  transition:box-shadow var(--eex-d3) var(--eex-ease), border-color var(--eex-d3) var(--eex-ease);
+}
+.eex-hero__console:hover,
+.eex-hero__console:focus-within{ box-shadow:var(--eex-e3); }
+.eex-hero__slot{ border-radius:inherit; }
+
+/* Casca do widget. O !important aqui vence "#Cf3b614{background-color:#879dae}",
+   CSS de ID gerado pelo editor de hotsite da Stays (especificidade 1-0-0). */
+.eex-hero .eex-w{ margin:0; padding:0; }
+.eex-hero .eex-wrap{
+  position:static !important;
+  width:auto !important;
+  top:auto !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  transition:none !important;
+}
+.eex-hero .eex-box{            /* era .container do Bootstrap */
+  width:auto !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+.eex-hero .eex-form{ margin:0; }
+
+/* Grade de tres celulas. Bootstrap 3 usa float + width em porcentagem nos
+   .col-*; trocamos por flex sem tocar nas classes originais. */
+.eex-hero .eex-row{
+  display:flex !important;
+  flex-direction:column;
+  margin:0 !important;
+}
+.eex-hero .eex-cell{
+  position:relative;
+  float:none !important;
+  width:auto !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:var(--eex-s4) var(--eex-s5) !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:6px;
+  min-height:78px;
+  transition:background var(--eex-d1) linear;
+}
+.eex-hero .eex-cell + .eex-cell{ border-top:1px solid var(--eex-hairline-2); }
+.eex-hero .eex-cell:not(.eex-cell--cta):hover{ background:var(--eex-canvas); }
+
+/* Microinteracao de foco: filete terracota que cresce da esquerda.
+   Apenas transform -> sem reflow, roda no compositor. */
+.eex-hero .eex-cell::after{
+  content:"";
+  position:absolute;
+  left:var(--eex-s5); right:var(--eex-s5); bottom:-1px;
+  height:1px;
+  background:var(--eex-accent);
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell:focus-within::after{ transform:scaleX(1); }
+.eex-hero .eex-cell--cta::after{ display:none; }
+
+.eex-hero__field-label{
+  font:500 var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell:focus-within .eex-hero__field-label{ color:var(--eex-stone); }
+
+/* Controles internos: input de datas e input-group */
+.eex-hero .eex-cell .input-group{
+  display:flex !important;
+  align-items:center;
+  width:100% !important;
+}
+.eex-hero .eex-cell .input-group-addon{
+  width:auto !important;
+  padding:0 10px 0 0 !important;
+  font-size:13px !important;
+  line-height:1 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  color:var(--eex-stone-2) !important;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell:focus-within .input-group-addon{ color:var(--eex-accent) !important; }
+.eex-hero .eex-cell .form-control{
+  height:auto !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  font:500 var(--eex-fs-field)/1.45 var(--eex-font-ui) !important;
+  color:var(--eex-ink) !important;
+}
+.eex-hero .eex-cell input.form-control{ cursor:pointer; }
+.eex-hero .eex-cell .form-control::placeholder{
+  color:var(--eex-stone-2);
+  font-weight:400;
 }
 
-.ee-hero-description {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.0625rem;
-    color: var(--ee-color-neutral-dark);
-    font-weight: 400;
-    line-height: 1.7;
-    margin: 0 0 var(--space-7) 0;
-    opacity: 0.9;
-    animation: ee-fadeInUp 0.8s ease-out 0.2s backwards;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+/* bootstrap-select (Hospedes) */
+.eex-hero .eex-cell .bootstrap-select{
+  display:flex !important;
+  float:none !important;
+  width:100% !important;
+  height:auto !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+.eex-hero .eex-cell .bootstrap-select > .dropdown-toggle{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  width:100% !important;
+  height:auto !important;
+  padding:0 !important;
+  text-align:left;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  font:500 var(--eex-fs-field)/1.45 var(--eex-font-ui) !important;
+  color:var(--eex-ink) !important;
+}
+.eex-hero .eex-cell .bootstrap-select > .dropdown-toggle.bs-placeholder,
+.eex-hero .eex-cell .bootstrap-select > .dropdown-toggle.bs-placeholder .filter-option{
+  font-weight:400 !important;
+  color:var(--eex-stone-2) !important;
+}
+/* O triangulo do Bootstrap 3 vira um chevron de 1.5px que gira ao abrir. */
+.eex-hero .eex-cell .bootstrap-select .caret{
+  position:static !important;
+  width:7px; height:7px;
+  margin:0 0 3px 0 !important;
+  border:0 !important;
+  border-right:1.5px solid var(--eex-stone) !important;
+  border-bottom:1.5px solid var(--eex-stone) !important;
+  transform:rotate(45deg);
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell .bootstrap-select.open .caret{ transform:rotate(-135deg); }
+
+/* Dentro da hero o dropdown de hospedes precisa abrir para BAIXO: sobra
+   espaco e abrir para cima colidiria com o titulo. O app.js aplica .dropup
+   em .bs-container; em vez de alterar o app.js (congelado), reposicionamos
+   apenas quando a hero esta montada. */
+html.eex-hero-active .bs-container.persons.dropup > .dropdown-menu{
+  top:100% !important;
+  bottom:auto !important;
+  margin-top:6px !important;
+  margin-bottom:0 !important;
+}
+html.eex-hero-active .bs-container.persons > .dropdown-menu{
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  box-shadow:var(--eex-e3);
+  padding:var(--eex-s2) 0;
 }
 
-/* Search box integration */
-.ee-hero .hotel-datepicker,
-.ee-hero [class*="search-block"],
-.ee-hero .search-section {
-    animation: ee-fadeInUp 0.8s ease-out 0.3s backwards;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-2);
-    margin-top: var(--space-4);
+/* CTA: tinta, nao terracota. A terracota fica reservada para acentos micro,
+   o que impede o visual "botao laranja de portal de viagem". */
+.eex-hero .eex-cell--cta{
+  flex:0 0 auto;
+  padding:var(--eex-s3) !important;
+  justify-content:center;
+}
+.eex-hero .eex-cell--cta .btn{
+  display:inline-flex !important;
+  flex-direction:row-reverse;          /* texto, depois o icone: "Procurar >" */
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100% !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:18px 30px !important;
+  border:0 !important;
+  border-radius:var(--eex-r-sm) !important;
+  background:var(--eex-ink) !important;
+  color:#fff !important;
+  font:600 var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  box-shadow:none !important;
+  /* A Stays marca o botao com .disabled sem o atributo disabled e o mantem
+     clicavel. Preservamos exatamente esse comportamento. */
+  opacity:1 !important;
+  pointer-events:auto !important;
+  transition:background var(--eex-d2) var(--eex-ease),
+             transform  var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell--cta .btn:hover{
+  background:var(--eex-ink-2) !important;
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2) !important;
+}
+.eex-hero .eex-cell--cta .btn:active{ transform:translateY(0); }
+.eex-hero .eex-cell--cta .btn:focus-visible{
+  outline:2px solid var(--eex-accent);
+  outline-offset:3px;
+}
+.eex-hero .eex-cell--cta .btn .fa{
+  font-size:12px;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-hero .eex-cell--cta .btn:hover .fa{ transform:translateX(3px); }
+
+/* == 06. MICROINTERACOES E ENTRADA ========================================= */
+.eex-hero__foot{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--eex-s5);
+  margin:var(--eex-s5) 0 0;
+}
+.eex-hero__link{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 0;
+  font:500 var(--eex-fs-small)/1 var(--eex-font-ui);
+  color:var(--eex-ink) !important;         /* vence o link global do legacy */
+  text-decoration:none !important;
+}
+.eex-hero__link::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:1px;
+  background:var(--eex-ink);
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-hero__link:hover::after,
+.eex-hero__link:focus-visible::after{ transform:scaleX(1); }
+.eex-hero__link:focus-visible{ outline:2px solid var(--eex-accent); outline-offset:4px; }
+.eex-hero__link-arrow{
+  font-size:11px;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-hero__link:hover .eex-hero__link-arrow{ transform:translateX(3px); }
+.eex-hero__note{
+  margin:0;
+  font:400 var(--eex-fs-small)/1.5 var(--eex-font-ui);
+  color:var(--eex-stone-2);
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-    .ee-hero {
-          padding: var(--space-5) var(--space-3);
-    }
-
-    .ee-hero-title {
-          font-size: 2rem;
-          margin-bottom: var(--space-1);
-    }
-
-    .ee-hero-subtitle {
-          font-size: 1.1rem;
-          margin-bottom: var(--space-3);
-    }
-
-    .ee-hero-description {
-          font-size: 1rem;
-          margin-bottom: var(--space-5);
-    }
+/* Entrada encenada. Sem chevron pulando: apenas opacidade + 14px de subida,
+   escalonados por --eex-i. So dispara quando hero.js adiciona .is-ready,
+   garantindo que nada anime antes de estar posicionado. */
+.eex-hero [data-eex-reveal]{
+  opacity:0;
+  transform:translate3d(0,14px,0);
+  will-change:opacity, transform;
+}
+.eex-hero.is-ready [data-eex-reveal]{
+  animation:eex-rise var(--eex-d4) var(--eex-ease-out) both;
+  animation-delay:calc(var(--eex-i, 0) * 85ms);
+}
+@keyframes eex-rise{
+  from{ opacity:0; transform:translate3d(0,14px,0); }
+  to  { opacity:1; transform:none; }
 }
 
-@media (max-width: 480px) {
-    .ee-hero {
-          padding: var(--space-4) var(--space-2);
-    }
+/* Pista de rolagem: um filete de 1px que respira. Substitui o chevron,
+   que e o clichê visual mais comum em landing pages. */
+.eex-hero__cue{ display:none; }
+@keyframes eex-cue{
+  0%,100%{ transform:scaleY(.32); opacity:.30; }
+  50%    { transform:scaleY(1);   opacity:.85; }
+}
 
-    .ee-hero-title {
-          font-size: 1.75rem;
-    }
+/* == 07. BREAKPOINTS ======================================================= */
+/* Mobile-first: acima daqui o console passa a ser uma barra de tres celulas. */
+@media (min-width:768px){
+  .eex-hero .eex-row{ flex-direction:row; align-items:stretch; }
+  .eex-hero .eex-cell{ flex:1 1 0; min-width:0; }
+  .eex-hero .eex-cell + .eex-cell{
+    border-top:0;
+    border-left:1px solid var(--eex-hairline-2);
+  }
+  .eex-hero .eex-cell--cta{
+    border-left:0 !important;
+    flex:0 0 auto;
+    padding:var(--eex-s3) !important;
+  }
+  .eex-hero .eex-cell::after{ bottom:0; }
+}
 
-    .ee-hero-subtitle {
-          font-size: 1rem;
-    }
+@media (min-width:1024px){
+  .eex-hero{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-height:84vh;
+    min-height:min(84svh, 880px);
+    padding-top:clamp(72px,10vh,132px);
+  }
+  /* Composicao assimetrica: copy a esquerda, rail hairline a direita.
+     Centralizar tudo e o que faz uma hero parecer template. */
+  .eex-hero__head{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(210px,290px);
+    gap:var(--eex-s9);
+    align-items:end;
+  }
+  .eex-hero__rail{
+    grid-template-columns:1fr;
+    gap:0;
+    margin:0;
+    padding:0;
+    border-top:0;
+    border-left:1px solid var(--eex-hairline);
+  }
+  .eex-hero__fact{ padding:var(--eex-s5) 0 var(--eex-s5) var(--eex-s6); }
+  .eex-hero__fact:first-child{ padding-top:0; }
+  .eex-hero__fact:last-child{ padding-bottom:0; }
+  .eex-hero__fact + .eex-hero__fact{
+    padding-left:var(--eex-s6);
+    border-left:0;
+    border-top:1px solid var(--eex-hairline);
+  }
+  .eex-hero__cue{
+    display:block;
+    width:1px;
+    height:56px;
+    margin:var(--eex-s8) 0 0;
+    background:linear-gradient(180deg, var(--eex-stone-2), rgba(148,139,130,0));
+    transform-origin:top center;
+    animation:eex-cue 2.8s var(--eex-ease) infinite;
+  }
+}
 
-    .ee-hero-description {
-          font-size: 0.9375rem;
-          line-height: 1.6;
-    }
+@media (min-width:1440px){
+  .eex-hero__head{ gap:var(--eex-s10); }
+  .eex-hero__console{ max-width:1060px; }
+}
+
+/* == 08. ACESSIBILIDADE, MOVIMENTO REDUZIDO, IMPRESSAO ===================== */
+.eex-hero__sr{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+@media (prefers-reduced-motion:reduce){
+  .eex-hero [data-eex-reveal]{
+    opacity:1 !important;
+    transform:none !important;
+    animation:none !important;
+    will-change:auto;
+  }
+  .eex-hero__cue{ animation:none !important; opacity:.5; }
+  .eex-hero *,
+  .eex-hero *::before,
+  .eex-hero *::after{
+    transition-duration:1ms !important;
+    animation-duration:1ms !important;
+  }
+}
+@media print{
+  .eex-hero{ min-height:0; padding:24px 0; border-bottom:1px solid #ccc; }
+  .eex-hero__bg,
+  .eex-hero__cue,
+  .eex-hero__console{ display:none !important; }
 }
