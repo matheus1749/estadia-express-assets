@@ -1,0 +1,278 @@
+/* =============================================================================
+   ESTADIA EXPRESS - HEADER PREMIUM
+   -----------------------------------------------------------------------------
+   Derivado do Design System V3 (assets/ds.css). Nao redefine tokens.
+
+   Direcao: o header nao deve se anunciar. Em repouso ele desaparece dentro do
+   canvas da Hero (mesma tinta exata, sem borda e sem sombra), de modo que a
+   primeira coisa que a pagina apresenta e a tipografia, nao a navegacao.
+   Ao rolar, ele se materializa como uma folha fosca com um unico filete de 1px.
+
+   Alinhamento: a coluna do header passa a ser exatamente a mesma coluna de
+   1280px da Hero. O logotipo alinha na vertical com a primeira letra do titulo.
+
+   Substitui integralmente as regras de header que viviam em legacy.css
+   (bloco original linha 57).
+   ============================================================================= */
+
+
+/* -----------------------------------------------------------------------------
+   1. CASCA
+   -------------------------------------------------------------------------- */
+header#header{
+  position:sticky;
+  top:0;
+  z-index:var(--eex-z-sticky, 11);
+  background:var(--eex-surface) !important;
+  border-bottom:1px solid var(--eex-hairline) !important;
+  box-shadow:none !important;
+  transition:background var(--eex-d3) var(--eex-ease),
+             border-color var(--eex-d3) var(--eex-ease),
+             box-shadow var(--eex-d3) var(--eex-ease);
+}
+
+/* Na home o header nasce invisivel: mesma tinta do canvas da Hero. */
+body.__page_index header#header{
+  background:var(--eex-canvas) !important;
+  border-bottom-color:transparent !important;
+}
+
+/* Estado rolado: folha fosca. Aplicado por js/header.js. */
+header#header.eex-header--scrolled,
+body.__page_index header#header.eex-header--scrolled{
+  background:rgba(255,255,255,.86) !important;
+  border-bottom-color:var(--eex-hairline) !important;
+  box-shadow:var(--eex-e1) !important;
+}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  header#header.eex-header--scrolled,
+  body.__page_index header#header.eex-header--scrolled{
+    background:rgba(255,255,255,.72) !important;
+    -webkit-backdrop-filter:saturate(1.6) blur(16px);
+    backdrop-filter:saturate(1.6) blur(16px);
+  }
+}
+
+/* A altura nunca muda com o scroll. Encolher um header em position:sticky
+   deslocaria todo o conteudo abaixo dele e produziria tremor. */
+
+
+/* -----------------------------------------------------------------------------
+   2. COLUNA
+   Mesma largura maxima e mesma calha da Hero.
+   -------------------------------------------------------------------------- */
+header#header > .container-fluid{
+  width:100%;
+  max-width:calc(var(--eex-maxw) + var(--eex-gutter) * 2);
+  margin-inline:auto;
+  padding-inline:var(--eex-gutter) !important;
+}
+
+
+/* -----------------------------------------------------------------------------
+   3. MARCA
+   -------------------------------------------------------------------------- */
+header#header .navbar-brand{
+  display:inline-flex;
+  align-items:center;
+  padding-left:0 !important;
+  margin-left:0 !important;
+}
+header#header .navbar-brand img{
+  max-height:46px !important;
+  width:auto !important;
+  transition:opacity var(--eex-d2) var(--eex-ease);
+}
+header#header .navbar-brand:hover img,
+header#header .navbar-brand:focus-visible img{ opacity:.62; }
+
+
+/* -----------------------------------------------------------------------------
+   4. FAIXA DE UTILITARIOS (moeda, chat, conta)
+   Deliberadamente silenciosa: 11px, caixa alta, tinta terciaria.
+   -------------------------------------------------------------------------- */
+header#header .menu-top{
+  align-items:center;
+  gap:var(--eex-s5);
+  margin-top:var(--eex-s4) !important;
+  margin-bottom:var(--eex-s2) !important;
+  padding-right:0 !important;
+}
+header#header .menu-top-item{ margin:0 !important; }
+
+header#header .menu-top-item a{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:4px 0 !important;
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:var(--eex-fs-micro) !important;
+  font-weight:var(--eex-w-medium) !important;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--eex-stone-2) !important;
+  text-decoration:none !important;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+header#header .menu-top-item a:hover,
+header#header .menu-top-item a:focus-visible{ color:var(--eex-ink) !important; }
+
+header#header .menu-top-item .fa{ font-size:12px; line-height:1; }
+header#header .menu-top-item .caret{ display:none; }
+
+/* Preservado de legacy.css: a lista de desejos permanece desligada. */
+.menu-top-item.menu-wish,
+a.mylist-btn{ display:none !important; }
+
+
+/* -----------------------------------------------------------------------------
+   5. NAVEGACAO PRINCIPAL
+   Rotulos em caixa alta com tracking largo. O hover nao preenche nada:
+   apenas revela um filete de 1px crescendo da esquerda, exatamente como os
+   links da Hero.
+   -------------------------------------------------------------------------- */
+header#header nav.main-nav-menu ul.nav{ align-items:center; }
+
+header#header .nav > li > a,
+header#header .navbar-nav > li > a{
+  position:relative;
+  padding:10px 0 !important;
+  margin:0 0 0 var(--eex-s6) !important;
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:12px !important;
+  font-weight:var(--eex-w-medium) !important;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--eex-ink) !important;
+  text-decoration:none !important;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+header#header .nav > li:first-child > a,
+header#header .navbar-nav > li:first-child > a{ margin-left:0 !important; }
+
+header#header .nav > li > a::after,
+header#header .navbar-nav > li > a::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:4px;
+  height:1px;
+  background:var(--eex-ink);
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+header#header .nav > li > a:hover,
+header#header .navbar-nav > li > a:hover,
+header#header .nav > li > a:focus-visible,
+header#header .navbar-nav > li > a:focus-visible{
+  background:none !important;
+  color:var(--eex-ink) !important;
+}
+header#header .nav > li > a:hover::after,
+header#header .navbar-nav > li > a:hover::after,
+header#header .nav > li > a:focus-visible::after,
+header#header .navbar-nav > li > a:focus-visible::after{ transform:scaleX(1); }
+
+/* Item correspondente a pagina atual: filete permanente. */
+header#header .nav > li.active > a::after,
+header#header .navbar-nav > li.active > a::after{ transform:scaleX(1); }
+
+
+/* -----------------------------------------------------------------------------
+   6. MENUS SUSPENSOS
+   -------------------------------------------------------------------------- */
+header#header .dropdown-menu{
+  min-width:190px;
+  margin-top:var(--eex-s2);
+  padding:var(--eex-s2) 0;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  box-shadow:var(--eex-e2);
+}
+header#header .dropdown-menu > li > a{
+  padding:10px var(--eex-s4) !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:var(--eex-fs-small) !important;
+  font-weight:var(--eex-w-regular) !important;
+  letter-spacing:0;
+  text-transform:none;
+  color:var(--eex-stone) !important;
+  transition:background var(--eex-d1) var(--eex-ease), color var(--eex-d1) var(--eex-ease);
+}
+header#header .dropdown-menu > li > a:hover,
+header#header .dropdown-menu > li > a:focus-visible{
+  background:var(--eex-canvas-2) !important;
+  color:var(--eex-ink) !important;
+}
+
+
+/* -----------------------------------------------------------------------------
+   7. MOBILE
+   -------------------------------------------------------------------------- */
+header#header .mobile-menu-toggle{
+  display:inline-flex;
+  align-items:center;
+  padding:var(--eex-s3) !important;
+  color:var(--eex-ink);
+  cursor:pointer;
+  transition:opacity var(--eex-d2) var(--eex-ease);
+}
+header#header .mobile-menu-toggle:hover{ opacity:.6; }
+header#header .mobile-menu-toggle .fa{ font-size:20px !important; }
+header#header .mobile-menu-toggle-close .fa{ font-size:20px !important; color:var(--eex-ink); }
+
+header#header #mobile-menu hr{
+  border:0;
+  height:1px;
+  background:var(--eex-hairline);
+  margin-block:var(--eex-s4) !important;
+}
+
+@media (max-width:767px){
+  header#header .navbar-brand img{ max-height:38px !important; }
+  header#header .menu-top{
+    gap:var(--eex-s4);
+    margin-top:var(--eex-s3) !important;
+    margin-bottom:var(--eex-s3) !important;
+  }
+  /* No painel aberto os rotulos crescem e a hierarquia se inverte:
+     a navegacao passa a ser o conteudo principal da tela. */
+  header#header #mobile-menu .navbar-nav > li > a{
+    margin:0 !important;
+    padding:var(--eex-s3) 0 !important;
+    font-size:15px !important;
+    letter-spacing:.02em;
+    text-transform:none;
+  }
+  header#header #mobile-menu .navbar-nav > li > a::after{ display:none; }
+  header#header .mobile-menu-cur a{
+    font-size:var(--eex-fs-micro) !important;
+    letter-spacing:var(--eex-track-micro);
+    text-transform:uppercase;
+    color:var(--eex-stone-2) !important;
+  }
+}
+
+
+/* -----------------------------------------------------------------------------
+   8. MOVIMENTO REDUZIDO E IMPRESSAO
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  header#header,
+  header#header .nav > li > a::after,
+  header#header .navbar-nav > li > a::after,
+  header#header .navbar-brand img,
+  header#header .menu-top-item a{ transition:none !important; }
+}
+
+@media print{
+  header#header{ position:static !important; box-shadow:none !important; border-bottom:1px solid #ccc !important; }
+  header#header .menu-top, header#header .mobile-menu-toggle{ display:none !important; }
+}
