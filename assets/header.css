@@ -339,12 +339,17 @@ header#header .mobile-menu-toggle .fa{ font-size:20px !important; }
     transition:border-color var(--eex-d2) var(--eex-ease);
   }
   header#header .mobile-menu-cur li a:hover{ border-color:var(--eex-ink); }
+  /* A regra geral de tinta acima usa dois IDs (header#header #mobile-menu), logo
+     qualquer excecao precisa igualar essa especificidade, nao apenas usar
+     !important. Por isso o #mobile-menu aparece aqui de novo. */
+  header#header #mobile-menu .mobile-menu-cur li.selected a,
+  header#header #mobile-menu .mobile-menu-cur li.selected a span{
+    color:var(--eex-text-invert) !important;
+  }
   header#header .mobile-menu-cur li.selected a{
     background:var(--eex-ink) !important;
     border-color:var(--eex-ink) !important;
-    color:var(--eex-text-invert) !important;
   }
-  header#header .mobile-menu-cur li.selected a span{ color:var(--eex-text-invert) !important; }
 
   /* --- 7.7 Faixa de utilitarios no topo da pagina ------------------------- */
   header#header .navbar-brand img{ max-height:38px !important; }
