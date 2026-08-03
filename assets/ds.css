@@ -129,13 +129,26 @@
    ============================================================================= */
 *, *::before, *::after{ box-sizing:border-box; }
 
-body, h1, h2, h3, h4, h5, h6, p, a, li, button, input, select{
+::selection{ background:var(--eex-accent-tint); color:var(--eex-ink); }
+
+/* A camada tipografica NAO e aplicada globalmente de proposito.
+   Hoje cada pagina da plataforma ainda usa a fonte nativa da Stays, e trocar
+   isso de uma vez seria uma mudanca de alto risco. A adocao acontece tela a
+   tela: cada modulo redesenhado aplica .eex-typeset no seu proprio escopo.
+   Quando a ultima tela estiver migrada, esta classe sobe para o <body>. */
+.eex-typeset{
   font-family:var(--eex-font-ui);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
-
-::selection{ background:var(--eex-accent-tint); color:var(--eex-ink); }
+.eex-typeset :is(p, a, li, button, input, select, span, div, td, th, label){
+  font-family:var(--eex-font-ui);
+}
+.eex-typeset :is(h1, h2, h3, h4, h5, h6){
+  font-family:var(--eex-font-display);
+  font-weight:var(--eex-w-regular);
+  letter-spacing:var(--eex-track-title);
+}
 
 
 /* =============================================================================
