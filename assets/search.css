@@ -94,6 +94,10 @@
   gap:6px;
   float:none !important;
   width:auto !important;
+  /* Os utilitarios de coluna da plataforma trazem max-width em porcentagem
+     (col-lg-3 -> 25%). Sem zerar isso o flex-grow nunca distribui a folga e a
+     folha fica com um vazio a direita. */
+  max-width:none !important;
   min-width:0;
   margin:0 !important;
   padding:15px var(--eex-s5) !important;
