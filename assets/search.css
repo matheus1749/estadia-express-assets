@@ -1,0 +1,750 @@
+/* =============================================================================
+   ESTADIA EXPRESS - SEARCH CONSOLE
+   -----------------------------------------------------------------------------
+   Derivado do Design System V3 (assets/ds.css) e desenhado para ser lido como
+   o MESMO objeto do console da Hero: uma folha branca sobre canvas, filetes de
+   1px separando as celulas, rotulo micro em caixa alta acima do valor, e um
+   unico bloco de tinta solida a direita para a acao.
+
+   O que muda em relacao ao que a plataforma entrega:
+     - a faixa cor de barro (#CEAB94) e o salmao (#EEA67F) saem de cena;
+     - os icones em caixa colorida somem: quem nomeia o campo agora e o rotulo;
+     - o raio de 24px de pilula vira o raio de 2px do sistema;
+     - o alinhamento passa a ser a coluna de 1280px, a mesma da Hero.
+
+   Depende dos ganchos aplicados por js/search.js:
+     .eex-searchband  faixa que envolve a busca
+     .eex-console     o formulario
+     .eex-console__row / __cell / __label / __cta
+     .eex-console__box  o container interno (#block-simple-search, #advancedSearch)
+
+   Substitui integralmente o bloco de filtros que vivia em legacy.css
+   (bloco original linha 829) e a regra do datepicker do bloco linha 57.
+   ============================================================================= */
+
+
+/* =============================================================================
+   1. FAIXA
+   ============================================================================= */
+.eex-searchband{
+  background:var(--eex-canvas) !important;
+  border-bottom:1px solid var(--eex-hairline);
+  padding-block:var(--eex-s7) var(--eex-s7) !important;
+}
+
+.eex-console__box{
+  width:100% !important;
+  max-width:calc(var(--eex-maxw) + var(--eex-gutter) * 2) !important;
+  margin-inline:auto !important;
+  padding-inline:var(--eex-gutter) !important;
+}
+
+/* Na pagina de busca o console vive dentro de uma coluna estreita: nao ha
+   faixa e nao ha calha propria, so a folha. */
+.eex-console__box--page{
+  max-width:none !important;
+  padding:0 !important;
+  margin-bottom:var(--eex-s5) !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+.eex-console__box--page > .panel-heading,
+.eex-console__box--page > .panel-body{
+  background:transparent !important;
+  border:0 !important;
+  padding:0 !important;
+}
+
+
+/* =============================================================================
+   2. A FOLHA
+   ============================================================================= */
+.eex-console{
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+.eex-console__row{
+  display:flex !important;
+  flex-wrap:wrap;
+  align-items:stretch;
+  margin:0 !important;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  overflow:hidden;
+  box-shadow:none;
+  transition:box-shadow var(--eex-d2) var(--eex-ease),
+             border-color var(--eex-d2) var(--eex-ease);
+}
+.eex-console__row:hover{ box-shadow:var(--eex-e2); }
+.eex-console__row:focus-within{ border-color:var(--eex-stone-2); box-shadow:var(--eex-e2); }
+
+/* Celula: coluna do Bootstrap neutralizada. Sem float, sem largura em %, sem
+   padding lateral do grid. A divisao e feita por um filete de 1px. */
+.eex-console__cell{
+  position:relative;
+  display:flex !important;
+  flex-direction:column;
+  justify-content:center;
+  gap:6px;
+  float:none !important;
+  width:auto !important;
+  min-width:0;
+  margin:0 !important;
+  padding:15px var(--eex-s5) !important;
+  border-right:1px solid var(--eex-hairline-2);
+  transition:background var(--eex-d2) var(--eex-ease);
+}
+.eex-console__cell:hover{ background:var(--eex-canvas-3); }
+.eex-console__cell--dates{ flex:1 1 260px; }
+.eex-console__cell--guests{ flex:1 1 180px; }
+.eex-console__cell--other{ flex:1 1 160px; }
+.eex-console__cell--cta{
+  flex:0 0 auto;
+  padding:0 !important;
+  border-right:0;
+  background:transparent !important;
+}
+.eex-console__cell:last-of-type{ border-right:0; }
+
+.eex-console__label{
+  display:block;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+.eex-console__cell:focus-within .eex-console__label{ color:var(--eex-ink); }
+
+
+/* =============================================================================
+   3. CAMPOS
+   O icone em caixa colorida sai. O input perde caixa, borda e altura fixa:
+   ele passa a ser apenas texto dentro da celula.
+   ============================================================================= */
+.eex-console .input-group{
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  border:0 !important;
+  border-collapse:separate;
+}
+.eex-console .input-group-addon{ display:none !important; }
+
+.eex-console .form-control,
+.eex-console input.form-control,
+.eex-console input#datesRange{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  outline:none !important;
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.3 var(--eex-font-ui) !important;
+  color:var(--eex-ink) !important;
+  text-overflow:ellipsis;
+}
+.eex-console .form-control::placeholder{ color:var(--eex-stone-2) !important; }
+.eex-console .form-control:focus{ box-shadow:none !important; border:0 !important; }
+
+/* Campo de datas vazio: mostramos o texto original da plataforma como dica,
+   guardado por js/search.js em data-eex-placeholder. */
+.eex-console input#datesRange:placeholder-shown::before{ content:none; }
+.eex-console__cell--dates input:not(:focus):placeholder-shown + .eex-console__hint{ display:block; }
+
+
+/* =============================================================================
+   4. HOSPEDES (bootstrap-select da plataforma)
+   ============================================================================= */
+.eex-console .bootstrap-select{
+  width:100% !important;
+  margin:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+.eex-console .bootstrap-select > .dropdown-toggle,
+.eex-console .bootstrap-select button.dropdown-toggle{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--eex-s2);
+  width:100% !important;
+  height:auto !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  outline:none !important;
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.3 var(--eex-font-ui) !important;
+  color:var(--eex-ink) !important;
+  text-align:left;
+}
+.eex-console .bootstrap-select .filter-option{
+  position:static !important;
+  padding:0 !important;
+  color:var(--eex-ink) !important;
+}
+.eex-console .bootstrap-select .filter-option-inner,
+.eex-console .bootstrap-select .filter-option-inner-inner{
+  color:var(--eex-ink) !important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.eex-console .bootstrap-select.bs-placeholder .filter-option-inner-inner{ color:var(--eex-stone-2) !important; }
+
+/* O caret do Bootstrap 3 e um triangulo solido. Trocamos por um chevron
+   desenhado em borda, que gira 180 graus quando o menu abre. */
+.eex-console .bootstrap-select .bs-caret{ display:flex !important; align-items:center; }
+.eex-console .bootstrap-select .bs-caret .caret{
+  width:8px; height:8px;
+  margin:0 !important;
+  border:0 !important;
+  border-right:1.5px solid var(--eex-stone);
+  border-bottom:1.5px solid var(--eex-stone);
+  transform:rotate(45deg) translateY(-2px);
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-console .bootstrap-select.open .bs-caret .caret,
+.eex-console .bootstrap-select.show .bs-caret .caret{
+  transform:rotate(225deg) translateY(-2px);
+}
+
+.eex-console .bootstrap-select .dropdown-menu{
+  min-width:220px;
+  margin-top:var(--eex-s3);
+  padding:var(--eex-s2) 0;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  box-shadow:var(--eex-e3);
+}
+.eex-console .bootstrap-select .dropdown-menu li a{
+  padding:11px var(--eex-s4) !important;
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.2 var(--eex-font-ui) !important;
+  color:var(--eex-stone) !important;
+  transition:background var(--eex-d1) var(--eex-ease), color var(--eex-d1) var(--eex-ease);
+}
+.eex-console .bootstrap-select .dropdown-menu li a:hover,
+.eex-console .bootstrap-select .dropdown-menu li a:focus{
+  background:var(--eex-canvas-2) !important;
+  color:var(--eex-ink) !important;
+}
+.eex-console .bootstrap-select .dropdown-menu li.selected a{
+  background:transparent !important;
+  color:var(--eex-ink) !important;
+  font-weight:var(--eex-w-medium) !important;
+}
+.eex-console .bootstrap-select .dropdown-menu li a .check-mark{ color:var(--eex-accent) !important; }
+
+
+/* =============================================================================
+   5. ACAO
+   Mesmo botao da Hero: tinta solida, rotulo 11px em caixa alta, raio 2px,
+   elevacao so no hover.
+   ============================================================================= */
+.eex-console__cta,
+.eex-console .btn-primary{
+  display:inline-flex !important;
+  flex-direction:row-reverse;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100% !important;
+  height:100% !important;
+  min-height:56px;
+  margin:0 !important;
+  padding:18px var(--eex-s7) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:var(--eex-ink) !important;
+  color:var(--eex-text-invert) !important;
+  font:var(--eex-w-semi) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+  white-space:nowrap;
+  box-shadow:none !important;
+  transition:background var(--eex-d2) var(--eex-ease);
+}
+.eex-console__cta:hover,
+.eex-console .btn-primary:hover,
+.eex-console__cta:focus-visible{ background:var(--eex-ink-2) !important; }
+.eex-console__cta .fa{
+  font-size:12px;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-console__cta:hover .fa{ transform:translateX(2px); }
+
+
+/* =============================================================================
+   6. CALENDARIO
+   Painel flutuante da plataforma. Substitui a regra do bloco legacy linha 57
+   (raio 16px + sombra dura) pela folha do sistema.
+   ============================================================================= */
+.hotel-datepicker,
+[class*="search-block"],
+[class*="homepage/search"]{
+  background:var(--eex-surface) !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-sm) !important;
+  box-shadow:var(--eex-e3) !important;
+  padding:var(--eex-s5) !important;
+}
+.hotel-datepicker__month-name{
+  font-family:var(--eex-font-display) !important;
+  font-weight:var(--eex-w-regular) !important;
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink) !important;
+}
+.hotel-datepicker__month-day--valid:hover{ background:var(--eex-canvas-2) !important; }
+.hotel-datepicker__month-day--selected,
+.hotel-datepicker__month-day--first-day-selected,
+.hotel-datepicker__month-day--last-day-selected{
+  background:var(--eex-ink) !important;
+  color:var(--eex-text-invert) !important;
+}
+.hotel-datepicker__month-day--selected-range{
+  background:var(--eex-accent-tint) !important;
+  color:var(--eex-ink) !important;
+}
+
+
+/* =============================================================================
+   7. FILTROS APLICADOS E "MAIS FILTROS"
+   ============================================================================= */
+#tagplace .label,
+#tagplace .label-default{
+  display:inline-flex !important;
+  align-items:center;
+  gap:7px;
+  padding:6px 11px !important;
+  margin:0 var(--eex-s2) var(--eex-s2) 0 !important;
+  background:var(--eex-canvas-2) !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-pill) !important;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--eex-stone) !important;
+  transition:border-color var(--eex-d2) var(--eex-ease), color var(--eex-d2) var(--eex-ease);
+}
+#tagplace .label:hover{ border-color:var(--eex-ink) !important; color:var(--eex-ink) !important; }
+#tagplace .label .fa-times{ font-size:9px; opacity:.55; }
+#tagplace .label:hover .fa-times{ opacity:1; }
+
+a.btn-filter{
+  display:inline-flex !important;
+  align-items:center;
+  gap:8px;
+  padding:8px 0 !important;
+  background:none !important;
+  border:0 !important;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-ink) !important;
+  text-decoration:none !important;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+a.btn-filter:hover{ color:var(--eex-accent) !important; }
+a.btn-filter .caret{
+  width:7px; height:7px;
+  margin:0 !important;
+  border:0 !important;
+  border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translateY(-2px);
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+a.btn-filter[aria-expanded="true"] .caret{ transform:rotate(225deg) translateY(-2px); }
+
+/* Painel de filtros avancados que abre em acordeao */
+#moreFilters .h5,
+#moreFilters .h4{
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2) !important;
+  margin-bottom:var(--eex-s3) !important;
+}
+#moreFilters .form-control{
+  height:auto !important;
+  padding:11px var(--eex-s4) !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-sm) !important;
+  background:var(--eex-surface) !important;
+  box-shadow:none !important;
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.2 var(--eex-font-ui) !important;
+  color:var(--eex-ink) !important;
+}
+#moreFilters .form-control:focus{ border-color:var(--eex-ink) !important; box-shadow:none !important; }
+#moreFilters .input-group-addon{
+  background:var(--eex-canvas-2) !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-sm) !important;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2) !important;
+}
+
+
+/* =============================================================================
+   8. CONTAGEM DE RESULTADOS E ORDENACAO
+   ============================================================================= */
+.result-count .result-counts-container,
+.result-count .h4{
+  font-family:var(--eex-font-display) !important;
+  font-weight:var(--eex-w-regular) !important;
+  font-size:var(--eex-fs-h3) !important;
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink) !important;
+  margin:0 !important;
+}
+.result-count .bootstrap-select.form-control,
+.result-count .bootstrap-select > .dropdown-toggle{
+  height:auto !important;
+  padding:10px var(--eex-s4) !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-sm) !important;
+  background:var(--eex-surface) !important;
+  box-shadow:none !important;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui) !important;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-ink) !important;
+}
+.result-count .bootstrap-select > .dropdown-toggle{ border:0 !important; padding:0 !important; }
+.result-count .bootstrap-select .dropdown-menu{
+  padding:var(--eex-s2) 0;
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  box-shadow:var(--eex-e3);
+}
+hr.hr12, hr.hr5{
+  border:0 !important;
+  height:1px !important;
+  background:var(--eex-hairline) !important;
+  margin-block:var(--eex-s6) !important;
+}
+
+
+/* =============================================================================
+   9. FOLHA DE FILTROS (mobile)
+   Reescrita completa do bloco que vivia em legacy.css (linha 829). A mecanica
+   e a estrutura de classes sao as mesmas, para nao mexer em js/app.js. O que
+   muda e a pele: raio de 20px vira 12px, cinzas frios viram os cinzas quentes
+   do sistema, pilulas ganham filete de 1px e a acao usa a tinta solida.
+   ============================================================================= */
+#ee-filter-row{
+  display:none;
+  align-items:center;
+  gap:var(--eex-s3);
+  padding:var(--eex-s3) 0 var(--eex-s1);
+  flex-wrap:wrap;
+}
+
+#ee-filter-btn{
+  display:none;
+  align-items:center;
+  gap:var(--eex-s2);
+  padding:11px var(--eex-s5);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-ink);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:border-color var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+#ee-filter-btn:hover{ border-color:var(--eex-ink); box-shadow:var(--eex-e2); }
+#ee-filter-btn svg{ width:15px; height:15px; stroke:currentColor; }
+#ee-filter-btn .ee-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:18px; height:18px;
+  padding-inline:5px;
+  background:var(--eex-ink);
+  color:var(--eex-text-invert);
+  border-radius:var(--eex-r-pill);
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+}
+
+#ee-filter-overlay{
+  position:fixed;
+  inset:0;
+  z-index:var(--eex-z-overlay);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(20,18,16,.42);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+
+#ee-filter-modal{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-width:620px;
+  max-height:90vh;
+  overflow:hidden;
+  background:var(--eex-surface);
+  border-radius:var(--eex-r-lg) var(--eex-r-lg) 0 0;
+  box-shadow:0 -2px 4px rgba(20,18,16,.05), 0 -28px 60px -22px rgba(20,18,16,.28);
+}
+@media (min-width:640px){
+  #ee-filter-overlay{ align-items:center; }
+  #ee-filter-modal{ border-radius:var(--eex-r-lg); max-height:82vh; }
+}
+
+#ee-filter-modal .fmod-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--eex-s4);
+  padding:var(--eex-s5);
+  border-bottom:1px solid var(--eex-hairline);
+}
+#ee-filter-modal .fmod-header h3{
+  margin:0;
+  font-family:var(--eex-font-display);
+  font-weight:var(--eex-w-regular);
+  font-size:var(--eex-fs-h3);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+}
+#ee-filter-modal .fmod-close{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px; height:36px;
+  background:none;
+  border:0;
+  border-radius:var(--eex-r-sm);
+  font-size:18px;
+  line-height:1;
+  color:var(--eex-stone);
+  cursor:pointer;
+  transition:background var(--eex-d1) var(--eex-ease), color var(--eex-d1) var(--eex-ease);
+}
+#ee-filter-modal .fmod-close:hover{ background:var(--eex-canvas-2); color:var(--eex-ink); }
+
+#ee-filter-modal .fmod-body{
+  flex:1 1 auto;
+  overflow-y:auto;
+  padding:var(--eex-s5);
+  -webkit-overflow-scrolling:touch;
+}
+#ee-filter-modal .fmod-section{
+  padding-bottom:var(--eex-s5);
+  margin-bottom:var(--eex-s5);
+  border-bottom:1px solid var(--eex-hairline-2);
+}
+#ee-filter-modal .fmod-section:last-child{
+  padding-bottom:0;
+  margin-bottom:0;
+  border-bottom:0;
+}
+#ee-filter-modal .fmod-section-title{
+  margin:0 0 var(--eex-s4);
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+}
+
+/* --- Preco ---------------------------------------------------------------- */
+.ee-price-inputs{ display:flex; align-items:flex-end; gap:var(--eex-s3); }
+.ee-price-field{ flex:1 1 0; display:flex; flex-direction:column; gap:6px; min-width:0; }
+.ee-price-field label{
+  margin:0;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+}
+.ee-price-field input{
+  width:100%;
+  padding:12px var(--eex-s4);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.2 var(--eex-font-ui);
+  color:var(--eex-ink);
+  font-variant-numeric:tabular-nums;
+  transition:border-color var(--eex-d2) var(--eex-ease);
+}
+.ee-price-field input:focus{ border-color:var(--eex-ink); outline:none; }
+.ee-price-divider{ padding-bottom:14px; color:var(--eex-stone-2); }
+
+/* --- Contadores ----------------------------------------------------------- */
+.ee-counter-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--eex-s4);
+  padding-block:var(--eex-s3);
+  border-bottom:1px solid var(--eex-hairline-2);
+}
+.ee-counter-row:last-child{ border-bottom:0; }
+.ee-counter-label{
+  font:var(--eex-w-regular) var(--eex-fs-field)/1.3 var(--eex-font-ui);
+  color:var(--eex-ink);
+}
+.ee-counter-ctrl{ display:flex; align-items:center; gap:var(--eex-s3); }
+.ee-counter-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:34px; height:34px;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  font-size:16px;
+  line-height:1;
+  color:var(--eex-ink);
+  cursor:pointer;
+  transition:border-color var(--eex-d2) var(--eex-ease), color var(--eex-d2) var(--eex-ease);
+}
+.ee-counter-btn:hover:not(:disabled){ border-color:var(--eex-ink); }
+.ee-counter-btn:disabled{ opacity:.32; cursor:default; }
+.ee-counter-val{
+  min-width:26px;
+  text-align:center;
+  font:var(--eex-w-medium) var(--eex-fs-field)/1 var(--eex-font-ui);
+  color:var(--eex-ink);
+  font-variant-numeric:tabular-nums;
+}
+
+/* --- Comodidades ---------------------------------------------------------- */
+.ee-amenity-grid{ display:flex; flex-wrap:wrap; gap:var(--eex-s2); }
+.ee-amenity-chip{
+  padding:9px var(--eex-s4);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--eex-stone);
+  cursor:pointer;
+  transition:border-color var(--eex-d2) var(--eex-ease),
+             background var(--eex-d2) var(--eex-ease),
+             color var(--eex-d2) var(--eex-ease);
+}
+.ee-amenity-chip:hover{ border-color:var(--eex-stone-2); color:var(--eex-ink); }
+.ee-amenity-chip.active{
+  background:var(--eex-ink);
+  border-color:var(--eex-ink);
+  color:var(--eex-text-invert);
+}
+
+/* --- Rodape --------------------------------------------------------------- */
+#ee-filter-modal .fmod-footer{
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s3);
+  padding:var(--eex-s5);
+  border-top:1px solid var(--eex-hairline);
+  background:var(--eex-canvas);
+}
+.fmod-btn-clear{
+  flex:0 0 auto;
+  padding:15px var(--eex-s5);
+  background:none;
+  border:0;
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone);
+  cursor:pointer;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+.fmod-btn-clear:hover{ color:var(--eex-ink); }
+.fmod-btn-apply{
+  flex:1 1 auto;
+  padding:16px var(--eex-s6);
+  background:var(--eex-ink);
+  border:0;
+  border-radius:var(--eex-r-sm);
+  font:var(--eex-w-semi) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+  color:var(--eex-text-invert);
+  cursor:pointer;
+  transition:background var(--eex-d2) var(--eex-ease);
+}
+.fmod-btn-apply:hover{ background:var(--eex-ink-2); }
+
+/* Na pagina de busca o botao de filtros substitui o link "Mais filtros". */
+.search-page-active .btn-filter{ display:none !important; }
+.search-page-active #ee-filter-row{ display:flex; }
+.search-page-active #ee-filter-btn{ display:inline-flex; }
+
+
+/* =============================================================================
+   10. RESPONSIVIDADE
+   Mobile-first: o console empilha e a acao vira um bloco de largura total,
+   exatamente como o console da Hero.
+   ============================================================================= */
+@media (max-width:767px){
+  .eex-searchband{ padding-block:var(--eex-s6) !important; }
+  .eex-console__row{ flex-direction:column; }
+  .eex-console__cell{
+    flex:1 1 auto !important;
+    border-right:0;
+    border-bottom:1px solid var(--eex-hairline-2);
+    padding:14px var(--eex-s4) !important;
+  }
+  .eex-console__cell--cta{ border-bottom:0; padding:0 !important; }
+  .eex-console__cta,
+  .eex-console .btn-primary{
+    min-height:54px;
+    padding:17px var(--eex-s5) !important;
+  }
+  .result-count .form-group{ margin-top:var(--eex-s3); }
+}
+
+
+/* =============================================================================
+   11. MOVIMENTO REDUZIDO E IMPRESSAO
+   ============================================================================= */
+@media (prefers-reduced-motion:reduce){
+  .eex-console__row,
+  .eex-console__cell,
+  .eex-console__cta,
+  #ee-filter-btn,
+  .ee-amenity-chip,
+  .ee-counter-btn,
+  .eex-console .bootstrap-select .bs-caret .caret,
+  a.btn-filter .caret{ transition:none !important; }
+}
+
+@media print{
+  .eex-searchband,
+  #ee-filter-row,
+  #ee-filter-overlay{ display:none !important; }
+}
