@@ -219,6 +219,7 @@
 .eex-tile__body{
   display:flex !important;
   flex-direction:column;
+  flex-wrap:nowrap;
   flex:1 1 auto;
   padding:var(--eex-s4) 0 0 !important;
   margin:0 !important;
@@ -227,17 +228,40 @@
 .eex-tile__body > .row{
   display:flex;
   flex-direction:column;
+  flex-wrap:nowrap;
   flex:1 1 auto;
   margin:0 !important;
 }
-.eex-tile__body > .row > [class*="col-"]{
+/* As colunas do Bootstrap chegam com flex:0 0 100%. Num container em coluna
+   isso significa "100% da ALTURA", e o conteudo do card se quebra em varias
+   colunas empilhadas. Aqui elas voltam a ser blocos simples. */
+.eex-tile__body > .row > *{
+  flex:0 0 auto !important;
   width:100% !important;
   max-width:none !important;
-  padding:0 !important;
+  padding-inline:0 !important;
   float:none !important;
 }
 
-/* 6.1 Titulo -------------------------------------------------------------- */
+/* 6.1 Bairro (sobrelinha) --------------------------------------------------
+   O bairro vinha escondido num <li> que so mostrava o icone de mapa. Ele sobe
+   para cima do titulo como sobrelinha, na mesma hierarquia que a Hero usa. */
+.eex-tile__place{
+  order:0;
+  margin:0 0 6px !important;
+  font-family:var(--eex-font-ui);
+  font-size:10px;
+  font-weight:var(--eex-w-medium);
+  line-height:1.4;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+}
+.eex-tile__meta li.eex-tile__place-src{
+  display:none !important;
+}
+
+/* 6.2 Titulo -------------------------------------------------------------- */
 .eex-tile__titlewrap{ order:1; }
 .eex-tile__title{
   font-family:var(--eex-font-ui) !important;
@@ -253,7 +277,7 @@
   overflow:hidden;
 }
 
-/* 6.2 Metadados ------------------------------------------------------------
+/* 6.3 Metadados ------------------------------------------------------------
    Quartos / banheiros / hospedes viram uma unica linha de texto. Os icones do
    Font Awesome saem: sao o sinal mais template que o card tinha. */
 .eex-tile__meta{
@@ -285,7 +309,7 @@
 .eex-tile__meta li.eex-hide{
   display:none !important;
 }
-.eex-tile__meta li:not(.eex-hide):not(.eex-first)::before{
+.eex-tile__meta li:not(.eex-hide):not(.eex-first):not(.eex-tile__place-src)::before{
   content:"";
   flex:0 0 auto;
   width:3px;
@@ -296,7 +320,7 @@
   opacity:.75;
 }
 
-/* 6.3 Selo comercial -------------------------------------------------------
+/* 6.4 Selo comercial -------------------------------------------------------
    "Prioridade Comercial" com cinco estrelas cheias identicas em todos os
    cards nao informa nada ao hospede e corroi a credibilidade da pagina
    inteira. Sai do card (continua no DOM, para nao quebrar nenhuma leitura da
@@ -305,7 +329,7 @@
   display:none !important;
 }
 
-/* 6.4 Rodape: preco + CTA -------------------------------------------------- */
+/* 6.5 Rodape: preco + CTA -------------------------------------------------- */
 .eex-tile__foot{
   order:9;
   display:flex;
@@ -316,12 +340,21 @@
   padding-top:var(--eex-s4);
   border-top:1px solid var(--eex-hairline);
 }
+/* As duas colunas tambem chegam com flex:0 0 100% do Bootstrap, e .cta-details
+   ainda vem com position:absolute - juntos faziam preco e CTA se sobreporem. */
+.eex-tile__foot > *{
+  position:static !important;
+  padding-inline:0 !important;
+  float:none !important;
+  max-width:none !important;
+}
 .eex-tile__foot > .eex-tile__pricewrap{
-  flex:1 1 auto;
+  flex:1 1 auto !important;
+  width:auto !important;
   min-width:0;
 }
 .eex-tile__foot > .eex-tile__ctawrap{
-  flex:0 0 auto;
+  flex:0 0 auto !important;
   width:auto !important;
 }
 
@@ -436,6 +469,15 @@
    As setas ficam centradas na faixa da foto (nao no meio do card inteiro) e
    so aparecem quando o mouse esta na secao.
    -------------------------------------------------------------------------- */
+/* As setas nasciam numa .row de 20px logo abaixo do carrossel, entao qualquer
+   "top" em porcentagem resolvia contra 20px. cards.js move as duas para dentro
+   do .swiper-container e e ele quem passa a ser a referencia. */
+#highlights_slider .swiper-container{
+  position:relative;
+}
+#highlights_slider .eex-tile__navhost--empty{
+  display:none !important;
+}
 #highlights_slider .swiper-button-next,
 #highlights_slider .swiper-button-prev{
   top:27% !important;
