@@ -1,0 +1,533 @@
+/* =============================================================================
+   estadia-express - cards.css
+   Design System V3 - Fase 3: Cards de imovel
+
+   Escopo: o card de imovel (.appThumb) onde quer que ele apareca - carrossel
+   de destaques do hotsite (#highlights_slider) e grade de resultados da busca
+   (#resultlist). A marcacao das duas superficies e identica, entao um unico
+   modulo cobre as duas.
+
+   Direcao visual (derivada da Hero):
+   - A fotografia e o objeto. O card nao tem casca: sem fundo, sem borda, sem
+     sombra, sem "painel". O que separa um card do outro e o espaco.
+   - Hierarquia tipografica forte: titulo em Inter medium, preco em Fraunces.
+   - Hairline no lugar de sombra; movimento lento, longo e discreto.
+   - Zero iconografia decorativa: os metadados viram uma unica linha de texto
+     com bullets finos, no lugar da lista com icones do Bootstrap.
+
+   Dependencias: ds.css (tokens + primitivas .eex-card*) e cards.js (adaptador
+   que traduz a marcacao da plataforma para essas classes).
+
+   Este modulo substitui - e por isso remove de legacy.css - todo o bloco de
+   regras "div.appThumb" que vinha do head_section.
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   1. A PRATELEIRA
+   O bloco de destaques do hotsite chegava com um bege forte (rgb(206,171,148))
+   que brigava com toda foto. O wrapper que pinta esse fundo tem ID gerado pela
+   plataforma e ele MUDA a cada publicacao, entao o alvo aqui e estrutural:
+   o primeiro filho de #highlights_slider.
+   -------------------------------------------------------------------------- */
+#highlights_slider,
+#highlights_slider > div{
+  background:var(--eex-canvas) !important;
+}
+
+/* A calha da plataforma e a do Bootstrap (1140px). A do Design System e
+   1280px + gutter, a mesma que alinha a marca do header com o titulo da Hero. */
+#highlights_slider > div > .container{
+  width:100% !important;
+  max-width:calc(var(--eex-maxw) + var(--eex-gutter) * 2) !important;
+  margin-inline:auto !important;
+  padding-inline:var(--eex-gutter) !important;
+}
+#highlights_slider .container .container{
+  width:100% !important;
+  max-width:none !important;
+  padding-inline:0 !important;
+}
+#highlights_slider .py-5{
+  padding-block:var(--eex-section-y) !important;
+}
+
+/* -----------------------------------------------------------------------------
+   2. A GRADE DA BUSCA
+   Na pagina de resultados os cards vivem numa .row do Bootstrap. O respiro
+   entre eles passa a ser o do Design System.
+   -------------------------------------------------------------------------- */
+#resultlist{
+  margin-inline:-12px !important;
+}
+#resultlist > .eex-tile{
+  padding-inline:12px !important;
+  margin-bottom:var(--eex-s7) !important;
+}
+
+/* -----------------------------------------------------------------------------
+   3. O CARTAO
+   Tudo que era "painel" desaparece. A casca da plataforma continua no DOM,
+   apenas deixa de pintar qualquer coisa.
+   -------------------------------------------------------------------------- */
+.eex-tile{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  height:auto;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  overflow:visible !important;
+  transform:none !important;
+  transition:none !important;
+}
+.eex-tile:hover{
+  transform:none !important;
+  box-shadow:none !important;
+}
+.eex-tile__panel{
+  display:flex !important;
+  flex-direction:column;
+  height:100%;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* -----------------------------------------------------------------------------
+   4. A MIDIA
+   A foto e carregada pela plataforma como background-image (lazy, via
+   data-src). Por isso o zoom acontece na propria ancora e o recorte fica no
+   wrapper - que tambem passa a ser quem define a proporcao.
+   -------------------------------------------------------------------------- */
+.eex-tile__mediawrap{
+  position:relative;
+  display:block;
+  aspect-ratio:3 / 2;
+  border-radius:var(--eex-r-md);
+  overflow:hidden;
+  background:var(--eex-hairline);
+  padding:0 !important;
+  margin:0 !important;
+}
+.eex-tile__media{
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  width:auto !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  transform:scale(1);
+  transform-origin:center center;
+  transition:transform var(--eex-d4) var(--eex-ease-out);
+}
+.eex-tile:hover .eex-tile__media,
+.eex-tile:focus-within .eex-tile__media{
+  transform:scale(1.045);
+}
+
+/* Aro interno de 1px: impede que fotos claras vazem para dentro do canvas
+   sem precisar de borda visivel. */
+.eex-tile__mediawrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(20,18,16,.07);
+  pointer-events:none;
+  z-index:2;
+}
+
+/* -----------------------------------------------------------------------------
+   5. ACOES SOBRE A MIDIA
+   Favoritar / compartilhar. A plataforma so exibe alguns desses botoes, por
+   isso nenhuma regra aqui mexe em "display": quem esta oculto continua oculto.
+   -------------------------------------------------------------------------- */
+.eex-tile__actions{
+  position:absolute !important;
+  top:var(--eex-s3) !important;
+  right:var(--eex-s3) !important;
+  bottom:auto !important;
+  left:auto !important;
+  width:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s2);
+  z-index:3;
+  opacity:0;
+  transform:translateY(-4px);
+  transition:opacity var(--eex-d2) var(--eex-ease),
+             transform var(--eex-d2) var(--eex-ease);
+}
+.eex-tile:hover .eex-tile__actions,
+.eex-tile:focus-within .eex-tile__actions{
+  opacity:1;
+  transform:none;
+}
+.eex-tile__actions .btn-card{
+  float:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  width:34px !important;
+  height:34px !important;
+  line-height:34px !important;
+  text-align:center;
+  border:0 !important;
+  border-radius:var(--eex-r-pill) !important;
+  background:rgba(255,255,255,.94) !important;
+  color:var(--eex-ink) !important;
+  box-shadow:var(--eex-e1);
+  transition:background var(--eex-d1) var(--eex-ease),
+             transform var(--eex-d1) var(--eex-ease);
+}
+.eex-tile__actions .btn-card:hover{
+  background:#FFFFFF !important;
+  transform:translateY(-1px);
+}
+.eex-tile__actions .btn-card .fa,
+.eex-tile__actions .btn-card .fa-2x{
+  font-size:13px !important;
+  line-height:34px !important;
+  vertical-align:top !important;
+  color:inherit !important;
+}
+
+/* Em telas sem hover as acoes precisam estar sempre visiveis. */
+@media (hover:none){
+  .eex-tile__actions{ opacity:1; transform:none; }
+}
+
+/* -----------------------------------------------------------------------------
+   6. O CORPO
+   As colunas do Bootstrap viram uma pilha simples. O rodape (preco + CTA) e
+   empurrado para baixo para que cards de titulos com alturas diferentes
+   terminem alinhados.
+   -------------------------------------------------------------------------- */
+.eex-tile__body{
+  display:flex !important;
+  flex-direction:column;
+  flex:1 1 auto;
+  padding:var(--eex-s4) 0 0 !important;
+  margin:0 !important;
+  background:transparent !important;
+}
+.eex-tile__body > .row{
+  display:flex;
+  flex-direction:column;
+  flex:1 1 auto;
+  margin:0 !important;
+}
+.eex-tile__body > .row > [class*="col-"]{
+  width:100% !important;
+  max-width:none !important;
+  padding:0 !important;
+  float:none !important;
+}
+
+/* 6.1 Titulo -------------------------------------------------------------- */
+.eex-tile__titlewrap{ order:1; }
+.eex-tile__title{
+  font-family:var(--eex-font-ui) !important;
+  font-weight:var(--eex-w-medium) !important;
+  font-size:17px !important;
+  line-height:1.35 !important;
+  letter-spacing:-.006em !important;
+  color:var(--eex-ink) !important;
+  margin:0 !important;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* 6.2 Metadados ------------------------------------------------------------
+   Quartos / banheiros / hospedes viram uma unica linha de texto. Os icones do
+   Font Awesome saem: sao o sinal mais template que o card tinha. */
+.eex-tile__meta{
+  order:2;
+  margin-top:var(--eex-s2) !important;
+}
+.eex-tile__meta ul{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:0 !important;
+  padding:0 !important;
+  list-style:none;
+}
+.eex-tile__meta li{
+  display:inline-flex;
+  align-items:center;
+  margin:0 !important;
+  padding:0 !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:13px !important;
+  font-weight:var(--eex-w-regular) !important;
+  line-height:1.5 !important;
+  color:var(--eex-stone) !important;
+}
+.eex-tile__meta li .fa{
+  display:none !important;
+}
+.eex-tile__meta li.eex-hide{
+  display:none !important;
+}
+.eex-tile__meta li:not(.eex-hide):not(.eex-first)::before{
+  content:"";
+  flex:0 0 auto;
+  width:3px;
+  height:3px;
+  margin:0 var(--eex-s2);
+  border-radius:50%;
+  background:var(--eex-stone-2);
+  opacity:.75;
+}
+
+/* 6.3 Selo comercial -------------------------------------------------------
+   "Prioridade Comercial" com cinco estrelas cheias identicas em todos os
+   cards nao informa nada ao hospede e corroi a credibilidade da pagina
+   inteira. Sai do card (continua no DOM, para nao quebrar nenhuma leitura da
+   plataforma). Para reverter, basta apagar esta regra. */
+.eex-tile__rating{
+  display:none !important;
+}
+
+/* 6.4 Rodape: preco + CTA -------------------------------------------------- */
+.eex-tile__foot{
+  order:9;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:var(--eex-s4);
+  margin-top:auto;
+  padding-top:var(--eex-s4);
+  border-top:1px solid var(--eex-hairline);
+}
+.eex-tile__foot > .eex-tile__pricewrap{
+  flex:1 1 auto;
+  min-width:0;
+}
+.eex-tile__foot > .eex-tile__ctawrap{
+  flex:0 0 auto;
+  width:auto !important;
+}
+
+.eex-tile__pricewrap .h5,
+.eex-tile__pricewrap .h4,
+.eex-tile__pricewrap p{
+  margin:0 !important;
+  font-size:inherit !important;
+  line-height:inherit !important;
+}
+.eex-tile__price{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.eex-tile__price-prefix{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:10px;
+  font-weight:var(--eex-w-medium);
+  line-height:1.45;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone-2);
+}
+.eex-tile__price-line{
+  display:flex;
+  align-items:baseline;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.eex-tile__price-value{
+  font-family:var(--eex-font-display);
+  font-size:21px;
+  font-weight:var(--eex-w-regular);
+  line-height:1.1;
+  letter-spacing:var(--eex-track-display);
+  color:var(--eex-ink);
+  font-variant-numeric:tabular-nums;
+}
+.eex-tile__price-unit{
+  font-family:var(--eex-font-ui);
+  font-size:12px;
+  font-weight:var(--eex-w-regular);
+  line-height:1.4;
+  color:var(--eex-stone);
+}
+
+/* O botao solido some. No lugar dele, o mesmo link com sublinhado que a Hero
+   e o header usam. */
+.eex-tile__cta{
+  position:relative;
+  z-index:2;
+  display:inline-flex !important;
+  align-items:center;
+  gap:var(--eex-s2);
+  width:auto !important;
+  padding:0 0 4px !important;
+  margin:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:12px !important;
+  font-weight:var(--eex-w-medium) !important;
+  line-height:1 !important;
+  letter-spacing:.14em !important;
+  text-transform:uppercase;
+  white-space:nowrap;
+  color:var(--eex-ink) !important;
+  text-decoration:none !important;
+}
+.eex-tile__cta::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:left center;
+  transition:transform var(--eex-d2) var(--eex-ease);
+}
+.eex-tile:hover .eex-tile__cta::after,
+.eex-tile__cta:hover::after,
+.eex-tile__cta:focus-visible::after{
+  transform:scaleX(1);
+}
+
+/* -----------------------------------------------------------------------------
+   7. AREA CLICAVEL
+   Link invisivel cobrindo o card inteiro, para que o alvo seja o card e nao
+   so a foto. Fica ABAIXO das acoes e do CTA no eixo z, entao nao rouba nenhum
+   clique deles. E aria-hidden porque o destino ja esta acessivel pela foto e
+   pelo link "Detalhes".
+   -------------------------------------------------------------------------- */
+.eex-tile__overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:block;
+  background:transparent;
+  border-radius:var(--eex-r-md);
+  font-size:0;
+  text-decoration:none;
+}
+
+/* -----------------------------------------------------------------------------
+   8. NAVEGACAO DO CARROSSEL
+   As setas ficam centradas na faixa da foto (nao no meio do card inteiro) e
+   so aparecem quando o mouse esta na secao.
+   -------------------------------------------------------------------------- */
+#highlights_slider .swiper-button-next,
+#highlights_slider .swiper-button-prev{
+  top:27% !important;
+  margin-top:0 !important;
+  transform:translateY(-50%);
+  width:44px !important;
+  height:44px !important;
+  border-radius:var(--eex-r-pill);
+  background:rgba(255,255,255,.94);
+  box-shadow:var(--eex-e2);
+  color:var(--eex-ink) !important;
+  opacity:0;
+  transition:opacity var(--eex-d2) var(--eex-ease),
+             background var(--eex-d1) var(--eex-ease),
+             transform var(--eex-d1) var(--eex-ease);
+}
+#highlights_slider:hover .swiper-button-next,
+#highlights_slider:hover .swiper-button-prev,
+#highlights_slider .swiper-button-next:focus-visible,
+#highlights_slider .swiper-button-prev:focus-visible{
+  opacity:1;
+}
+#highlights_slider .swiper-button-next:hover,
+#highlights_slider .swiper-button-prev:hover{
+  background:#FFFFFF;
+  transform:translateY(-50%) scale(1.04);
+}
+#highlights_slider .swiper-button-next::after,
+#highlights_slider .swiper-button-prev::after{
+  font-size:13px !important;
+  font-weight:600;
+}
+#highlights_slider .swiper-navigation-icon{
+  width:13px !important;
+  height:13px !important;
+}
+#highlights_slider .swiper-button-prev{ left:10px !important; }
+#highlights_slider .swiper-button-next{ right:10px !important; }
+#highlights_slider .swiper-button-disabled{ opacity:0 !important; }
+
+/* -----------------------------------------------------------------------------
+   9. RESPONSIVIDADE
+   -------------------------------------------------------------------------- */
+@media (max-width:991px){
+  .eex-tile__title{ font-size:16px !important; }
+  .eex-tile__price-value{ font-size:20px; }
+}
+
+@media (max-width:767px){
+  #resultlist > .eex-tile{
+    margin-bottom:var(--eex-s6) !important;
+  }
+  .eex-tile__body{ padding-top:var(--eex-s3) !important; }
+  .eex-tile__foot{
+    align-items:center;
+    padding-top:var(--eex-s3);
+    gap:var(--eex-s3);
+  }
+  .eex-tile__meta li{ font-size:12.5px !important; }
+  /* Sem hover, as setas do carrossel sao inuteis: o gesto e o arraste. */
+  #highlights_slider .swiper-button-next,
+  #highlights_slider .swiper-button-prev{ display:none !important; }
+}
+
+/* -----------------------------------------------------------------------------
+   10. ACESSIBILIDADE, MOVIMENTO E IMPRESSAO
+   -------------------------------------------------------------------------- */
+.eex-tile__cta:focus-visible,
+.eex-tile__actions .btn-card:focus-visible,
+.eex-tile__media:focus-visible{
+  outline:2px solid var(--eex-focus);
+  outline-offset:3px;
+  border-radius:var(--eex-r-sm);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .eex-tile__media,
+  .eex-tile__actions,
+  .eex-tile__cta::after,
+  #highlights_slider .swiper-button-next,
+  #highlights_slider .swiper-button-prev{
+    transition:none !important;
+  }
+  .eex-tile:hover .eex-tile__media,
+  .eex-tile:focus-within .eex-tile__media{ transform:none; }
+  .eex-tile__actions{ opacity:1; transform:none; }
+}
+
+@media print{
+  .eex-tile__actions,
+  .eex-tile__overlay,
+  #highlights_slider .swiper-button-next,
+  #highlights_slider .swiper-button-prev{ display:none !important; }
+  .eex-tile__mediawrap::after{ display:none; }
+}
