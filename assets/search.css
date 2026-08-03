@@ -118,7 +118,7 @@
 
 .eex-console__label{
   display:block;
-  font:var(--eex-w-medium) var(--eex-fs-micro)/1 var(--eex-font-ui);
+  font:var(--eex-w-medium) var(--eex-fs-micro)/1.45 var(--eex-font-ui);
   letter-spacing:var(--eex-track-micro);
   text-transform:uppercase;
   color:var(--eex-stone-2);
