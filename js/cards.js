@@ -115,6 +115,11 @@
     add(card.querySelector('.card-title .h4, .card-title h4, .card-title .h3, .card-title h3'),
         'eex-card__title eex-tile__title');
     add(card.querySelector('.card-details'), 'eex-card__meta eex-tile__meta');
+
+    var marker = card.querySelector('.card-details li .fa-map-marker');
+    if (marker && marker.parentNode) {
+      add(marker.parentNode, 'eex-tile__place-src');
+    }
     add(card.querySelector('.apt-rating'), 'eex-tile__rating');
 
     var priceWrap = card.querySelector('.card-price');
@@ -162,11 +167,33 @@
     }
   }
 
+  /* O bairro sai da lista de metadados e vira sobrelinha acima do titulo. */
+  function place(card) {
+    var src = card.querySelector('.eex-tile__place-src');
+    if (!src) { return; }
+    var txt = flatten(src.textContent);
+    var eyebrow = card.querySelector('.eex-tile__place');
+    if (!txt) {
+      if (eyebrow && eyebrow.parentNode) { eyebrow.parentNode.removeChild(eyebrow); }
+      return;
+    }
+    if (!eyebrow) {
+      var row = card.querySelector('.eex-tile__body > .row');
+      var titleWrap = card.querySelector('.eex-tile__titlewrap');
+      if (!row || !titleWrap) { return; }
+      eyebrow = document.createElement('div');
+      eyebrow.className = 'eex-tile__place';
+      row.insertBefore(eyebrow, titleWrap);
+    }
+    if (eyebrow.textContent !== txt) { eyebrow.textContent = txt; }
+  }
+
   function meta(card) {
     var items = card.querySelectorAll('.eex-tile__meta li');
     var first = true;
     for (var i = 0; i < items.length; i++) {
       var li = items[i];
+      if (li.classList.contains('eex-tile__place-src')) { continue; }
       li.classList.remove('eex-first');
       if (!flatten(li.textContent)) {
         li.classList.add('eex-hide');
@@ -261,6 +288,21 @@
       sw.params.breakpoints = breakpoints;
       if (typeof sw.setBreakpoint === 'function') { sw.setBreakpoint(); }
       sw.update();
+
+      /* As setas nasciam numa linha de 20px depois do carrossel, o que tornava
+         impossivel alinha-las com a faixa da foto. Vao para dentro do proprio
+         container (os handlers do Swiper acompanham o no). */
+      var nav = [
+        document.querySelector('#highlights_slider .swiper-button-prev'),
+        document.querySelector('#highlights_slider .swiper-button-next')
+      ];
+      var host = nav[0] ? nav[0].parentNode : null;
+      for (var n = 0; n < nav.length; n++) {
+        if (nav[n] && nav[n].parentNode !== el) { el.appendChild(nav[n]); }
+      }
+      if (host && host !== el && !host.children.length) {
+        host.className += ' eex-tile__navhost--empty';
+      }
     } catch (e) {
       el.removeAttribute('data-eex-slider');
     }
@@ -276,6 +318,7 @@
       var cards = document.querySelectorAll(SCOPE);
       for (var i = 0; i < cards.length; i++) {
         structure(cards[i]);
+        place(cards[i]);
         meta(cards[i]);
         price(cards[i]);
       }
