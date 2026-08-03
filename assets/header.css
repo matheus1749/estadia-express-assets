@@ -215,6 +215,17 @@ header#header .dropdown-menu > li > a:focus-visible{
 
 /* -----------------------------------------------------------------------------
    7. MOBILE
+   -----------------------------------------------------------------------------
+   A plataforma entrega o menu como um painel fixo azul-marinho de 301px com
+   texto branco, e forca essa cor por especificidade de ID. Isso esta fora da
+   paleta do produto. Reaproveitamos a mecanica (right negativo -> .open) e
+   trocamos apenas a pele: painel bone, tinta ink, filetes de 1px.
+
+   Largura e posicao fechada sao sempre sobrescritas EM PAR: se mexermos na
+   largura sem mexer no right negativo, o painel vaza na borda direita.
+
+   Todas as regras do painel vivem dentro de (max-width:767px), exatamente o
+   mesmo ponto de quebra usado pela plataforma para torna-lo position:fixed.
    -------------------------------------------------------------------------- */
 header#header .mobile-menu-toggle{
   display:inline-flex;
@@ -226,37 +237,121 @@ header#header .mobile-menu-toggle{
 }
 header#header .mobile-menu-toggle:hover{ opacity:.6; }
 header#header .mobile-menu-toggle .fa{ font-size:20px !important; }
-header#header .mobile-menu-toggle-close .fa{ font-size:20px !important; color:var(--eex-ink); }
-
-header#header #mobile-menu hr{
-  border:0;
-  height:1px;
-  background:var(--eex-hairline);
-  margin-block:var(--eex-s4) !important;
-}
 
 @media (max-width:767px){
+
+  /* --- 7.1 O painel ------------------------------------------------------- */
+  header#header #mobile-menu{
+    --eex-drawer-w:min(86vw, 340px);
+    width:var(--eex-drawer-w) !important;
+    right:calc(-1 * var(--eex-drawer-w)) !important;
+    padding:0 var(--eex-s5) var(--eex-s8) !important;
+    background-color:var(--eex-canvas) !important;
+    box-shadow:none !important;
+    transition:right var(--eex-d3) var(--eex-ease-out) !important;
+  }
+  header#header #mobile-menu.open{
+    right:0 !important;
+    box-shadow:var(--eex-e3) !important;
+  }
+
+  /* --- 7.2 Tinta ---------------------------------------------------------- */
+  /* A plataforma pinta tudo de branco via #id #id. Trazemos de volta ao ink. */
+  header#header #mobile-menu,
+  header#header #mobile-menu a,
+  header#header #mobile-menu span,
+  header#header #mobile-menu .fa,
+  header#header #mobile-menu .navbar-nav > li > a,
+  header#header #mobile-menu .menu-top-item a,
+  header#header #mobile-menu .mobile-menu-toggle-close .fa{
+    color:var(--eex-ink) !important;
+  }
+
+  /* --- 7.3 Cabecalho do painel -------------------------------------------- */
+  header#header #mobile-menu > .row:first-child{
+    align-items:center;
+    margin:0 !important;
+    padding-block:var(--eex-s5);
+    border-bottom:1px solid var(--eex-hairline);
+  }
+  header#header #mobile-menu > .row:first-child .fa-2x{ font-size:18px !important; }
+  header#header .mobile-menu-toggle-close{
+    padding:var(--eex-s2) !important;
+    background:none !important;
+    border:0 !important;
+    box-shadow:none !important;
+    transition:opacity var(--eex-d2) var(--eex-ease);
+  }
+  header#header .mobile-menu-toggle-close:hover{ opacity:.6; }
+
+  /* --- 7.4 Navegacao ------------------------------------------------------ */
+  /* No painel a hierarquia se inverte: a navegacao passa a ser o conteudo
+     principal da tela, entao os rotulos crescem e saem da caixa alta. */
+  header#header #mobile-menu .navbar-nav{
+    margin:var(--eex-s2) 0 0 !important;
+    padding:0 !important;
+    float:none !important;
+    width:100%;
+  }
+  header#header #mobile-menu .navbar-nav > li{
+    float:none !important;
+    border-bottom:1px solid var(--eex-hairline-2);
+  }
+  header#header #mobile-menu .navbar-nav > li:last-child{ border-bottom:0; }
+  header#header #mobile-menu .navbar-nav > li > a{
+    display:block;
+    margin:0 !important;
+    padding:var(--eex-s4) 0 !important;
+    font-size:16px !important;
+    font-weight:var(--eex-w-regular) !important;
+    letter-spacing:0 !important;
+    text-transform:none !important;
+  }
+  header#header #mobile-menu .navbar-nav > li > a::after{ display:none !important; }
+  header#header #mobile-menu .navbar-nav > li > a:active{ opacity:.55; }
+
+  /* --- 7.5 Filetes -------------------------------------------------------- */
+  header#header #mobile-menu hr{
+    border:0;
+    height:1px;
+    background:var(--eex-hairline);
+    margin-block:var(--eex-s5) !important;
+  }
+
+  /* --- 7.6 Moeda: pilulas de contorno ------------------------------------- */
+  header#header .mobile-menu-cur{
+    display:flex;
+    gap:var(--eex-s2);
+    list-style:none;
+    padding:0 !important;
+  }
+  header#header .mobile-menu-cur li{ float:none !important; margin:0 !important; }
+  header#header .mobile-menu-cur li a{
+    display:inline-flex;
+    align-items:center;
+    padding:9px 15px !important;
+    border:1px solid var(--eex-hairline);
+    border-radius:var(--eex-r-pill);
+    font-size:var(--eex-fs-micro) !important;
+    font-weight:var(--eex-w-medium) !important;
+    letter-spacing:var(--eex-track-micro) !important;
+    text-transform:uppercase;
+    transition:border-color var(--eex-d2) var(--eex-ease);
+  }
+  header#header .mobile-menu-cur li a:hover{ border-color:var(--eex-ink); }
+  header#header .mobile-menu-cur li.selected a{
+    background:var(--eex-ink) !important;
+    border-color:var(--eex-ink) !important;
+    color:var(--eex-text-invert) !important;
+  }
+  header#header .mobile-menu-cur li.selected a span{ color:var(--eex-text-invert) !important; }
+
+  /* --- 7.7 Faixa de utilitarios no topo da pagina ------------------------- */
   header#header .navbar-brand img{ max-height:38px !important; }
   header#header .menu-top{
     gap:var(--eex-s4);
     margin-top:var(--eex-s3) !important;
     margin-bottom:var(--eex-s3) !important;
-  }
-  /* No painel aberto os rotulos crescem e a hierarquia se inverte:
-     a navegacao passa a ser o conteudo principal da tela. */
-  header#header #mobile-menu .navbar-nav > li > a{
-    margin:0 !important;
-    padding:var(--eex-s3) 0 !important;
-    font-size:15px !important;
-    letter-spacing:.02em;
-    text-transform:none;
-  }
-  header#header #mobile-menu .navbar-nav > li > a::after{ display:none; }
-  header#header .mobile-menu-cur a{
-    font-size:var(--eex-fs-micro) !important;
-    letter-spacing:var(--eex-track-micro);
-    text-transform:uppercase;
-    color:var(--eex-stone-2) !important;
   }
 }
 
