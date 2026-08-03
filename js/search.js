@@ -21,25 +21,22 @@
   if (window.__eexSearch) { return; }
   window.__eexSearch = true;
 
+  /* Rotulos fixos, exatamente os mesmos da Hero, para que os dois consoles se
+     leiam como o mesmo objeto. Nao reaproveitamos o placeholder do campo: ele
+     continua no lugar, dizendo "Check-in e checkout" abaixo do rotulo "Datas",
+     que e a hierarquia que a Hero estabeleceu. */
   var LABELS = {
-    dates: 'Datas',
-    guests: 'Hospedes'
+    'pt': { dates: 'Datas', guests: 'Hóspedes' },
+    'en': { dates: 'Dates', guests: 'Guests' },
+    'es': { dates: 'Fechas', guests: 'Huéspedes' }
   };
 
-  /* Os rotulos precisam sair do proprio documento, nunca do nosso codigo, para
-     nao brigar com o idioma da pagina. Caimos no fallback so se nada existir. */
-  function readLabels(form) {
-    var out = { dates: LABELS.dates, guests: LABELS.guests };
-    var dateInput = form.querySelector('input#datesRange, input[name="dates"], .hotel-datepicker-input');
-    if (dateInput && dateInput.getAttribute('placeholder')) {
-      out.dates = dateInput.getAttribute('placeholder');
+  function readLabels() {
+    var lang = (document.documentElement.getAttribute('lang') || '').slice(0, 2).toLowerCase();
+    if (!LABELS[lang]) {
+      lang = (window.location.pathname.split('/')[1] || 'pt').toLowerCase();
     }
-    var sel = form.querySelector('select.persons, select.selectpicker');
-    if (sel) {
-      var t = sel.getAttribute('title') || sel.getAttribute('data-none-selected-text');
-      if (t) { out.guests = t; }
-    }
-    return out;
+    return LABELS[lang] || LABELS.pt;
   }
 
   function label(text) {
@@ -64,7 +61,7 @@
     form.classList.add('eex-console');
     row.classList.add('eex-console__row');
 
-    var texts = readLabels(form);
+    var texts = readLabels();
     var cells = row.children;
 
     for (var i = 0; i < cells.length; i++) {
@@ -93,13 +90,6 @@
     }
 
     if (cta) { cta.classList.add('eex-console__cta'); }
-
-    /* O rotulo do placeholder passou a viver acima do campo. Manter o mesmo
-       texto dentro dele duplicaria a informacao. */
-    if (dateInput && dateInput.getAttribute('placeholder')) {
-      dateInput.setAttribute('data-eex-placeholder', dateInput.getAttribute('placeholder'));
-      dateInput.setAttribute('placeholder', '');
-    }
 
     return true;
   }
