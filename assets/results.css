@@ -1,0 +1,152 @@
+/* ============================================================================
+   estadia-express - results.css
+   Design System V3 - Fase 4: Pagina de resultados
+
+   Escopo: a moldura da pagina de busca (body.__page_search). Os cards da lista
+   sao do cards.css; o console de busca, os chips de filtro aplicado e a pele do
+   seletor de ordenacao sao do search.css. Aqui cuidamos do que segura essas
+   pecas: o fundo, a medida, o ritmo vertical, a linha do cabecalho e o mapa.
+
+   Direcao visual (derivada da Hero):
+   - a pagina inteira sobre o canvas, nunca sobre branco;
+   - a lista alinhada a goteira do Design System e o mapa sangrando ate a borda
+     da janela: a lista rola, o mapa fica;
+   - hairline e espaco no lugar de caixa e sombra.
+
+   Dependencias: ds.css (tokens), search.css, cards.css.
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------------
+   1. A PAGINA
+   A busca era a unica pagina que continuava sobre branco puro enquanto o resto
+   do site ja vivia sobre o canvas.
+   -------------------------------------------------------------------------- */
+body.__page_search{
+  background:var(--eex-canvas) !important;
+}
+body.__page_search main#mainblock,
+body.__page_search #maincontent{
+  background:transparent !important;
+}
+
+/* ----------------------------------------------------------------------------
+   2. A MEDIDA
+   O shell e um .container-fluid: nascia colado nas duas bordas da janela, com
+   apenas os 15px do Bootstrap. A lista passa a respeitar a goteira do DS - o
+   mesmo clamp(20px,5vw,72px) da Hero e do header - e o mapa segue sangrando ate
+   a borda direita. E por isso que a goteira entra so a esquerda.
+
+   Descontamos 15px porque as colunas do Bootstrap ja trazem esse padding; sem o
+   desconto a lista assentaria 15px mais para dentro que o resto do site.
+   -------------------------------------------------------------------------- */
+body.__page_search .container-fluid.mt-5{
+  margin-top:var(--eex-s7) !important;
+  padding-left:calc(var(--eex-gutter) - 15px) !important;
+  padding-right:0 !important;
+}
+body.__page_search #search_content{
+  padding-right:var(--eex-s7) !important;
+}
+body.__page_search #search_map{
+  padding:0 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   3. O CABECALHO DE RESULTADOS
+   Eram duas colunas do Bootstrap (col-sm-10 e col-sm-2). A de 2/12 nao cabia o
+   texto "Ordenar por" e cortava o rotulo no meio. Viram uma linha flex: a
+   contagem toma o espaco que sobra e a ordenacao ocupa exatamente a sua largura.
+   O alinhamento e pela base, para a serifa da contagem e as micro caps do
+   controle assentarem na mesma linha.
+   -------------------------------------------------------------------------- */
+body.__page_search .result-count{
+  display:flex !important;
+  flex-wrap:wrap;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:var(--eex-s4);
+  margin:0 !important;
+}
+body.__page_search .result-count > div{
+  float:none !important;
+  width:auto !important;
+  max-width:none !important;
+  flex:0 0 auto !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+body.__page_search .result-count > div:first-child{
+  flex:1 1 auto !important;
+  min-width:0;
+}
+
+/* A ordenacao cabe no proprio texto. O bootstrap-select media a largura pelo
+   .form-control da plataforma, que vinha esticado e depois truncado. */
+body.__page_search .result-count .bootstrap-select,
+body.__page_search .result-count .bootstrap-select > .dropdown-toggle{
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+}
+body.__page_search .result-count .bootstrap-select .filter-option,
+body.__page_search .result-count .bootstrap-select .filter-option-inner,
+body.__page_search .result-count .bootstrap-select .filter-option-inner-inner{
+  position:static !important;
+  width:auto !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+/* ----------------------------------------------------------------------------
+   4. O MAPA
+   A plataforma escreve position:sticky, top:0 e height:calc(100vh) inline, sem
+   saber que o header do projeto tambem e sticky. O mapa escorregava por baixo
+   dele e perdia essa faixa. Reposicionamos pelo mesmo token que o header
+   publica em tempo de execucao, --eex-header-h, para os dois nunca discordarem.
+   Precisa de !important porque os valores originais sao inline.
+   -------------------------------------------------------------------------- */
+body.__page_search #search_map > div{
+  position:sticky !important;
+  top:var(--eex-header-h) !important;
+  border-left:1px solid var(--eex-hairline);
+}
+body.__page_search #search_map > div > div{
+  height:calc(100vh - var(--eex-header-h)) !important;
+}
+
+/* ----------------------------------------------------------------------------
+   5. MOBILE
+   Abaixo de md o mapa nao existe (a plataforma marca hidden-xs hidden-sm),
+   entao a lista recupera a goteira nos dois lados e o cabecalho empilha.
+   -------------------------------------------------------------------------- */
+@media (max-width:991px){
+  body.__page_search .container-fluid.mt-5{
+    padding-right:calc(var(--eex-gutter) - 15px) !important;
+  }
+  body.__page_search #search_content{
+    padding-right:15px !important;
+  }
+}
+@media (max-width:767px){
+  body.__page_search .result-count{
+    align-items:flex-start;
+    gap:var(--eex-s3);
+  }
+  body.__page_search .result-count > div,
+  body.__page_search .result-count > div:first-child{
+    flex:1 1 100% !important;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   6. IMPRESSAO
+   -------------------------------------------------------------------------- */
+@media print{
+  body.__page_search #search_map{ display:none !important; }
+  body.__page_search #search_content{
+    width:100% !important;
+    padding:0 !important;
+  }
+}
