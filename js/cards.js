@@ -298,6 +298,10 @@
           spaceBetween: 16,
           watchOverflow: true,
           breakpoints: breakpoints,
+          /* Espelha o que a plataforma configura no caminho saudavel, para que a
+             pagina se comporte igual tenha sido ela ou nos a inicializar. */
+          loop: true,
+          autoplay: { delay: 3000, disableOnInteraction: false },
           navigation: {
             nextEl: '#highlights_slider .swiper-button-next',
             prevEl: '#highlights_slider .swiper-button-prev'
