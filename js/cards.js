@@ -27,6 +27,7 @@
   window.__eexCards = true;
 
   var SCOPE = '.appThumb';
+  var CARD_CLASS = 'appThumb';
   var running = false;
   var timer = null;
 
@@ -311,6 +312,16 @@
   /* ===========================================================================
      ORQUESTRACAO
      ======================================================================== */
+  /* O console da plataforma e instrumentado (errbit/tinelic). Se o proprio log
+     estourar, a excecao escapa do catch - por isso ele fica isolado aqui. */
+  function warn(e) {
+    try {
+      if (window.console && window.console.warn) {
+        window.console.warn('[eex] cards.js:', e);
+      }
+    } catch (ignored) {}
+  }
+
   function run() {
     if (running) { return; }
     running = true;
@@ -324,40 +335,68 @@
       }
       slider();
     } catch (e) {
-      if (window.console && window.console.warn) {
-        window.console.warn('[eex] cards.js:', e);
-      }
+      warn(e);
+    } finally {
+      /* O finally e essencial: sem ele, qualquer excecao depois do try (por
+         exemplo no log) deixava running travado em true para sempre e o
+         observer passava a ignorar toda insercao seguinte - na busca, que
+         preenche #resultlist por AJAX, o card nunca chegava a ser adaptado. */
+      running = false;
     }
-    running = false;
   }
 
   function schedule() {
     if (timer) { window.clearTimeout(timer); }
-    timer = window.setTimeout(run, 120);
+    timer = window.setTimeout(function () {
+      timer = null;
+      run();
+    }, 120);
+  }
+
+  /* Só reagimos a nós que TRAZEM card. Reagir a qualquer mutacao faria o
+     observer disparar com as nossas proprias alteracoes de classe. */
+  function bringsCard(node) {
+    if (!node || node.nodeType !== 1) { return false; }
+    if (node.classList && node.classList.contains(CARD_CLASS)) { return true; }
+    return !!(node.querySelector && node.querySelector(SCOPE));
   }
 
   function observe() {
-    if (!window.MutationObserver || !document.body) { return; }
+    if (!window.MutationObserver) { return; }
+    var target = document.body || document.documentElement;
+    if (!target) { return; }
     var obs = new window.MutationObserver(function (records) {
-      if (running) { return; }
       for (var i = 0; i < records.length; i++) {
-        if (records[i].addedNodes && records[i].addedNodes.length) {
-          schedule();
-          return;
+        var added = records[i].addedNodes;
+        for (var j = 0; added && j < added.length; j++) {
+          if (bringsCard(added[j])) {
+            schedule();
+            return;
+          }
         }
       }
     });
-    obs.observe(document.body, { childList: true, subtree: true });
+    obs.observe(target, { childList: true, subtree: true });
   }
 
   function boot() {
     run();
     observe();
-    window.setTimeout(run, 400);
-    window.setTimeout(run, 1200);
-    window.setTimeout(run, 2500);
+    /* Rede de seguranca: na busca os resultados chegam por AJAX e podem levar
+       mais de 15s, em lotes (12, depois 24, depois 38). run() e idempotente,
+       entao um poll curto e limitado custa pouco e cobre o que o observer
+       eventualmente perca. */
+    var tries = 0;
+    var poll = window.setInterval(function () {
+      tries++;
+      run();
+      if (tries >= 40) { window.clearInterval(poll); }
+    }, 750);
     window.addEventListener('load', run, false);
   }
+
+  /* Exposto para diagnostico no console. */
+  window.__eexCardsRun = run;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, false);
