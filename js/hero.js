@@ -228,10 +228,23 @@
     if (!cell) { return null; }
     cell.classList.add('eex-cell');
     if (variant) { cell.classList.add(variant); }
-    if (label && !q('.eex-hero__field-label', cell)) {
-      var tag = make('span', 'eex-hero__field-label');
-      tag.textContent = label;
-      cell.insertBefore(tag, cell.firstChild);
+    if (label) {
+      /* A Hero e a referencia visual do projeto: quando ela rotula um campo, o
+         rotulo do Search Console sai de cena. Os dois modulos decoram o mesmo
+         formulario na home, e o hero.js carrega depois do search.js - por isso a
+         limpeza precisa acontecer aqui. O guarda equivalente no search.js nunca
+         dispararia sozinho, porque no instante em que ele roda este rotulo da
+         Hero ainda nao existe. Os dois juntos deixam o resultado independente
+         da ordem de carregamento. */
+      var stale = cell.querySelectorAll('.eex-console__label');
+      for (var si = 0; si < stale.length; si++) {
+        if (stale[si].parentNode) { stale[si].parentNode.removeChild(stale[si]); }
+      }
+      if (!q('.eex-hero__field-label', cell)) {
+        var tag = make('span', 'eex-hero__field-label');
+        tag.textContent = label;
+        cell.insertBefore(tag, cell.firstChild);
+      }
     }
     return cell;
   }
