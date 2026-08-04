@@ -84,6 +84,12 @@
       }
 
       cell.classList.add('eex-console__cell--' + kind);
+
+      /* Na home a Hero ja rotula os campos (.eex-hero__field-label) e a Hero e a
+         referencia visual do projeto - quem cede e o console, senao o campo
+         aparece com o rotulo duplicado ("DATAS / DATAS"). */
+      if (cell.querySelector('.eex-hero__field-label')) { continue; }
+
       if (!cell.querySelector(':scope > .eex-console__label')) {
         cell.insertBefore(label(texts[kind]), cell.firstChild);
       }
