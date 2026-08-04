@@ -85,8 +85,8 @@
   padding-inline:calc(var(--eex-gutter) - 12px);
 }
 #anuncio_grid .row > .eex-tile{
-  padding-inline:12px;
-  margin-bottom:var(--eex-s7);
+  padding-inline:12px !important;
+  margin-bottom:var(--eex-s7) !important;
 }
 
 /* -----------------------------------------------------------------------------
