@@ -269,15 +269,43 @@
   function slider() {
     var el = document.querySelector('#highlights_slider .swiper-container')
           || document.querySelector('#highlights_slider .swiper');
-    if (!el || !el.swiper) { return; }
+    if (!el) { return; }
     if (el.getAttribute('data-eex-slider') === '1') { return; }
 
-    var sw = el.swiper;
     var breakpoints = {
       540: { slidesPerView: 2, spaceBetween: 24 },
       768: { slidesPerView: 3, spaceBetween: 24 },
       1024: { slidesPerView: 4, spaceBetween: 24 }
     };
+
+    var sw = el.swiper;
+
+    /* Quando a plataforma nao deixou instancia, assumimos a inicializacao.
+       Motivo: este carrossel e criado por AMD (requirejs). O bundle do Meta
+       Pixel registra um define() anonimo e o requirejs entrega o objeto do
+       Pixel no lugar da classe do Swiper - o new Swiper() da plataforma quebra
+       com "Swiper is not a constructor" e os 38 slides viram uma tira gigante
+       de cards do tamanho da tela. O window.Swiper global continua correto,
+       entao criamos a instancia por conta propria com os mesmos parametros que
+       usariamos para adaptar a dela. Se algo falhar, saimos sem tocar na
+       marcacao: a pagina volta ao estado da plataforma, nunca a um estado pior. */
+    if (!sw) {
+      if (typeof window.Swiper !== 'function') { return; }
+      if (!el.querySelector('.swiper-wrapper')) { return; }
+      try {
+        sw = new window.Swiper(el, {
+          slidesPerView: 1.15,
+          spaceBetween: 16,
+          watchOverflow: true,
+          breakpoints: breakpoints,
+          navigation: {
+            nextEl: '#highlights_slider .swiper-button-next',
+            prevEl: '#highlights_slider .swiper-button-prev'
+          }
+        });
+      } catch (e) { warn(e); return; }
+      if (!sw) { return; }
+    }
 
     try {
       el.setAttribute('data-eex-slider', '1');
