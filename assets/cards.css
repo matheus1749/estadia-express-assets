@@ -65,6 +65,31 @@
 }
 
 /* -----------------------------------------------------------------------------
+   2B. A GRADE DA HOME
+   A home nao usa o carrossel: os destaques vem num grid proprio
+   (#anuncio_grid), em Bootstrap 4/5 (col-12 col-lg-3), dentro de um
+   container-fluid que sangra ate a borda da janela. Sem calha, o preco de um
+   card encostava no "Detalhes" do vizinho. Aqui a grade recebe a mesma medida
+   e o mesmo respiro do resto do Design System.
+
+   Duas escolhas deliberadas:
+     - descemos pela estrutura, nunca pelo id do wrapper: ele e gerado e muda
+       a cada render;
+     - a calha entra como padding no card e sai do padding do container, em vez
+       de margem negativa na .row - assim a linha do titulo, que divide a mesma
+       .row, nao e afetada.
+   -------------------------------------------------------------------------- */
+#anuncio_grid > div > .container-fluid{
+  max-width:calc(var(--eex-maxw) + var(--eex-gutter) * 2);
+  margin-inline:auto;
+  padding-inline:calc(var(--eex-gutter) - 12px);
+}
+#anuncio_grid .row > .eex-tile{
+  padding-inline:12px;
+  margin-bottom:var(--eex-s7);
+}
+
+/* -----------------------------------------------------------------------------
    3. O CARTAO
    Tudo que era "painel" desaparece. A casca da plataforma continua no DOM,
    apenas deixa de pintar qualquer coisa.
