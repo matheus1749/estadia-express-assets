@@ -552,7 +552,8 @@
 }
 
 @media (max-width:767px){
-  #resultlist > .eex-tile{
+  #resultlist > .eex-tile,
+  #anuncio_grid .row > .eex-tile{
     margin-bottom:var(--eex-s6) !important;
   }
   .eex-tile__body{ padding-top:var(--eex-s3) !important; }
