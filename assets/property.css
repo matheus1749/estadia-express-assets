@@ -189,6 +189,12 @@ body.__page_apartment .booking-apt-panel{
   box-shadow:none;
   overflow:hidden;
 }
+/* O search.js marca este painel com .eex-searchband e o search.css pinta a
+   faixa de busca com canvas !important. Na home e nos resultados isso esta
+   certo: a faixa fica sobre papel. Aqui a relacao e a inversa - a pagina e
+   canvas e o painel e o papel -, entao reafirmamos a superficie. */
+body.__page_apartment .booking-apt-panel.eex-searchband{ background:var(--eex-surface) !important; }
+
 body.__page_apartment .booking-apt-header{
   border-bottom:1px solid var(--eex-hairline);
   background:transparent;
