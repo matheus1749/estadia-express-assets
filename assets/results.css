@@ -100,6 +100,46 @@ body.__page_search .result-count .bootstrap-select .filter-option-inner-inner{
 }
 
 /* ----------------------------------------------------------------------------
+   3B. A LINHA DE FILTROS
+   Os chips ativos e o atalho "Mais filtros" pertencem a mesma linha: leitura
+   da esquerda para a direita, acao ancorada na borda. A plataforma quebrava
+   essa linha em duas porque embrulha o atalho num .col-xs-12.
+   ---------------------------------------------------------------------------- */
+#tagplace{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  gap:var(--eex-s2) var(--eex-s3) !important;
+  padding:0 !important;
+  height:auto !important;
+  min-height:0 !important;
+}
+
+/* O embrulho do atalho deixa de ser coluna e encosta na direita.
+   O !important e obrigatorio aqui: dentro de um container flex o
+   flex-basis:100% da coluna vence qualquer width que declaremos. */
+#tagplace > div{
+  flex:0 0 auto !important;
+  width:auto !important;
+  max-width:none !important;
+  padding:0 !important;
+  margin:0 0 0 auto !important;
+}
+
+/* Com o gap acima o respiro dos chips vem do container, nao da margem
+   utilitaria .mr-2 que a plataforma cola em cada um. */
+#tagplace > .label{
+  margin:0 !important;
+}
+
+/* O bootstrap-select ancora o caret em position:absolute a 12px da direita,
+   mas o skin do search.css zera o padding do botao: o texto do rotulo
+   terminava por baixo da seta. Devolvemos a calha do lado direito. */
+body.__page_search .result-count .bootstrap-select > .dropdown-toggle{
+  padding-right:26px !important;
+}
+
+/* ----------------------------------------------------------------------------
    4. O MAPA
    A plataforma escreve position:sticky, top:0 e height:calc(100vh) inline, sem
    saber que o header do projeto tambem e sticky. O mapa escorregava por baixo
