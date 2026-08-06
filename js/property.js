@@ -74,13 +74,14 @@
     run();
 
     /* O painel e a ficha sao montados pelo JS da plataforma depois do
-       DOMContentLoaded. Em vez de chutar tempos fixos, observamos o documento
-       e reaplicamos - com um rAF de folga para nao rodar por mutacao. */
-    var pending = false;
+       DOMContentLoaded, e o "top" inline as vezes so aparece nesse momento.
+       Observamos o documento e reaplicamos, com uma folga curta por timer.
+       Nao usamos requestAnimationFrame aqui: em aba em segundo plano o rAF
+       fica parado e a correcao nunca aconteceria. */
+    var timer = null;
     var mo = new MutationObserver(function () {
-      if (pending) return;
-      pending = true;
-      requestAnimationFrame(function () { pending = false; run(); });
+      if (timer) return;
+      timer = setTimeout(function () { timer = null; run(); }, 50);
     });
     mo.observe(document.documentElement, {
       childList: true,
@@ -91,6 +92,13 @@
     /* Passados 20s a pagina ja estabilizou; soltamos o observador e ficamos
        so com o resize, que e quando a plataforma poderia reescrever o topo. */
     setTimeout(function () { mo.disconnect(); }, 20000);
+
+    /* Rede de seguranca: se o observador for desligado antes de a plataforma
+       escrever o topo, estes disparos cobrem a janela. */
+    setTimeout(run, 500);
+    setTimeout(run, 1500);
+    setTimeout(run, 3000);
+    window.addEventListener("load", run);
     window.addEventListener("resize", run);
   }
 
