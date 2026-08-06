@@ -1,0 +1,277 @@
+/* ============================================================================
+   estadia-express - property.css
+   Design System V3 - Fase 5: Pagina do imovel
+
+   Escopo: a moldura e a tipografia de body.__page_apartment. Os cartoes de
+   imoveis semelhantes sao do cards.css; o campo de datas do painel de reserva
+   e do search.css. Aqui cuidamos do fundo, da medida, da galeria, do titulo,
+   das secoes e do painel de reserva.
+
+   Direcao visual (derivada da Hero):
+   - a pagina inteira sobre o canvas; o painel de reserva e que vira papel;
+   - hierarquia por tamanho e espaco, nao por peso e caixa;
+   - hairline no lugar de sombra e borda grossa.
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   1. A PAGINA
+   Era a ultima pagina ainda sobre branco puro. A relacao estava invertida:
+   fundo branco com o painel de reserva em canvas. Trocamos os papeis.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment{ background:var(--eex-canvas); color:var(--eex-text); }
+body.__page_apartment #mainblock,
+body.__page_apartment #maincontent,
+body.__page_apartment .appDetails{ background:transparent; }
+
+/* ----------------------------------------------------------------------------
+   2. A MEDIDA
+   O container do Bootstrap trava em 1140px e ignora a goteira do DS. Passamos
+   para a medida do sistema, igual ao resto do site.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment .appDetails > .container{
+  max-width:var(--eex-maxw);
+  width:100%;
+  padding-left:var(--eex-gutter);
+  padding-right:var(--eex-gutter);
+}
+
+/* ----------------------------------------------------------------------------
+   3. A GALERIA
+   A faixa de fotos ja sangra de ponta a ponta e isso esta certo. O problema
+   eram os 45 marcadores azuis (#007AFF, fora da paleta) empilhados embaixo:
+   com 45 fotos nenhum marcador informa nada, so polui. As setas ja dao a
+   navegacao e o arrasto funciona. Some a poeira, fica a foto.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment .appDetails > .container-fluid{
+  margin-bottom:var(--eex-s7) !important;
+  border-bottom:1px solid var(--eex-hairline);
+}
+body.__page_apartment .appDetails .swiper-pagination{ display:none !important; }
+
+/* As setas ganham a mesma pele discreta do resto do sistema. */
+body.__page_apartment .appDetails .swiper-button-prev,
+body.__page_apartment .appDetails .swiper-button-next{
+  width:44px; height:44px;
+  border-radius:var(--eex-r-pill);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  color:var(--eex-ink);
+  transition:transform .3s var(--eex-ease), border-color .3s var(--eex-ease);
+}
+body.__page_apartment .appDetails .swiper-button-prev:hover,
+body.__page_apartment .appDetails .swiper-button-next:hover{
+  transform:scale(1.06);
+  border-color:var(--eex-ink);
+}
+body.__page_apartment .appDetails .swiper-button-prev::after,
+body.__page_apartment .appDetails .swiper-button-next::after{ font-size:15px; }
+
+/* ----------------------------------------------------------------------------
+   4. O CABECALHO DO IMOVEL
+   O nome do imovel e o maior compromisso da pagina e estava em 22px, menor
+   que os titulos das secoes. Sobe para a escala de titulo do DS.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment #buildingDesc h1{
+  font-family:var(--eex-font-display);
+  /* !important porque o legacy.css ainda tem uma regra global
+     "#maincontent h1" com teto de 2.2rem e !important. Essa regra se
+     dissolve na Fase 7; aqui so a neutralizamos dentro da pagina. */
+  font-size:var(--eex-fs-h2) !important;
+  font-weight:400;
+  line-height:var(--eex-lh-title);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink) !important;
+  margin:0 0 var(--eex-s3);
+}
+body.__page_apartment #buildingDesc h4{ margin:0; }
+body.__page_apartment #buildingDesc h4 .list-inline{ margin:0; padding:0; }
+body.__page_apartment #buildingDesc h4 li{
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone);
+}
+body.__page_apartment #buildingDesc h4 .fa-map-marker{ color:var(--eex-accent); margin-right:var(--eex-s2); }
+
+/* Os selos de quarto/pessoas/cama/banheiro eram pilulas cinza-chumbo, o
+   elemento mais pesado da dobra. Viram etiquetas de contorno. */
+body.__page_apartment .row.text-muted.h4 .label{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--eex-s2);
+  background:transparent !important;
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  color:var(--eex-ink) !important;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  font-weight:400;
+  letter-spacing:.02em;
+  padding:var(--eex-s2) var(--eex-s4);
+  margin:0 var(--eex-s2) var(--eex-s2) 0;
+}
+body.__page_apartment .row.text-muted.h4 .label i{ color:var(--eex-stone); }
+
+/* ----------------------------------------------------------------------------
+   5. AS SECOES
+   Sete blocos (Camas, Regras, Amenities, Localizacao, Arredores, Avaliacoes)
+   com titulos em Open Sans 24px/700 preto puro. Viram titulos do DS, com uma
+   hairline que separa sem pesar e respiro generoso entre blocos.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment #details_full > .row{ margin-bottom:var(--eex-s7); }
+body.__page_apartment #details_full h3{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h3);
+  font-weight:400;
+  line-height:var(--eex-lh-title);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+  margin:0 0 var(--eex-s4);
+  padding-bottom:var(--eex-s3);
+  border-bottom:1px solid var(--eex-hairline);
+}
+
+body.__page_apartment .buildingDescription,
+body.__page_apartment #details_full p{
+  font-size:var(--eex-fs-body);
+  line-height:var(--eex-lh-body);
+  color:var(--eex-text-2);
+  max-width:var(--eex-maxw-text, 68ch);
+}
+
+/* Os "sim/nao" das regras eram pilulas cinza; viram marcas discretas. */
+body.__page_apartment #houseRules .label{
+  white-space:nowrap;
+  margin-left:var(--eex-s2);
+  vertical-align:middle;
+  background:transparent !important;
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  color:var(--eex-stone) !important;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:400;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  padding:2px var(--eex-s2);
+}
+
+/* O quadro de camas era uma caixa com raio grande; vira papel com hairline. */
+body.__page_apartment #beds .col-xs-12 > div{
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+}
+
+/* ----------------------------------------------------------------------------
+   6. O PAINEL DE RESERVA
+   Tres defeitos reais aqui, nao so estetica:
+   a) .sticky-panel vinha com overflow:auto e produzia uma barra de rolagem
+      horizontal visivel embaixo do painel;
+   b) o topo grudava em 110px fixos, sem relacao com a altura real do header
+      (89px, publicada em --eex-header-h pelo header.js);
+   c) o painel usava canvas sobre fundo branco - a relacao invertida.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment .sticky-panel{
+  overflow:visible;
+  overflow-x:visible;
+  /* A plataforma escreve style="position:sticky!important;top:110px!important"
+     direto no elemento. Inline com !important nao perde para folha nenhuma,
+     entao quem limpa esse top e o property.js; a regra abaixo so assume
+     depois disso, mantendo o painel de acordo com a altura real do header. */
+  top:calc(var(--eex-header-h) + var(--eex-s5)) !important;
+}
+body.__page_apartment .booking-apt-panel{
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  box-shadow:none;
+  overflow:hidden;
+}
+body.__page_apartment .booking-apt-header{
+  border-bottom:1px solid var(--eex-hairline);
+  background:transparent;
+}
+body.__page_apartment .price-night .priceValue{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-fact);
+  font-weight:400;
+  line-height:1.1;
+  color:var(--eex-ink);
+}
+body.__page_apartment .price-night .priceValue small{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-stone);
+}
+/* A segunda coluna do cabecalho do painel (preco por mes) vem vazia neste
+   inventario e so abria um buraco ao lado do preco. Some quando nao tem texto. */
+body.__page_apartment .booking-apt-header .price-month:empty{ display:none; }
+
+/* --- Vindas do legacy.css (bloco original 60, retirado de la nesta fase).
+   A lista de seletores e reproduzida na integra, inclusive #livechat e
+   .btn-block.text-center, para nao alterar o comportamento atual. --- */
+body.__page_apartment .panel-body.booking-apt .btn-contact-me,
+body.__page_apartment .booking-apt .btn-contact-me,
+body.__page_apartment .panel-body.booking-apt .cta-chat,
+body.__page_apartment .booking-apt .cta-chat,
+body.__page_apartment .panel-body.booking-apt #livechat,
+body.__page_apartment .booking-apt #livechat,
+body.__page_apartment .panel-body.booking-apt .btn-block.text-center{ display:none !important; }
+body.__page_apartment .booking-apt-panel .panel-body.booking-apt::after{
+  content:"Selecione as datas para reservar";
+  display:block;
+  text-align:center;
+  color:var(--eex-stone);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  padding:var(--eex-s4) 0;
+}
+body.__page_apartment .booking-apt-panel .panel-body.booking-apt:has(.bookbutton)::after{ display:none !important; }
+
+/* ----------------------------------------------------------------------------
+   7. OS SEMELHANTES
+   O titulo da faixa estava em 14px, menor que o corpo do texto.
+   ---------------------------------------------------------------------------- */
+body.__page_apartment .similarsTitle a{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h3);
+  font-weight:400;
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+  text-decoration:none;
+}
+body.__page_apartment .similarsTitle hr{
+  border:0;
+  height:1px;
+  background:var(--eex-hairline);
+  margin:var(--eex-s3) 0 0;
+}
+
+/* ----------------------------------------------------------------------------
+   8. MOBILE
+   Abaixo de md o painel de reserva vem antes do texto (order-1) e nao precisa
+   grudar: ele ja esta no topo.
+   ---------------------------------------------------------------------------- */
+@media (max-width:991px){
+  body.__page_apartment .sticky-panel{ position:static; }
+  body.__page_apartment #details_full > .row{ margin-bottom:var(--eex-s6); }
+}
+@media (max-width:767px){
+  body.__page_apartment .appDetails > .container-fluid{ margin-bottom:var(--eex-s6) !important; }
+  body.__page_apartment #details_full > .row{ margin-bottom:var(--eex-s5); }
+}
+
+/* ----------------------------------------------------------------------------
+   9. IMPRESSAO
+   ---------------------------------------------------------------------------- */
+@media print{
+  body.__page_apartment{ background:#fff; }
+  body.__page_apartment #panelBook,
+  body.__page_apartment #appSimilars,
+  body.__page_apartment .appDetails > .container-fluid{ display:none !important; }
+}
