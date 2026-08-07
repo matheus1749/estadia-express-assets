@@ -190,3 +190,13 @@ body.__page_search #search_map > div > div{
     padding:0 !important;
   }
 }
+
+/* ----------------------------------------------------------------------------
+   CORRECAO: a barra de rolagem horizontal da pagina de resultados
+   O container do mapa tem padding-right zerado para a faixa sangrar ate a
+   borda direita da janela, mas a .row do Bootstrap mantem margin-right:-15px.
+   Sem o padding do lado direito para compensar, esses 15px escapavam e viravam
+   uma barra de rolagem horizontal na pagina inteira. Zeramos a margem do lado
+   que sangra; o mapa continua encostando na borda.
+   ---------------------------------------------------------------------------- */
+body.__page_search .container-fluid > .row:has(#search_map){ margin-right:0; }
