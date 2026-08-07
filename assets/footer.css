@@ -1,0 +1,455 @@
+/* ==========================================================================
+   ESTADIA EXPRESS - assets/footer.css
+   Fase 6 do Design System V3 - Footer Premium ("o epilogo")
+   --------------------------------------------------------------------------
+   DIRECAO VISUAL
+   O rodape e o fecho editorial da pagina, nao um deposito de links. Ele fala a
+   mesma lingua da Hero: superficie de tinta quente, medida e goteira iguais as
+   das outras secoes, fio de cabelo no lugar de caixas, rotulos micro caixa
+   alta com tracking largo, e acento aplicado so no hover.
+
+   O QUE MUDA EM RELACAO AO RODAPE LEGADO
+   - #1e2d3d (azul frio, alheio a paleta)  ->  --eex-ink (#141210, tinta quente)
+   - emojis do sistema operacional          ->  tipografia e fios
+   - largura propria de 1200px              ->  --eex-maxw / --eex-gutter
+   - colunas soltas                         ->  colunas separadas por fio
+   - enderecos em caixa alta pesada         ->  caixa normal, so o rotulo sobe
+
+   DEPENDENCIAS   assets/ds.css (tokens --eex-*)
+   COMPORTAMENTO  js/footer.js (reposiciona, revela e limpa os emojis)
+   ORIGEM         css/legacy.css, bloco original linha 675 (estrangulado aqui)
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. A SUPERFICIE
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer{
+  /* Paleta invertida em escopo local: nada disto vaza para o resto do site. */
+  --eexf-bg:        var(--eex-ink, #141210);
+  --eexf-ink:       #FBF9F6;
+  --eexf-ink-2:     rgba(251, 249, 246, 0.62);
+  --eexf-ink-3:     rgba(251, 249, 246, 0.38);
+  --eexf-line:      rgba(251, 249, 246, 0.13);
+  --eexf-line-soft: rgba(251, 249, 246, 0.07);
+  --eexf-accent:    var(--eex-accent-soft, #EEA67F);
+
+  /* Nasce oculto de proposito: footer.js o move para cima do #mainfooter e so
+     entao revela. Sem isto ele pisca por um instante na posicao original. */
+  display: none;
+
+  background-color: var(--eexf-bg);
+  color: var(--eexf-ink-2);
+  font-family: var(--eex-font-ui);
+  line-height: var(--eex-lh-body);
+  padding: var(--eex-s9) 0 0;
+  /* Texto claro sobre fundo escuro fica pesado sem isto. */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* O rodape nativo da plataforma some. Regra herdada do legado, mantida
+   identica: sem ela o site mostra dois rodapes. */
+footer#mainfooter{ display: none !important; }
+
+/* A pagina de contato usa o proprio rodape como conteudo. Idem legado. */
+body.__page_contact main#mainblock{ display: none !important; }
+
+
+/* --------------------------------------------------------------------------
+   2. A MEDIDA
+   Mesma caixa de texto do resto do site, para o rodape alinhar coluna a
+   coluna com a Hero, os cards e o cabecalho.
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-footer-inner{
+  max-width: var(--eex-maxw);
+  margin: 0 auto;
+  padding: 0 var(--eex-gutter);
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.1fr;
+  gap: 0;
+}
+
+/* Fio vertical entre colunas: recurso editorial classico e bem mais leve do
+   que qualquer borda, caixa ou fundo alternado. */
+#ee-custom-footer .ee-foot-col{
+  min-width: 0;
+  padding-left: var(--eex-s7);
+  border-left: 1px solid var(--eexf-line-soft);
+}
+#ee-custom-footer .ee-foot-col:first-child{
+  padding-left: 0;
+  padding-right: var(--eex-s7);
+  border-left: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. A ASSINATURA
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-logo-text{
+  font-family: var(--eex-font-display);
+  font-size: var(--eex-fs-fact);
+  font-weight: var(--eex-w-regular);
+  letter-spacing: var(--eex-track-display);
+  line-height: 1.05;
+  color: var(--eexf-ink);
+  margin: 0 0 var(--eex-s4);
+}
+
+#ee-custom-footer .ee-foot-tagline{
+  font-size: var(--eex-fs-field);
+  line-height: var(--eex-lh-body);
+  color: var(--eexf-ink-3);
+  max-width: 46ch;
+  margin: 0 0 var(--eex-s7);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. OS ROTULOS
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-section-title{
+  display: flex;
+  align-items: center;
+  gap: var(--eex-s3);
+  font-size: var(--eex-fs-micro);
+  font-weight: var(--eex-w-semi);
+  letter-spacing: var(--eex-track-micro);
+  text-transform: uppercase;
+  color: var(--eexf-ink-3);
+  margin: 0 0 var(--eex-s5);
+}
+
+/* Fio curto depois do rotulo: prolonga o olhar na horizontal e amarra a
+   coluna sem precisar desenhar nenhuma caixa. */
+#ee-custom-footer .ee-foot-section-title::after{
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--eexf-line);
+}
+
+/* Respiro extra quando um segundo rotulo aparece dentro da mesma coluna. */
+#ee-custom-footer .ee-foot-socials + .ee-foot-section-title,
+#ee-custom-footer .ee-foot-contact-list + .ee-foot-section-title,
+#ee-custom-footer .ee-foot-nav-list + .ee-foot-section-title{
+  margin-top: var(--eex-s7);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. O CONTATO
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-contact-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--eex-s4);
+}
+
+#ee-custom-footer .ee-foot-contact-list li{
+  display: flex;
+  align-items: flex-start;
+  gap: var(--eex-s3);
+  font-size: var(--eex-fs-field);
+  line-height: 1.45;
+  color: var(--eexf-ink-2);
+}
+
+/* O antigo quadrado de 36x36 com emoji vira um tique de acento de 8px.
+   footer.js esvazia o texto do elemento; aqui ele so desenha o tique. */
+#ee-custom-footer .ee-foot-icon{
+  flex: 0 0 auto;
+  width: 8px;
+  height: 1px;
+  margin-top: 0.62em;
+  background: var(--eexf-accent);
+  border-radius: 0;
+  font-size: 0;
+  opacity: 0.9;
+}
+
+#ee-custom-footer .ee-foot-text{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* Rotulo do par (WHATSAPP, E-MAIL, ENDERECO): micro caixa alta. */
+#ee-custom-footer .ee-foot-text > span:first-child{
+  font-size: var(--eex-fs-micro);
+  font-weight: var(--eex-w-semi);
+  letter-spacing: var(--eex-track-micro);
+  text-transform: uppercase;
+  color: var(--eexf-ink-3);
+}
+
+/* Valor do par. O legado gritava o endereco inteiro em caixa alta porque a
+   regra pegava todos os spans; aqui so o rotulo sobe de caixa. */
+#ee-custom-footer .ee-foot-text > span:not(:first-child){
+  font-size: var(--eex-fs-field);
+  font-weight: var(--eex-w-regular);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--eexf-ink-2);
+}
+
+#ee-custom-footer .ee-foot-contact-list a{
+  font-size: var(--eex-fs-field);
+  color: var(--eexf-ink) !important;
+  text-decoration: none !important;
+  transition: color var(--eex-d2) ease;
+}
+#ee-custom-footer .ee-foot-contact-list a:hover{
+  color: var(--eexf-accent) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. OS ATALHOS
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-nav-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--eex-s3);
+}
+
+#ee-custom-footer .ee-foot-nav-list li a{
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+  font-size: var(--eex-fs-field);
+  color: var(--eexf-ink-2) !important;
+  text-decoration: none !important;
+  transition: color var(--eex-d2) ease;
+}
+
+/* Microinteracao: o fio nasce a esquerda e cresce ate a largura do texto.
+   scaleX e composto na GPU, entao o hover nao provoca layout nem repaint
+   da coluna inteira. */
+#ee-custom-footer .ee-foot-nav-list li a::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--eexf-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--eex-d2) cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+#ee-custom-footer .ee-foot-nav-list li a:hover{
+  color: var(--eexf-ink) !important;
+}
+#ee-custom-footer .ee-foot-nav-list li a:hover::after{
+  transform: scaleX(1);
+}
+
+
+/* --------------------------------------------------------------------------
+   7. AS REDES
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-socials{
+  display: flex;
+  gap: var(--eex-s3);
+  margin: 0;
+}
+
+#ee-custom-footer .ee-foot-social-btn{
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--eexf-line);
+  border-radius: var(--eex-r-pill);
+  color: var(--eexf-ink-2) !important;
+  text-decoration: none !important;
+  transition: color var(--eex-d2) ease,
+              background-color var(--eex-d2) ease,
+              border-color var(--eex-d2) ease;
+}
+#ee-custom-footer .ee-foot-social-btn:hover{
+  background: var(--eexf-accent);
+  border-color: var(--eexf-accent);
+  color: var(--eex-ink, #141210) !important;
+}
+#ee-custom-footer .ee-foot-social-btn svg{
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. OS PAGAMENTOS
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-payment-icons{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eex-s3);
+  margin: 0;
+}
+
+#ee-custom-footer .ee-foot-payment-icons i{
+  font-size: 17px !important;
+  line-height: 1;
+  color: var(--eexf-ink-3) !important;
+}
+
+/* "PIX" e texto e nao icone: vira pilula de contorno para pesar igual aos
+   demais simbolos, em vez de gritar mais alto que todos eles. */
+#ee-custom-footer .ee-foot-payment-icons > span{
+  padding: 3px 7px;
+  font-size: 10px;
+  font-weight: var(--eex-w-semi);
+  line-height: 1;
+  letter-spacing: var(--eex-track-micro);
+  text-transform: uppercase;
+  color: var(--eexf-ink-3);
+  border: 1px solid var(--eexf-line);
+  border-radius: var(--eex-r-sm);
+}
+
+
+/* --------------------------------------------------------------------------
+   9. O FECHO
+   -------------------------------------------------------------------------- */
+
+#ee-custom-footer .ee-foot-bottom{
+  position: relative;
+  max-width: var(--eex-maxw);
+  margin: var(--eex-s8) auto 0;
+  padding: var(--eex-s5) var(--eex-gutter) var(--eex-s6);
+  /* O legado desenhava um border-top que ia de ponta a ponta da caixa; o fio
+     correto e o ::before abaixo, recuado pela goteira. Zerado aqui para que
+     nao apareca fio duplo enquanto legacy.css ainda estiver carregado. */
+  border-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--eex-s3);
+}
+
+/* O fio do fecho e desenhado por pseudo elemento, recuado pela goteira, para
+   comecar e terminar exatamente onde as colunas comecam e terminam. */
+#ee-custom-footer .ee-foot-bottom::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--eex-gutter);
+  right: var(--eex-gutter);
+  height: 1px;
+  background: var(--eexf-line-soft);
+}
+
+#ee-custom-footer .ee-foot-copyright{
+  font-size: var(--eex-fs-micro);
+  letter-spacing: 0.02em;
+  color: var(--eexf-ink-3);
+}
+
+#ee-custom-footer .ee-foot-legal-links{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eex-s2) var(--eex-s5);
+}
+#ee-custom-footer .ee-foot-legal-links a{
+  font-size: var(--eex-fs-micro);
+  letter-spacing: var(--eex-track-micro);
+  text-transform: uppercase;
+  color: var(--eexf-ink-3) !important;
+  text-decoration: none !important;
+  transition: color var(--eex-d2) ease;
+}
+#ee-custom-footer .ee-foot-legal-links a:hover{
+  color: var(--eexf-ink) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   10. MOBILE
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 991px){
+  #ee-custom-footer{ padding-top: var(--eex-s8); }
+
+  #ee-custom-footer .ee-footer-inner{
+    grid-template-columns: 1fr 1fr;
+    gap: var(--eex-s7) var(--eex-s6);
+  }
+  /* A assinatura ocupa a linha inteira e se despede com um fio horizontal. */
+  #ee-custom-footer .ee-foot-col:first-child{
+    grid-column: 1 / -1;
+    padding-right: 0;
+    padding-bottom: var(--eex-s6);
+    border-bottom: 1px solid var(--eexf-line-soft);
+  }
+  #ee-custom-footer .ee-foot-col{ padding-left: var(--eex-s5); }
+  #ee-custom-footer .ee-foot-col:nth-child(2){
+    padding-left: 0;
+    border-left: 0;
+  }
+  #ee-custom-footer .ee-foot-tagline{ margin-bottom: var(--eex-s6); }
+}
+
+@media (max-width: 640px){
+  #ee-custom-footer{ padding-top: var(--eex-s7); }
+
+  #ee-custom-footer .ee-footer-inner{
+    grid-template-columns: 1fr;
+    gap: var(--eex-s6);
+  }
+  #ee-custom-footer .ee-foot-col,
+  #ee-custom-footer .ee-foot-col:first-child{
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: var(--eex-s6);
+    border-left: 0;
+    border-bottom: 1px solid var(--eexf-line-soft);
+  }
+  #ee-custom-footer .ee-foot-col:last-child{
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  #ee-custom-footer .ee-foot-tagline{ max-width: none; }
+
+  #ee-custom-footer .ee-foot-bottom{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--eex-s4);
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   11. MOVIMENTO REDUZIDO E IMPRESSAO
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce){
+  #ee-custom-footer .ee-foot-nav-list li a::after,
+  #ee-custom-footer .ee-foot-social-btn,
+  #ee-custom-footer a{ transition: none !important; }
+}
+
+@media print{
+  #ee-custom-footer{ display: none !important; }
+}
