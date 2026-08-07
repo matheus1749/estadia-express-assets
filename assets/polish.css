@@ -25,6 +25,31 @@
 
 
 /* --------------------------------------------------------------------------
+   0. A LINHA DE BASE
+   Vinha do "bloco 1649" do legacy.css, mas aplicada so em body.__page_index.
+   Fora da home o site inteiro caia no Open Sans e no Lora da plataforma.
+
+   As duas regras usam a menor especificidade que existe (um seletor de tipo),
+   de proposito: elas so preenchem lacuna. Qualquer regra de modulo, da
+   plataforma ou com !important continua vencendo. Medido antes de publicar:
+   na busca isto alinha 44 elementos que estavam fora da fonte do DS e nao
+   altera nenhum que ja estivesse correto.
+   -------------------------------------------------------------------------- */
+
+body{
+  font-family: var(--eex-font-ui);
+}
+h1, h2, h3, h4, h5, h6{
+  font-family: var(--eex-font-display);
+}
+
+/* Os tokens V2 que acompanhavam o bloco 1649 (--radius-lg, --shadow-1,
+   --shadow-2, --transition-fast, --lift-sm) nao foram trazidos: nenhum
+   arquivo do projeto, nem o proprio legacy.css, chegou a referenciar
+   qualquer um deles. */
+
+
+/* --------------------------------------------------------------------------
    1. A TIPOGRAFIA DE CONTEUDO
    O #maincontent e o container que a plataforma usa para tudo que nao e
    busca, imovel ou checkout. Aqui ele passa a falar a lingua do DS.
