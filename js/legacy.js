@@ -523,53 +523,7 @@
 
 ;
 /* ===== bloco original: linha 556 ===== */
-(function() {
-		function applyBookingBypass() {
-			if (typeof requirejs === "undefined") return;
-			requirejs(["jquery"], function($) {
-				$(document).off("click", ".bookbutton");
-				$(document).on("click.bypassed", ".bookbutton", function(e) {
-					e.preventDefault();
-					e.stopImmediatePropagation();
-					var bookBtn = $("#panelBook .bookbutton");
-					if (bookBtn.length) {
-						var href = bookBtn.attr("href");
-						if (href) {
-							window.location.href = href;
-							return false;
-						}
-					}
-				});
-			});
-		}
-		setTimeout(applyBookingBypass, 1500);
-		setTimeout(applyBookingBypass, 3000);
-		setTimeout(applyBookingBypass, 5000);
-	})();
-	(function(){
-		// FIX: bypass do modal quebrado no botao "Reserve ja" (usuarios anonimos).
-		// A Stays ja gera, oculto, um link nativo ".bookbutton" dentro de "#panelBook"
-		// com o href correto do checkout (id/datas/hospedes ja inclusos).
-		// Interceptamos o clique em FASE DE CAPTURA (antes do handler nativo da Stays)
-		// e navegamos direto para esse href - sem montar URL manualmente, sem alterar
-		// codigo da plataforma, sem setTimeout/polling. Se nao houver ".bookbutton"
-		// com href valido dentro do mesmo "#panelBook", o clique segue o fluxo nativo
-		// normalmente (fallback seguro). Escopo restrito ao botao de reserva do imovel.
-		if (window.__directCheckoutBypassBound) return;
-		window.__directCheckoutBypassBound = true;
-		document.addEventListener("click", function(e){
-			var btn = e.target && e.target.closest && e.target.closest("#panelBook .btn-create-user");
-			if (!btn) return;
-			var panel = btn.closest("#panelBook");
-			var bookBtn = panel ? panel.querySelector(".bookbutton") : null;
-			var href = bookBtn ? bookBtn.getAttribute("href") : null;
-			if (!href) return;
-			e.preventDefault();
-			e.stopPropagation();
-			e.stopImmediatePropagation();
-			window.location.href = href;
-		}, true);
-	})();
+/* Fase 5: o bypass do "Reserve ja" que ficava aqui foi movido, sem alteracao, para js/property.js. */
 
 	function restructurePaymentCards() {
 		var form = document.getElementById("payment-form");
