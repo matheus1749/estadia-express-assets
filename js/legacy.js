@@ -9,6 +9,7 @@
    - bloco 901, parte 1 (bindFilterHandlers) -> copia identica ja vivia no app.js
    - bloco 901, parte 2 (fix de toque mobile) -> movido para results.js
    - bloco 1175 (fixPersonsDropup)      -> copia identica ja vivia no app.js
+   - bloco 744  (rodape completo)     -> js/footer.js (Fase 6)
    Nos tres casos de copia identica o legacy carregava primeiro e registrava a
    guarda, deixando a versao do app.js morta. Removendo daqui, a do app.js
    assume o mesmo papel na mesma ordem.
@@ -558,92 +559,7 @@
 
 
 ;
-/* ===== bloco original: linha 744 ===== */
-(function() {
-		function initEEFooter() {
-			var footerDiv = document.getElementById('ee-custom-footer');
-			var mainFooter = document.getElementById('mainfooter');
-			if (!footerDiv || !mainFooter) return;
-			if (footerDiv._eeFooterPlaced) return;
-			footerDiv._eeFooterPlaced = true;
-			mainFooter.parentElement.insertBefore(footerDiv, mainFooter);
-			footerDiv.style.display = 'block';
-			mainFooter.style.display = 'none';
-		}
-		function tryFooterInit() {
-			if (document.body && document.getElementById('mainfooter')) {
-				initEEFooter();
-				return true;
-			}
-			return false;
-		}
-		if (!tryFooterInit()) {
-			var _eeFootObs = new MutationObserver(function() {
-				if (tryFooterInit()) _eeFootObs.disconnect();
-			});
-			_eeFootObs.observe(document.documentElement, { childList: true, subtree: true });
-			setTimeout(function() { _eeFootObs.disconnect(); }, 15000);
-			setTimeout(tryFooterInit, 100);
-			setTimeout(tryFooterInit, 500);
-			setTimeout(tryFooterInit, 1500);
-		}
-	})();
-	(function() {
-		function interceptContactLink() {
-			var navLinks = document.querySelectorAll('nav.main-nav-menu a, .main-nav-menu a, nav a');
-			var found = false;
-			navLinks.forEach(function(a) {
-				if (a.textContent.trim() === 'Contato' && a.href.indexOf('/contact') !== -1) {
-					a.href = 'javascript:void(0)';
-					a.setAttribute('data-ee-scroll-contact', '1');
-					if (!a._eeContactBound) {
-						a._eeContactBound = true;
-						a.addEventListener('click', function(e) {
-							e.preventDefault();
-							var footer = document.getElementById('ee-custom-footer');
-							if (footer) {
-								footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-							}
-						});
-					}
-					found = true;
-				}
-			});
-			return found;
-		}
-		function interceptFooterContactLink() {
-			var footerLinks = document.querySelectorAll('#ee-custom-footer a');
-			footerLinks.forEach(function(a) {
-				if (a.textContent.trim().indexOf('Contato') !== -1 && a.href.indexOf('/contact') !== -1) {
-					a.href = 'javascript:void(0)';
-					if (!a._eeFootContactBound) {
-						a._eeFootContactBound = true;
-						a.addEventListener('click', function(e) {
-							e.preventDefault();
-							var footer = document.getElementById('ee-custom-footer');
-							if (footer) {
-								footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-							}
-						});
-					}
-				}
-			});
-		}
-		function tryIntercept() {
-			interceptContactLink();
-			interceptFooterContactLink();
-		}
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', tryIntercept);
-		} else {
-			tryIntercept();
-		}
-		setTimeout(tryIntercept, 500);
-		setTimeout(tryIntercept, 1500);
-		var _eeNavObs = new MutationObserver(function() { tryIntercept(); });
-		_eeNavObs.observe(document.documentElement, { childList: true, subtree: true });
-		setTimeout(function() { _eeNavObs.disconnect(); }, 30000);
-	})();
+/* Rodape migrado para js/footer.js na Fase 6 do Design System V3. Era o bloco original linha 744 (posicionamento do #ee-custom-footer + scroll do link Contato). */
 
 ;
 /* ===== bloco original: linha 1227 ===== */
