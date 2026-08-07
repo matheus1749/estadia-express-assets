@@ -1,0 +1,300 @@
+/* ==========================================================================
+   ESTADIA EXPRESS - assets/polish.css
+   Fase 7 do Design System V3 - Polimento global
+   --------------------------------------------------------------------------
+   O QUE ESTE ARQUIVO FAZ
+   Cobre o que sobrou fora das seis fases anteriores: as paginas de conteudo
+   (Politica de Privacidade e afins), a pagina de erro, e o acabamento
+   transversal de foco e selecao. Tambem assume o lugar do "bloco 57" do
+   legacy.css, que era a ultima heranca da paleta V1 (azul #1A3C5E e dourado
+   #E8A020) e que atropelava a tipografia do DS com !important.
+
+   O QUE FOI DESCARTADO DO BLOCO 57, E POR QUE
+   - reset de box-sizing        -> ja existe, identico, em assets/ds.css
+   - regra vazia body,h1,...{}  -> nao declarava nada
+   - :root da paleta V1         -> nenhum arquivo fora do proprio bloco usava
+   - .carousel .panel           -> nao casa com nenhum elemento do site
+   - [class*="testimonial"]     -> idem, nao existe depoimento em pagina alguma
+   Sobraram so as duas regras que de fato pintavam algo (#maincontent h1/h2 e
+   os paragrafos), reescritas aqui em cima dos tokens e sem !important.
+
+   DEPENDENCIAS   assets/ds.css (tokens --eex-*)
+   COMPORTAMENTO  js/polish.js (limpa emojis do indice lateral)
+   ORIGEM         css/legacy.css, bloco original linha 57 (estrangulado aqui)
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. A TIPOGRAFIA DE CONTEUDO
+   O #maincontent e o container que a plataforma usa para tudo que nao e
+   busca, imovel ou checkout. Aqui ele passa a falar a lingua do DS.
+   -------------------------------------------------------------------------- */
+
+/* ATENCAO A ESPECIFICIDADE
+   "#maincontent h1" carrega um id e vence quase toda regra de modulo. O bloco
+   57 fazia exatamente isso, com !important ainda por cima, e por isso o
+   property.css precisou de !important para recuperar o proprio titulo.
+   Para nao repetir o erro, esta secao se exclui das quatro paginas que ja
+   tem dono: home, busca, imovel e checkout. O :not em cadeia tambem cobre
+   qualquer pagina nova que o CMS venha a criar. */
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent :is(h1, h2, h3, h4){
+  font-family: var(--eex-font-display);
+  font-weight: var(--eex-w-regular);
+  letter-spacing: var(--eex-track-title);
+  line-height: var(--eex-lh-title);
+  color: var(--eex-ink);
+}
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent h1{ font-size: var(--eex-fs-h1); }
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent h2{ font-size: var(--eex-fs-h2); }
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent h3{ font-size: var(--eex-fs-h3); }
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent h4{ font-size: var(--eex-fs-h4); }
+
+body:not(.__page_index):not(.__page_search):not(.__page_apartment):not(.__page_booking) #maincontent :is(p, li, .lead){
+  font-family: var(--eex-font-ui);
+  font-size: var(--eex-fs-body);
+  line-height: var(--eex-lh-body);
+  color: var(--eex-ink-2);
+}
+
+/* A medida de leitura e aplicada por pagina (secoes 2 e 4), e nao aqui,
+   para nao encolher listas de navegacao que tambem vivem dentro de <p>. */
+
+
+/* --------------------------------------------------------------------------
+   2. AS PAGINAS DE CONTEUDO (body.__page_page)
+   -------------------------------------------------------------------------- */
+
+body.__page_page #maincontent .container{
+  max-width: var(--eex-maxw);
+  padding-left: var(--eex-gutter);
+  padding-right: var(--eex-gutter);
+}
+/* .mt-5/.mb-5 do Bootstrap davam 48px fixos. O ritmo passa a ser o mesmo
+   das outras secoes do site, que respira junto com a largura da tela. */
+body.__page_page #maincontent .container.mt-5{ margin-top: var(--eex-section-y); }
+body.__page_page #maincontent .container.mb-5{ margin-bottom: var(--eex-section-y); }
+
+@media (min-width: 768px){
+  /* A linha do Bootstrap vira grade: indice estreito, texto largo, e um fio
+     de cabelo entre os dois - o mesmo recurso do rodape. */
+  body.__page_page #maincontent .row{
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--eex-s8);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  /* O Bootstrap 4 trava a coluna por flex-basis E max-width; zerar so o
+     width nao adianta, a coluna continua com 33% da faixa da grade. */
+  body.__page_page #maincontent .row > [class*="col-sm-"]{
+    width: auto;
+    max-width: none;
+    flex: none;
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 0;
+  }
+  body.__page_page #maincontent .row > .col-sm-4{
+    padding-top: 0;
+  }
+  body.__page_page #maincontent .row > .col-sm-8{
+    padding-left: var(--eex-s8);
+    border-left: 1px solid var(--eex-hairline);
+  }
+}
+
+/* O titulo se despede com um fio, que separa cabecalho de corpo sem exigir
+   uma caixa nem um bloco de cor. */
+body.__page_page #maincontent .col-sm-8 > h1:first-child{
+  margin: 0 0 var(--eex-s5);
+  padding-bottom: var(--eex-s5);
+  border-bottom: 1px solid var(--eex-hairline);
+}
+body.__page_page #maincontent .col-sm-8 > p,
+body.__page_page #maincontent .col-sm-8 > ul li{
+  margin: 0 0 var(--eex-s5);
+  max-width: 68ch;
+}
+/* A plataforma deixa paragrafos vazios (so com <br>) entre os blocos de
+   texto. Eles viravam buracos irregulares no ritmo; aqui somem. */
+body.__page_page #maincontent .col-sm-8 > p:empty{ display: none; }
+
+
+/* --------------------------------------------------------------------------
+   3. O INDICE LATERAL
+   -------------------------------------------------------------------------- */
+
+body.__page_page #maincontent .nav.nav-stacked{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: sticky;
+  top: calc(var(--eex-header-h, 89px) + var(--eex-s5));
+}
+body.__page_page #maincontent .nav.nav-stacked > p{
+  margin: 0;
+  border-bottom: 1px solid var(--eex-hairline-2);
+}
+body.__page_page #maincontent .nav.nav-stacked > p:last-child{
+  border-bottom: 0;
+}
+body.__page_page #maincontent .nav.nav-stacked a{
+  position: relative;
+  display: block;
+  padding: var(--eex-s3) 0;
+  font-family: var(--eex-font-ui);
+  font-size: var(--eex-fs-micro);
+  font-weight: var(--eex-w-semi);
+  letter-spacing: var(--eex-track-micro);
+  text-transform: uppercase;
+  color: var(--eex-stone);
+  text-decoration: none;
+  transition: color var(--eex-d2) ease;
+}
+body.__page_page #maincontent .nav.nav-stacked a:hover,
+body.__page_page #maincontent .nav.nav-stacked a:focus{
+  color: var(--eex-ink);
+  text-decoration: none;
+}
+/* Mesma microinteracao do rodape, para o site inteiro reagir do mesmo jeito. */
+body.__page_page #maincontent .nav.nav-stacked a::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--eex-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--eex-d2) cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+body.__page_page #maincontent .nav.nav-stacked a:hover::after{
+  transform: scaleX(1);
+}
+
+/* A pagina em que o visitante esta fica marcada com o fio ja estendido, na
+   tinta cheia. Quem escreve o aria-current e o js/polish.js. */
+body.__page_page #maincontent .nav.nav-stacked a[aria-current="page"]{
+  color: var(--eex-ink);
+}
+body.__page_page #maincontent .nav.nav-stacked a[aria-current="page"]::after{
+  background: var(--eex-ink);
+  transform: scaleX(1);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. A PAGINA DE ERRO (body.__page_error)
+   Dois dos cinco links do menu caem aqui hoje, entao esta pagina e vista com
+   muito mais frequencia do que uma pagina de erro deveria ser.
+   -------------------------------------------------------------------------- */
+
+/* O template de erro da plataforma escreve style inline no proprio HTML
+   (padding no container, font-size e color no h1). Inline so perde para
+   !important, entao as tres regras abaixo precisam dele - e apenas elas. */
+body.__page_error #maincontent .container.text-center{
+  max-width: var(--eex-maxw);
+  padding: var(--eex-s10) var(--eex-gutter) !important;
+  /* Sem uma altura minima o rodape sobe e a pagina fica com cara de quebrada. */
+  min-height: 52vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+body.__page_error #maincontent h1{
+  margin: 0 0 var(--eex-s4);
+  font-size: var(--eex-fs-display, var(--eex-fs-h1)) !important;
+  line-height: 1;
+  /* inline: #d1d1d1, cinza de rascunho que sumia no fundo claro */
+  color: var(--eex-ink) !important;
+}
+body.__page_error #maincontent p{
+  margin: 0 0 var(--eex-s7);
+  max-width: 44ch;
+  font-size: var(--eex-fs-lead);
+  color: var(--eex-stone);
+}
+
+/* O botao azul do Bootstrap era a unica peca do site fora da paleta. */
+body.__page_error #maincontent .backLink,
+body.__page_error #maincontent .btn.btn-info{
+  display: inline-flex;
+  align-items: center;
+  padding: var(--eex-s4) var(--eex-s6);
+  background: var(--eex-ink);
+  border: 1px solid var(--eex-ink);
+  border-radius: var(--eex-r-sm);
+  box-shadow: none;
+  font-family: var(--eex-font-ui);
+  font-size: var(--eex-fs-micro);
+  font-weight: var(--eex-w-semi);
+  letter-spacing: var(--eex-track-cta);
+  text-transform: uppercase;
+  color: var(--eex-text-invert);
+  text-decoration: none;
+  transition: background-color var(--eex-d2) ease, border-color var(--eex-d2) ease;
+}
+body.__page_error #maincontent .backLink:hover,
+body.__page_error #maincontent .btn.btn-info:hover{
+  background: var(--eex-accent);
+  border-color: var(--eex-accent);
+  color: var(--eex-text-invert);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. ACABAMENTO TRANSVERSAL
+   Vale para o site inteiro, inclusive para as telas que a plataforma gera e
+   que nenhum modulo nosso cobre.
+   -------------------------------------------------------------------------- */
+
+/* Anel de foco unico e visivel. A plataforma usava o outline azul padrao do
+   navegador em alguns lugares e nenhum em outros. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible{
+  outline: 2px solid var(--eex-focus);
+  outline-offset: 2px;
+  border-radius: var(--eex-r-sm);
+}
+
+/* Selecao de texto na tinta do projeto, e nao no azul do sistema. */
+::selection{
+  background: var(--eex-accent-tint);
+  color: var(--eex-ink);
+}
+
+
+/* --------------------------------------------------------------------------
+   6. MOBILE
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767px){
+  body.__page_page #maincontent .container{
+    padding-left: var(--eex-gutter);
+    padding-right: var(--eex-gutter);
+  }
+  body.__page_page #maincontent .col-sm-8 > h1:first-child{
+    margin-bottom: var(--eex-s4);
+    padding-bottom: var(--eex-s4);
+  }
+  body.__page_error #maincontent .container.text-center{
+    padding-top: var(--eex-s8);
+    padding-bottom: var(--eex-s8);
+    min-height: 40vh;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   7. IMPRESSAO
+   -------------------------------------------------------------------------- */
+
+@media print{
+  body.__page_page #maincontent .row > .col-sm-4{ display: none; }
+  body.__page_page #maincontent .row > .col-sm-8{
+    padding-left: 0;
+    border-left: 0;
+  }
+}
