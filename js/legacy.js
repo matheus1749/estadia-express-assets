@@ -998,7 +998,11 @@
 (function(){function f(){var r=document.getElementById('payment_credit_card_cielo_6a61334181efb5464ac2e348'),c=r&&r.closest('.payment-option'),b=c&&c.querySelector('.label.label-default');if(b&&b.textContent.trim()==='Cartão de crédito')b.textContent='Cartão de débito';}new MutationObserver(f).observe(document.documentElement,{childList:true,subtree:true});})();
 
 ;
-/* ===== bloco original: linha 1672 ===== */
-
-	(function initHero(){if(document.getElementById('ee-hero'))return;const $main=document.querySelector('main');if(!$main)return;const $hero=document.createElement('section');$hero.id='ee-hero';$hero.innerHTML='<div class="ee-hero-content"><h1 class="ee-hero-title">Estadia Express</h1><p class="ee-hero-subtitle">Hospedagem premium em Goiânia</p><p class="ee-hero-description">Lofts e apartamentos mobiliados.\nConforto, localização e qualidade.</p></div>';$main.insertBefore($hero,$main.firstChild);})();if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initHero)}else{initHero()}
-
+/* ===== bloco original: linha 1672 - REMOVIDO na Fase 7 =====
+   Era a Hero V1, declarada obsoleta na Fase 2 e substituida por js/hero.js.
+   Alem de morta, estava quebrada: o bloco terminava com
+       (function initHero(){ ... })();  if (...) { initHero() }
+   e o nome de uma funcao-expressao nao existe fora dela, entao a ultima
+   linha lancava ReferenceError: initHero is not defined a cada carregamento
+   de pagina. O #ee-hero tambem nunca chegava a ser criado, porque o legacy.js
+   roda antes do <main> ser lido e a funcao desistia logo no inicio. ===== */
