@@ -1003,28 +1003,37 @@
 
 ;
 
-
-
-/* ============================================================================
+/* ===============================================================
    FASE 8 - CHECKOUT PREMIUM (Design System V3)
-   Acrescimos de comportamento. Nada aqui altera o fluxo de pagamento: o modulo
-   so acrescenta sinalizacao de progresso e limpa restos vazios do inventario.
-   ============================================================================ */
+   Acrescimos de interface. Nada aqui altera o fluxo de pagamento: o modulo nao
+   le, nao escreve e nao envia nenhum campo do formulario. Ele so acrescenta a
+   trilha de etapas e esconde restos vazios do resumo.
+
+   SOBRE O MOMENTO DE ENTRAR
+   Este arquivo e carregado sem defer (a Parte 1 precisa disso), entao ele roda
+   antes de a plataforma montar a pagina. Duas coisas ainda nao existem nesse
+   instante: o container do checkout e a classe __page_booking no body -- ela e
+   colocada depois, por script da propria plataforma. Por isso o gatilho aqui
+   nao e o body, e o aparecimento do #booking-checkout-v1.
+   =============================================================== */
 (function(){
   'use strict';
-  if (!document.body || document.body.className.indexOf('__page_booking') < 0) return;
   if (window.__eexCheckoutV3) return;
-  window.__eexCheckoutV3 = true;
 
-  /* Rotulos escapados para o arquivo continuar 100% ASCII, como os demais modulos. */
+  /* Rotulos escapados para o arquivo continuar legivel em qualquer editor. */
   var STEPS = ['Seus dados', 'Op\u00e7\u00f5es', 'Pagamento'];
 
-  /* Em que etapa estamos. A plataforma nao guarda isso em lugar nenhum: ela
-     apenas mostra e esconde elementos com as classes step-registration,
-     step-promocode e step-payment-methods. A acao visivel na barra de baixo e
-     o sinal mais confiavel de todos. */
+  function isCheckout(){
+    return !!document.getElementById('booking-checkout-v1') &&
+           !!document.getElementById('guest-form');
+  }
+
+  /* Em que etapa estamos. A plataforma nao guarda isso em lugar nenhum: ela so
+     mostra e esconde elementos com as classes step-registration, step-promocode
+     e step-payment-methods. A acao visivel na barra de baixo e o sinal mais
+     confiavel de todos. */
   function currentStep(){
-    var vis = function(el){ return !!(el && el.offsetParent !== null); };
+    function vis(el){ return !!(el && el.offsetParent !== null); }
     if (vis(document.querySelector('.bottom-bar .payment-implement'))) return 2;
     if (vis(document.querySelector('.bottom-bar .btn-to-payment-methods'))) return 1;
     return 0;
@@ -1037,46 +1046,49 @@
     nav.className = 'eex-ck-steps';
     nav.setAttribute('aria-label', 'Etapas da reserva');
     var ol = document.createElement('ol');
-    STEPS.forEach(function(label, i){
+    for (var i = 0; i < STEPS.length; i++){
       var li = document.createElement('li');
       li.className = 'eex-ck-step';
-      li.setAttribute('data-index', String(i + 1));
       var mark = document.createElement('span');
       mark.className = 'eex-ck-step__mark';
       var txt = document.createElement('span');
       txt.className = 'eex-ck-step__label';
-      txt.textContent = label;
+      txt.textContent = STEPS[i];
       li.appendChild(mark);
       li.appendChild(txt);
       ol.appendChild(li);
-    });
+    }
     nav.appendChild(ol);
     host.insertBefore(nav, host.firstChild);
     return nav;
   }
 
-  function paint(nav){
+  function paint(){
+    var nav = document.querySelector('.eex-ck-steps');
     if (!nav) return;
     var now = currentStep();
     var items = nav.querySelectorAll('.eex-ck-step');
     for (var i = 0; i < items.length; i++){
       items[i].classList.toggle('is-done', i < now);
       items[i].classList.toggle('is-current', i === now);
-      if (i === now) { items[i].setAttribute('aria-current', 'step'); }
-      else { items[i].removeAttribute('aria-current'); }
+      if (i === now) items[i].setAttribute('aria-current', 'step');
+      else items[i].removeAttribute('aria-current');
     }
   }
 
-  /* O resumo traz <li> de localizacao com o alfinete e nenhum nome de cidade:
+  /* O resumo traz um <li> de localizacao com o alfinete e nenhum nome de cidade:
      uma pilula vazia logo abaixo do titulo do imovel. So o texto decide. */
   function tidy(){
     var det = document.querySelector('#reserve-info .card-details');
     if (det && !det.textContent.replace(/\s|\u00a0/g, '')) det.style.display = 'none';
   }
 
-  function boot(){
-    var nav = document.querySelector('.eex-ck-steps') || buildRail();
-    paint(nav);
+  function start(){
+    if (window.__eexCheckoutV3) return true;
+    if (!isCheckout()) return false;
+    window.__eexCheckoutV3 = true;
+    if (!document.querySelector('.eex-ck-steps')) buildRail();
+    paint();
     tidy();
     /* As etapas trocam sem recarregar a pagina; observar o formulario mantem a
        trilha em dia sem depender dos eventos internos da plataforma. */
@@ -1085,11 +1097,19 @@
       var t = null;
       new MutationObserver(function(){
         clearTimeout(t);
-        t = setTimeout(function(){ paint(nav); tidy(); }, 90);
+        t = setTimeout(function(){ paint(); tidy(); }, 90);
       }).observe(form, { attributes:true, childList:true, subtree:true, attributeFilter:['class','style'] });
     }
+    return true;
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  /* O checkout pode ja estar no DOM ou ainda estar sendo montado. Cobrimos os
+     dois casos e desligamos o observador assim que entrar. */
+  if (!start() && window.MutationObserver){
+    var mo = new MutationObserver(function(){ if (start()) mo.disconnect(); });
+    mo.observe(document.documentElement, { childList:true, subtree:true });
+    /* Rede de seguranca: se por algum motivo o container nunca aparecer, o
+       observador nao fica preso para sempre. */
+    setTimeout(function(){ mo.disconnect(); }, 20000);
+  }
 })();
