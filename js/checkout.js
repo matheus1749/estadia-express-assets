@@ -1,19 +1,26 @@
-/* checkout.js - Estadia Express / Design System V3
-   ---------------------------------------------------------------
-   MODULO PREPARADO, AINDA NAO ATIVO.
-   Recorte LITERAL das linhas 19-999 de js/legacy.js: os 12 blocos
-   que sobraram do template inline (blocos originais 62, 137, 297,
-   423, 480, 556, 1227, 1229, 1445, 1508, 1588 e 1644), todos do
-   fluxo de reserva/pagamento.
-   Nada foi reescrito, reordenado nem otimizado. Foi feito por
-   fatiamento programatico, nao por transcricao.
-   Este arquivo NAO esta referenciado no head_section e o codigo
-   correspondente CONTINUA em legacy.js. Enquanto isso for
-   verdade, publicar este arquivo nao muda nada no site.
-   A ativacao (referenciar aqui + remover de legacy.js) so ocorre
-   depois de o fluxo ser validado ponta a ponta, incluindo a tela
-   de pagamento.
-*/
+/* ===============================================================
+   checkout.js - Estadia Express / Design System V3
+   Fase 8: Checkout premium
+
+   Este arquivo tem duas partes bem separadas.
+
+   PARTE 1 - HERANCA (nao mexer sem motivo)
+   Recorte LITERAL das linhas 19-999 do antigo js/legacy.js: os 12
+   blocos que sobraram do template inline (blocos originais 62, 137,
+   297, 423, 480, 556, 1227, 1229, 1445, 1508, 1588 e 1644), todos do
+   fluxo de reserva e pagamento. Nada foi reescrito, reordenado nem
+   otimizado -- o recorte foi feito por fatiamento programatico, nao
+   por transcricao. E o codigo que faz o checkout funcionar, inclusive
+   o bloco 423, que remenda Element.prototype.setAttribute antes de o
+   formulario existir. Por isso este arquivo e carregado SEM defer e
+   imediatamente depois do legacy.js no head_section: a ordem importa.
+
+   PARTE 2 - FASE 8 (no fim do arquivo)
+   Acrescimos de interface do redesign do checkout: a trilha de etapas
+   e a limpeza dos restos vazios do resumo. Nao toca em nada do fluxo
+   de pagamento: nao le, nao escreve e nao envia campo nenhum.
+   =============================================================== */
+
 /* ===== bloco original: linha 62 ===== */
 	(function() {
 		function applyCheckoutImprovements() {
@@ -995,3 +1002,94 @@
 (function(){function f(){var r=document.getElementById('payment_credit_card_cielo_6a61334181efb5464ac2e348'),c=r&&r.closest('.payment-option'),b=c&&c.querySelector('.label.label-default');if(b&&b.textContent.trim()==='Cartão de crédito')b.textContent='Cartão de débito';}new MutationObserver(f).observe(document.documentElement,{childList:true,subtree:true});})();
 
 ;
+
+
+
+/* ============================================================================
+   FASE 8 - CHECKOUT PREMIUM (Design System V3)
+   Acrescimos de comportamento. Nada aqui altera o fluxo de pagamento: o modulo
+   so acrescenta sinalizacao de progresso e limpa restos vazios do inventario.
+   ============================================================================ */
+(function(){
+  'use strict';
+  if (!document.body || document.body.className.indexOf('__page_booking') < 0) return;
+  if (window.__eexCheckoutV3) return;
+  window.__eexCheckoutV3 = true;
+
+  /* Rotulos escapados para o arquivo continuar 100% ASCII, como os demais modulos. */
+  var STEPS = ['Seus dados', 'Op\u00e7\u00f5es', 'Pagamento'];
+
+  /* Em que etapa estamos. A plataforma nao guarda isso em lugar nenhum: ela
+     apenas mostra e esconde elementos com as classes step-registration,
+     step-promocode e step-payment-methods. A acao visivel na barra de baixo e
+     o sinal mais confiavel de todos. */
+  function currentStep(){
+    var vis = function(el){ return !!(el && el.offsetParent !== null); };
+    if (vis(document.querySelector('.bottom-bar .payment-implement'))) return 2;
+    if (vis(document.querySelector('.bottom-bar .btn-to-payment-methods'))) return 1;
+    return 0;
+  }
+
+  function buildRail(){
+    var host = document.getElementById('guest-form');
+    if (!host) return null;
+    var nav = document.createElement('nav');
+    nav.className = 'eex-ck-steps';
+    nav.setAttribute('aria-label', 'Etapas da reserva');
+    var ol = document.createElement('ol');
+    STEPS.forEach(function(label, i){
+      var li = document.createElement('li');
+      li.className = 'eex-ck-step';
+      li.setAttribute('data-index', String(i + 1));
+      var mark = document.createElement('span');
+      mark.className = 'eex-ck-step__mark';
+      var txt = document.createElement('span');
+      txt.className = 'eex-ck-step__label';
+      txt.textContent = label;
+      li.appendChild(mark);
+      li.appendChild(txt);
+      ol.appendChild(li);
+    });
+    nav.appendChild(ol);
+    host.insertBefore(nav, host.firstChild);
+    return nav;
+  }
+
+  function paint(nav){
+    if (!nav) return;
+    var now = currentStep();
+    var items = nav.querySelectorAll('.eex-ck-step');
+    for (var i = 0; i < items.length; i++){
+      items[i].classList.toggle('is-done', i < now);
+      items[i].classList.toggle('is-current', i === now);
+      if (i === now) { items[i].setAttribute('aria-current', 'step'); }
+      else { items[i].removeAttribute('aria-current'); }
+    }
+  }
+
+  /* O resumo traz <li> de localizacao com o alfinete e nenhum nome de cidade:
+     uma pilula vazia logo abaixo do titulo do imovel. So o texto decide. */
+  function tidy(){
+    var det = document.querySelector('#reserve-info .card-details');
+    if (det && !det.textContent.replace(/\s|\u00a0/g, '')) det.style.display = 'none';
+  }
+
+  function boot(){
+    var nav = document.querySelector('.eex-ck-steps') || buildRail();
+    paint(nav);
+    tidy();
+    /* As etapas trocam sem recarregar a pagina; observar o formulario mantem a
+       trilha em dia sem depender dos eventos internos da plataforma. */
+    var form = document.getElementById('booking-guest-address-information-form');
+    if (form && window.MutationObserver){
+      var t = null;
+      new MutationObserver(function(){
+        clearTimeout(t);
+        t = setTimeout(function(){ paint(nav); tidy(); }, 90);
+      }).observe(form, { attributes:true, childList:true, subtree:true, attributeFilter:['class','style'] });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
