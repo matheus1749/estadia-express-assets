@@ -9,7 +9,6 @@
      2. Re-parentear o widget de busca nativo da Stays para dentro da hero.
         O no do DOM e MOVIDO, nunca recriado: listeners, hotel-datepicker e
         bootstrap-select continuam intactos.
-     3. Preencher o rail com dados reais lidos da propria pagina.
 
    Garantias
      - Idempotente: montar duas vezes e impossivel.
@@ -18,15 +17,24 @@
      - Reversivel em runtime: a ancora original do widget e guardada antes do
        move; em qualquer excecao ele volta ao lugar exato e a hero e removida.
      - Nao escreve em legacy.js, legacy.css nem app.js.
-     - Sem dado inventado: numero de imoveis e preco minimo saem do DOM. Se a
-       leitura falhar, o campo permanece vazio em vez de exibir um valor falso.
+
+   2.1.0 - Remocao do rail de credenciais
+     O bloco lateral da hero (38 / IMOVEIS DISPONIVEIS, R$ 180 / A PARTIR DE
+     NOITE, Goiania / GOIAS - BRASIL) foi removido a pedido. Saiu a marcacao
+     (ul.eex-hero__rail), a hidratacao progressiva (hydrateRail), as strings
+     de conteudo (CONTENT.facts e CONTENT.emptyValue) e o helper formatBRL,
+     que existia apenas para formatar o preco do rail.
+     readInventory() foi mantido: e superficie publica de QA (window.EEXHero)
+     e nao dependia do rail.
+     A coluna da direita continua declarada nas grid-areas do hero.css de
+     proposito. Assim nada na hero se desloca; a area apenas fica livre.
    ============================================================================= */
 (function () {
   'use strict';
 
   if (window.__EEX_HERO_MOUNTED) { return; }
 
-  var VERSION = '2.0.0';
+  var VERSION = '2.1.0';
 
   /* ---------------------------------------------------------------------------
      CONTEUDO EDITORIAL
@@ -44,14 +52,7 @@
     fieldLabels: {
       dates:  'Datas',
       guests: 'H\u00f3spedes'
-    },
-    facts: {
-      countKey:   'Im\u00f3veis dispon\u00edveis',
-      priceKey:   'A partir de / noite',
-      placeValue: 'Goi\u00e2nia',
-      placeKey:   'Goi\u00e1s \u00b7 Brasil'
-    },
-    emptyValue: '\u2014'
+    }
   };
 
   /* ---------------------------------------------------------------------------
@@ -122,21 +123,9 @@
     return out;
   }
 
-  function formatBRL(value) {
-    try { return 'R$ ' + value.toLocaleString('pt-BR'); }
-    catch (e) { return 'R$ ' + value; }
-  }
-
   /* ---------------------------------------------------------------------------
      MARCACAO
      --------------------------------------------------------------------------- */
-  function factHTML(id, value, key, pending) {
-    return '<li class="eex-hero__fact' + (pending ? ' eex-hero__fact--pending' : '') +
-           '" data-eex-fact="' + id + '">' +
-             '<span class="eex-hero__fact-value">' + esc(value) + '</span>' +
-             '<span class="eex-hero__fact-key">' + esc(key) + '</span>' +
-           '</li>';
-  }
 
   function buildShell() {
     /* 'is-ready' ja nasce na classe: a animacao de entrada comeca na primeira
@@ -149,10 +138,8 @@
 
     hero.innerHTML =
       '<div class="eex-hero__bg" aria-hidden="true"></div>' +
-      /* Ordem do DOM = ordem do mobile: titulo, console, credenciais, rodape.
-         O console vem antes do rail de proposito, para ficar acima da dobra
-         no telefone. No desktop as grid-areas do hero.css recolocam o rail
-         na coluna da direita sem mexer neste HTML. */
+      /* Ordem do DOM = ordem do mobile: titulo, console, rodape. As grid-areas
+         do hero.css desacoplam a composicao desta ordem, sem mexer neste HTML. */
       '<div class="eex-hero__inner">' +
         '<div class="eex-hero__copy">' +
           '<p class="eex-hero__eyebrow" data-eex-reveal style="--eex-i:0">' +
@@ -173,11 +160,6 @@
           '<h2 class="eex-hero__sr">' + esc(CONTENT.consoleLabel) + '</h2>' +
           '<div class="eex-hero__slot"></div>' +
         '</div>' +
-        '<ul class="eex-hero__rail" data-eex-reveal style="--eex-i:5">' +
-          factHTML('count', CONTENT.emptyValue, CONTENT.facts.countKey, true) +
-          factHTML('price', CONTENT.emptyValue, CONTENT.facts.priceKey, true) +
-          factHTML('place', CONTENT.facts.placeValue, CONTENT.facts.placeKey, false) +
-        '</ul>' +
         '<div class="eex-hero__foot" data-eex-reveal style="--eex-i:6"></div>' +
         '<div class="eex-hero__cue" aria-hidden="true"></div>' +
       '</div>';
@@ -287,41 +269,6 @@
   }
 
   /* ---------------------------------------------------------------------------
-     RAIL: HIDRATACAO PROGRESSIVA
-     Os valores ja ocupam a altura final antes de existir dado, portanto
-     preencher depois nao desloca nada (CLS zero).
-     --------------------------------------------------------------------------- */
-  function hydrateRail(hero) {
-    var MAX_TRIES = 20;
-    var INTERVAL  = 400;
-    var tries = 0;
-
-    function setFact(id, value) {
-      var li = q('[data-eex-fact="' + id + '"]', hero);
-      if (!li) { return; }
-      var slot = q('.eex-hero__fact-value', li);
-      if (!slot || slot.textContent === value) { return; }
-      slot.textContent = value;
-      li.classList.remove('eex-hero__fact--pending');
-    }
-
-    function tick() {
-      tries += 1;
-      var inv;
-      try { inv = readInventory(); } catch (e) { warn('leitura de inventario falhou', e); return; }
-
-      if (inv.count > 0)    { setFact('count', String(inv.count)); }
-      if (inv.min !== null) { setFact('price', formatBRL(inv.min)); }
-
-      var complete = inv.count > 0 && inv.min !== null;
-      if (!complete && tries < MAX_TRIES) { setTimeout(tick, INTERVAL); }
-      /* Se nao completar, os campos ficam no estado vazio. Nunca inventamos. */
-    }
-
-    tick();
-  }
-
-  /* ---------------------------------------------------------------------------
      MONTAGEM
      --------------------------------------------------------------------------- */
   function mount() {
@@ -352,8 +299,6 @@
           t.style.willChange = 'auto';
         }
       });
-
-      hydrateRail(hero);
     } catch (err) {
       /* Rollback total: o site volta exatamente ao estado anterior. */
       try { restoreWidget(widget); } catch (e) { warn('rollback do widget falhou', e); }
