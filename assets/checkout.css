@@ -1,27 +1,1481 @@
-/* checkout.css - Estadia Express / Design System V3
- ---------------------------------------------------------------
- MODULO PREPARADO, AINDA NAO ATIVO.
- Conteudo recortado LITERALMENTE de css/legacy.css (blocos
- originais 59, 61, 135, 136, 296 e a parte de checkout do 1649).
- Nenhuma regra foi reescrita, reordenada ou otimizada: e o mesmo
- texto, byte a byte, apenas em outro arquivo.
- Este arquivo NAO esta referenciado no head_section e as regras
- correspondentes CONTINUAM em legacy.css. Enquanto isso for
- verdade, publicar este arquivo nao muda nada no site.
- A ativacao (referenciar aqui + remover de legacy.css) so ocorre
- depois de o fluxo de reserva ser validado ponta a ponta.
-*/
-/* ===== bloco original: linha 59 ===== */
-body.__page_booking,body[class*="__page_booking"]{background: #f0f2f5 !important;font-family: 'Segoe UI',Arial,sans-serif !important;}body.__page_booking #maincontent,body.__page_booking .container,body.__page_booking .container-fluid{background: #f0f2f5 !important;}body.__page_booking .panel,body.__page_booking .panel-default,body.__page_booking .well,body.__page_booking [class*="card"]{background: #fff !important;border: none !important;border-radius: 12px !important;box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;margin-bottom: 20px !important;overflow: hidden !important;}body.__page_booking .panel-body{padding: 24px !important;}body.__page_booking .panel-heading{background: #fff !important;border: none !important;border-bottom: 1px solid #f0f0f0 !important;padding: 18px 24px !important;font-size: 16px !important;font-weight: 700 !important;color: #1a1a2e !important;}body.__page_booking h1,body.__page_booking h2,body.__page_booking h3,body.__page_booking h4,body.__page_booking h5{color: #1a1a2e !important;font-weight: 700 !important;}body.__page_booking .form-control,body.__page_booking input,body.__page_booking select,body.__page_booking textarea{border: 1.5px solid #d1d5db !important;border-radius: 8px !important;padding: 11px 14px !important;font-size: 14px !important;height: auto !important;box-shadow: none !important;color: #333 !important;}body.__page_booking .form-control:focus,body.__page_booking input:focus,body.__page_booking select:focus{border-color: #3b82f6 !important;box-shadow: 0 0 0 3px rgba(59,130,246,.1) !important;outline: none !important;}body.__page_booking .btn-primary,body.__page_booking .btn-info,body.__page_booking .btn-success,body.__page_booking button[type="submit"],body.__page_booking .btn-book,body.__page_booking .btn-lg.btn-primary,body.__page_booking .btn-block.btn-primary,body.__page_booking .btn-block.btn-info,body.__page_booking .btn-block.btn-success{background: #1a1a2e !important;border: none !important;border-radius: 10px !important;padding: 14px 20px !important;font-size: 15px !important;font-weight: 700 !important;color: #fff !important;letter-spacing: .3px !important;transition: background .2s !important;box-shadow: none !important;}body.__page_booking .btn-primary:hover,body.__page_booking .btn-info:hover,body.__page_booking .btn-success:hover{background: #2d2d4e !important;color: #fff !important;}body.__page_booking .btn-default{border: 1.5px solid #d1d5db !important;border-radius: 8px !important;background: #fff !important;color: #555 !important;font-weight: 500 !important;}body.__page_booking .row > [class*="col"] > strong,body.__page_booking .total-price,body.__page_booking [class*="total"] strong{font-size: 16px !important;font-weight: 700 !important;color: #1a1a2e !important;}body.__page_booking .radio,body.__page_booking .radio label,body.__page_booking [class*="payment"] .radio{cursor: pointer !important;}body.__page_booking .radio input[type="radio"]{accent-color: #3b82f6 !important;}body.__page_booking [class*="payment"] .label,body.__page_booking [class*="payment"] .badge{border-radius: 6px !important;font-size: 11px !important;font-weight: 600 !important;padding: 3px 8px !important;}body.__page_booking .alert{border-radius: 8px !important;border: none !important;font-size: 14px !important;}body.__page_booking .alert-info{background: #eff6ff !important;color: #1d4ed8 !important;}body.__page_booking hr{border-color: #e0e0e0 !important;margin: 16px 0 !important;}body.__page_booking input[type="checkbox"]{accent-color: #3b82f6 !important;width: 16px !important;height: 16px !important;}body.__page_booking a{color: #3b82f6 !important;}body.__page_booking .booking-property-card,body.__page_booking [class*="property-card"]{background: #fff !important;border-radius: 12px !important;box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;overflow: hidden !important;}body.__page_booking .price-total,body.__page_booking .grand-total,body.__page_booking [class*="total"]{font-weight: 700 !important;color: #1a1a2e !important;}body.__page_booking img.thumbnail,body.__page_booking .media-object{border-radius: 8px !important;}body.__page_booking section,body.__page_booking .checkout-section{margin-bottom: 20px !important;}
-/* ===== bloco original: linha 61 ===== */
-body.__page_booking .payment-item .label.label-default.text-capitalize{display: none !important;}body.__page_booking .payment-card-info{background: #ffffff !important;border: none !important;box-shadow: none !important;}body.__page_booking .panel.panel-default.card-panel{background: #ffffff !important;border: 1.5px solid #e5e7eb !important;box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;border-radius: 10px !important;}body.__page_booking .panel.panel-default.active:has(.panel-group){border-radius: 12px !important;border: 1.5px solid #e5e7eb !important;box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;overflow: hidden !important;}body.__page_booking .payment-item{border-radius: 10px !important;border: 1.5px solid #e5e7eb !important;margin-bottom: 10px !important;transition: border-color 0.2s,box-shadow 0.2s !important;background: #ffffff !important;cursor: pointer !important;}body.__page_booking .payment-item:hover{border-color: #1a1a2e !important;box-shadow: 0 2px 8px rgba(26,26,46,0.10) !important;}body.__page_booking .payment-item.active,body.__page_booking .payment-item.selected{border-color: #1a1a2e !important;background: #f8f8fc !important;}body.__page_booking .payment-item .label.label-default.mr-2{background: transparent !important;color: #1a1a2e !important;font-size: 15px !important;font-weight: 600 !important;padding: 0 !important;border-radius: 0 !important;}body.__page_booking .payment-item .col-md-12 > div:first-child{color: #6b7280 !important;font-size: 12px !important;font-weight: 400 !important;margin-bottom: 4px !important;}body.__page_booking .payment-item-selector i{font-size: 20px !important;color: #9ca3af !important;}body.__page_booking .panel-group{background: transparent !important;border: none !important;box-shadow: none !important;}body.__page_booking .card-panel .panel-body{padding: 20px !important;}body.__page_booking #payment-form input[type="text"],body.__page_booking #payment-form input[type="tel"],body.__page_booking #payment-form input[type="number"],body.__page_booking #payment-form select{border: 1.5px solid #e5e7eb !important;border-radius: 8px !important;padding: 10px 14px !important;font-size: 14px !important;color: #1a1a2e !important;background: #ffffff !important;transition: border-color 0.2s !important;height: 44px !important;}body.__page_booking #payment-form input:focus,body.__page_booking #payment-form select:focus{border-color: #1a1a2e !important;outline: none !important;box-shadow: 0 0 0 3px rgba(26,26,46,0.07) !important;}body.__page_booking #payment-form label,body.__page_booking .card-panel label{font-size: 13px !important;font-weight: 600 !important;color: #374151 !important;margin-bottom: 4px !important;}body.__page_booking .btn-book,body.__page_booking button[type="submit"],body.__page_booking .btn-pay{background: #1a1a2e !important;color: #ffffff !important;border: none !important;border-radius: 8px !important;font-weight: 600 !important;font-size: 16px !important;padding: 14px 24px !important;}body.__page_booking .panel.panel-default.active .panel-heading{background: #ffffff !important;border-bottom: 1.5px solid #f3f4f6 !important;padding: 16px 20px !important;font-weight: 700 !important;font-size: 18px !important;color: #1a1a2e !important;border-radius: 12px 12px 0 0 !important;}body.__page_booking .panel-body > .row{gap: 0 !important;}body.__page_booking .col-sm-12.col-md-6:first-child{padding-right: 12px !important;}body.__page_booking .panel.panel-default.active:first-of-type{border-radius: 12px !important;border: 1.5px solid #e5e7eb !important;box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;margin-bottom: 20px !important;}body.__page_booking .panel.panel-default.active:first-of-type .panel-heading{background: #ffffff !important;border-bottom: 1.5px solid #f3f4f6 !important;padding: 16px 20px !important;border-radius: 12px 12px 0 0 !important;font-size: 16px !important;font-weight: 700 !important;color: #1a1a2e !important;}
-/* ===== bloco original: linha 135 ===== */
-body.__page_booking .panel.panel-default.active .panel-body .col-sm-12 #antif_firstname,body.__page_booking #antif_firstname,body.__page_booking #antif_lastname,body.__page_booking #antif_email,body.__page_booking #antif_document_number{border: 1.5px solid #e5e7eb !important;border-radius: 8px !important;padding: 10px 14px !important;font-size: 14px !important;height: 44px !important;color: #1a1a2e !important;background: #fff !important;width: 100% !important;transition: border-color 0.2s !important;}body.__page_booking #antif_firstname:focus,body.__page_booking #antif_lastname:focus,body.__page_booking #antif_email:focus,body.__page_booking #antif_document_number:focus{border-color: #1a1a2e !important;outline: none !important;box-shadow: 0 0 0 3px rgba(26,26,46,0.07) !important;}body.__page_booking .buyer-data-title{font-size: 18px !important;font-weight: 700 !important;color: #1a1a2e !important;margin-bottom: 20px !important;padding-bottom: 12px !important;border-bottom: 1.5px solid #f3f4f6 !important;}body.__page_booking .panel.panel-default.active .panel-heading h4,body.__page_booking .panel.panel-default.active .panel-heading{font-size: 18px !important;font-weight: 700 !important;color: #1a1a2e !important;}body.__page_booking .panel-group .panel{border-radius: 10px !important;margin-bottom: 8px !important;}body.__page_booking .panel-group .panel + .panel{margin-top: 8px !important;border-top: 1.5px solid #e5e7eb !important;}body.__page_booking .col-sm-12.col-md-6:has(.panel-group){padding-right: 16px !important;}body.__page_booking .payment-implement{padding: 16px !important;background: #f9fafb !important;border-radius: 10px !important;margin-top: 8px !important;}body.__page_booking .col-sm-12.text-center.my-5,body.__page_booking .text-center.my-5{background: #f9fafb !important;border-radius: 10px !important;padding: 20px !important;margin: 16px 0 !important;}body.__page_booking .text-center.my-5 p,body.__page_booking .text-center p{font-size: 15px !important;color: #374151 !important;margin-bottom: 8px !important;}body.__page_booking #subtotal-bottom,body.__page_booking .subtotal-display{font-size: 24px !important;font-weight: 700 !important;color: #1a1a2e !important;}body.__page_booking #pay-button,body.__page_booking .btn-book-now,body.__page_booking input[type="submit"].btn-primary,body.__page_booking button.btn-primary.btn-lg{background: #1a1a2e !important;color: #ffffff !important;border: none !important;border-radius: 8px !important;font-weight: 700 !important;font-size: 16px !important;padding: 14px 32px !important;width: 100% !important;cursor: pointer !important;transition: background 0.2s !important;}body.__page_booking #pay-button:hover,body.__page_booking .btn-book-now:hover{background: #2d2d4e !important;}body.__page_booking .payment-item .m-0{display: none !important;}body.__page_booking .payment-item .panel-body{padding: 14px 16px !important;align-items: center !important;}body.__page_booking .payment-item .row{margin: 0 !important;align-items: center !important;}body.__page_booking .payment-item .d-flex.my-2 img,body.__page_booking .payment-item .d-flex.my-2 svg{height: 22px !important;margin-right: 4px !important;}
-/* ===== bloco original: linha 136 ===== */
-label.label.label-default.text-capitalize,.payment-item label.label-default.text-capitalize,.col-md-12 label.text-capitalize{display: none !important;visibility: hidden !important;height: 0 !important;overflow: hidden !important;margin: 0 !important;padding: 0 !important;}.payment-item .col-md-12 > b{display: none !important;}.payment-item .col-md-12 > *:first-child{display: none !important;}body.__page_booking .payment-item{border-radius: 12px !important;border: 1.5px solid #e5e7eb !important;margin-bottom: 10px !important;background: #ffffff !important;}body.__page_booking .payment-item .col-md-12 label.label-default.mr-2{font-size: 16px !important;font-weight: 600 !important;color: #1a1a2e !important;background: transparent !important;border: none !important;padding: 0 !important;display: inline !important;visibility: visible !important;height: auto !important;}body.__page_booking .col-sm-12.col-md-6.payment-card-info{background-color: #ffffff !important;border-color: #e5e7eb !important;}body.__page_booking .col-sm-12.col-md-6.payment-card-info,body.__page_booking .panel-inner{background: #ffffff !important;}
-/* ===== bloco original: linha 296 ===== */
- body.__page_booking #cardInfo .col-sm-6[data-hidden-if="card-token-selected"]{display: none !important;}body.__page_booking .col-sm-12.col-md-6.payment-card-info{width: 100% !important;flex: 0 0 100% !important;max-width: 100% !important;background: transparent !important;border: none !important;box-shadow: none !important;padding: 0 !important;}body.__page_booking .payment-card-info .panel-inner,body.__page_booking .payment-card-info .card-panel{background: transparent !important;border: none !important;box-shadow: none !important;padding: 0 !important;}body.__page_booking .payment-card-info .card-panel .panel-body{padding: 0 !important;}body.__page_booking .payment-card-info #cc_number,body.__page_booking .payment-card-info #cc_name,body.__page_booking .payment-card-info #cc_cvv{border: 1.5px solid #d1d5db !important;border-radius: 8px !important;padding: 10px 14px !important;font-size: 15px !important;height: 46px !important;background: #fff !important;box-shadow: none !important;width: 100% !important;transition: border-color 0.2s !important;}body.__page_booking .payment-card-info #cc_number:focus,body.__page_booking .payment-card-info #cc_name:focus,body.__page_booking .payment-card-info #cc_cvv:focus{border-color: #1a1a2e !important;outline: none !important;box-shadow: 0 0 0 3px rgba(26,26,46,0.08) !important;}body.__page_booking .payment-card-info label.control-label small{font-size: 12px !important;font-weight: 600 !important;color: #374151 !important;text-transform: uppercase !important;letter-spacing: 0.5px !important;}body.__page_booking .payment-card-info .form-group{margin-bottom: 14px !important;}body.__page_booking .payment-card-info .row{margin-left: 0 !important;margin-right: 0 !important;}body.__page_booking .dropdown.bootstrap-select.cc_month,body.__page_booking .dropdown.bootstrap-select.cc_year,body.__page_booking .card-info-block:has(.cc_month,.cc_year),body.__page_booking .panel-body-credit-card:has(.cc_month,.cc_year),body.__page_booking .payment-card-info:has(.cc_month,.cc_year){overflow:visible!important;}body.__page_booking .payment-card-info .label.label-success{display: inline-block !important;background: #f9fafb !important;color: #6b7280 !important;border: 1px solid #e5e7eb !important;font-size: 10px !important;border-radius: 4px !important;padding: 3px 8px !important;font-weight: 500 !important;margin-right: 4px !important;}
-/* ===== bloco original: linha 1649 ===== */
+/* ============================================================================
+   estadia-express - checkout.css
+   Design System V3 - Fase 8: Checkout premium
 
-	/* CHECKOUT PROTECTION - preserva fonte antes de remover regra legada global */
-	body.__page_booking :is(h1,h2,h3,h4,h5,h6,p,a,li,button,input,select){font-family:'Inter',sans-serif!important}
+   Escopo: body.__page_booking inteiro -- a coluna do formulario, o resumo da
+   reserva e a escolha do meio de pagamento. O cabecalho e o rodape sao do
+   header.css e do footer.css; os tokens vem do ds.css.
+
+   DE ONDE VEIO
+   A versao anterior deste arquivo (v1) era o recorte literal do checkout que
+   morava no legacy.css: 81 regras, 280 !important e zero @media. Aquele recorte
+   cumpriu o papel dele -- provar que da para tirar o checkout do legado sem
+   mudar um pixel -- e agora e substituido pelo desenho definitivo. O v1 segue
+   no historico do repositorio, entao voltar atras continua sendo uma linha no
+   head_section.
+
+   O QUE ESTAVA ERRADO
+   O checkout foi a unica area do site que nunca passou pelo sistema, e falava
+   outra lingua: fundo cinza-frio #F0F2F5, Segoe UI, tinta azul-marinho #1A1A2E,
+   foco azul #3B82F6 e selecao no azul cru do Bootstrap. Fora isso, 54 das 81
+   regras herdadas nem casavam mais com o HTML servido hoje: miravam uma geracao
+   anterior do checkout da plataforma (.payment-item, #payment-form, .card-panel).
+   O que sobrou de util delas foi reescrito na linguagem nova, na secao 12.
+
+   DIRECAO VISUAL
+   - a pagina sobre o canvas quente; os paineis e que sao papel;
+   - Fraunces nos titulos, Inter no resto, como em todas as outras fases;
+   - hairline no lugar de borda grossa e sombra;
+   - o resumo da reserva gruda enquanto o hospede digita o cartao;
+   - a decisao (meio de pagamento) e desenhada como escolha, nao como caixa;
+   - primeira vez que o checkout tem tratamento mobile de verdade.
+
+   SOBRE ESPECIFICIDADE E !IMPORTANT
+   A plataforma estiliza esta pagina por cadeias longas ancoradas em id, do tipo
+   "#booking-checkout-v1 .input-panel .row .form-group .form-check-label .card-list".
+   Em vez de repetir a estrategia do legado (!important em tudo), as regras daqui
+   acompanham a profundidade da cadeia da plataforma e ganham por um elemento.
+   Sobraram sete !important no arquivo inteiro: quatro desfazem utilitarias do
+   Bootstrap (.pb-4, .justify-content-center, .mt-5/.mb-4 e .mr-sm-4), que nascem
+   !important e so cedem ao mesmo peso; um garante o .hidden da plataforma; e
+   dois estao na regra de movimento reduzido. Todos comentados no lugar.
+
+   DEPENDE DE
+   ds.css (tokens) e js/checkout.js (trilha de etapas e limpeza do resumo).
+   ============================================================================ */
+
+
+/* ----------------------------------------------------------------------------
+   1. FUNDAMENTO
+   O checkout era a unica area que nunca passou pelo Design System: vinha com
+   fundo cinza-frio (#F0F2F5), Segoe UI, tinta azul-marinho (#1A1A2E) e foco
+   azul (#3B82F6). Nada disso existe no resto do site. Aqui a pagina volta
+   para o canvas quente, Inter no corpo e Fraunces nos titulos.
+   ---------------------------------------------------------------------------- */
+body.__page_booking{
+  background:var(--eex-canvas);
+  font-family:var(--eex-font-ui);
+  color:var(--eex-text);
+}
+body.__page_booking #maincontent,
+body.__page_booking #mainblock{
+  background:var(--eex-canvas);
+}
+/* A pagina comecava encostada no cabecalho. Ritmo de secao no topo e no pe. */
+body.__page_booking #booking-checkout-v1{
+  max-width:var(--eex-maxw);
+  padding-top:clamp(28px,3.5vw,56px);
+  padding-bottom:clamp(48px,6vw,104px);
+  padding-left:var(--eex-gutter);
+  padding-right:var(--eex-gutter);
+}
+
+/* ----------------------------------------------------------------------------
+   2. GRADE
+   Bootstrap dava 6 colunas para o formulario e 5+1 para o resumo. Com 50% de
+   largura as linhas de tres campos (mes / ano / CVV) nao caberiam e o seletor
+   de ano truncava em "202". O formulario ganha folga e o resumo passa a grudar.
+   ---------------------------------------------------------------------------- */
+@media (min-width:768px){
+  body.__page_booking .checkout-row{
+    align-items:flex-start;
+    gap:0;
+  }
+  body.__page_booking .checkout-row > .col-md-6{
+    flex:0 0 58%;
+    max-width:58%;
+  }
+  body.__page_booking .checkout-row > .col-md-5{
+    flex:0 0 38%;
+    max-width:38%;
+    position:sticky;
+    top:105px;
+    align-self:flex-start;
+  }
+  body.__page_booking .checkout-row > .offset-md-1{
+    margin-left:4%;
+  }
+}
+
+
+/* ----------------------------------------------------------------------------
+   3. PAPEL
+   Os paineis eram caixas brancas de raio 12 com sombra difusa de plataforma.
+   Passam a folha: superficie, hairline de 1px e elevacao 1. A sombra pesada sai
+   porque a hierarquia aqui vem do espaco, nao da profundidade.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .panel,
+body.__page_booking .panel-checkout,
+body.__page_booking .panel-default{
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-lg);
+  box-shadow:var(--eex-e1);
+  overflow:hidden;
+}
+body.__page_booking .panel-body{
+  padding:clamp(20px,2.4vw,32px);
+  background:transparent;
+}
+body.__page_booking .panel-heading{
+  padding:clamp(20px,2.4vw,32px) clamp(20px,2.4vw,32px) 0;
+  background:transparent;
+  border:0;
+}
+/* Painel logo abaixo de um cabecalho nao repete o padding de cima. */
+body.__page_booking .panel-heading + .panel-body{
+  padding-top:var(--eex-s5);
+}
+/* Os <hr> entre blocos existiam para separar o que agora sao folhas distintas.
+   Viram apenas respiro vertical. */
+body.__page_booking #guest-form > div > hr,
+body.__page_booking #guest-form > hr{
+  border:0;
+  height:0;
+  margin:var(--eex-s5) 0 0;
+}
+body.__page_booking #guest-form > div{
+  margin-bottom:var(--eex-s5);
+}
+body.__page_booking #guest-form{
+  padding-bottom:0 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   4. TITULOS
+   O bloco de "protecao" do legado forcava Inter em todos os titulos com
+   !important, justamente o contrario do sistema. Fraunces volta nos titulos de
+   painel; a linha de apoio fica em Inter, cor pedra.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .panel h4,
+body.__page_booking .panel .h4,
+body.__page_booking .media-heading,
+body.__page_booking #reserve-info .h4{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h4);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-title);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+  margin:0;
+}
+body.__page_booking .media-sub-heading{
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-body);
+  letter-spacing:0;
+  color:var(--eex-text-2);
+  margin:var(--eex-s2) 0 0;
+}
+/* O titulo do painel de pagamento tem duas linhas (titulo + apoio); o <h4>
+   de apoio nao deve herdar o serifado. */
+body.__page_booking h4.media-sub-heading{
+  font-family:var(--eex-font-ui);
+}
+
+
+/* --- 3.1 O clearfix herdado do Bootstrap 3 ---
+   .row, .panel-body e .form-group trazem ::before e ::after com content:" " e
+   display:table, sobra da epoca em que a grade era de floats. A grade desta
+   pagina e flex, entao eles nao servem para nada -- mas viram itens de grade e
+   de flex assim que um desses blocos deixa de ser bloco comum (secoes 5, 8 e
+   10). Era o que empurrava "Nome" para a segunda coluna e abria a celula vazia
+   no canto do resumo de dados pessoais. */
+body.__page_booking .row::before,
+body.__page_booking .row::after,
+body.__page_booking .panel-body::before,
+body.__page_booking .panel-body::after,
+body.__page_booking .panel-heading::before,
+body.__page_booking .panel-heading::after,
+body.__page_booking .form-group::before,
+body.__page_booking .form-group::after,
+body.__page_booking .clearfix::before,
+body.__page_booking .clearfix::after{
+  content:none;
+}
+
+
+/* ----------------------------------------------------------------------------
+   5. RESUMO DE DADOS
+   O resumo dos dados pessoais vinha em linhas de Bootstrap de largura irregular
+   (duas de col-sm-6, duas de col-sm-4 sozinhas, depois tres). O resultado era
+   uma coluna esquerda cheia de buracos. Aqui as linhas viram "display:contents"
+   e o painel inteiro passa a ser uma grade unica de duas colunas, entao os pares
+   rotulo/valor se alinham sozinhos, independentemente do que o inventario mandar.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .personal-details-resume .panel-body{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:var(--eex-s6);
+  row-gap:var(--eex-s5);
+}
+body.__page_booking .personal-details-resume .panel-body > .row{
+  display:contents;
+}
+body.__page_booking .personal-details-resume .panel-body > .row > [class*="col-"]{
+  flex:none;
+  width:auto;
+  max-width:none;
+  padding:0;
+}
+/* Celula sem valor (Complemento em branco, por exemplo) nao abre buraco. */
+body.__page_booking .personal-details-resume .panel-body > .row > [class*="col-"]:has(.resume-value:empty){
+  display:none;
+}
+body.__page_booking .resume-subtitle{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-medium);
+  line-height:1;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-text-3);
+  margin:0 0 var(--eex-s2);
+}
+body.__page_booking .resume-value{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-tight);
+  color:var(--eex-ink);
+  overflow-wrap:anywhere;
+}
+/* O botao de editar dados fica discreto, alinhado ao titulo. */
+body.__page_booking .btn-guest-edit{
+  font-size:var(--eex-fs-micro);
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+}
+
+
+/* ----------------------------------------------------------------------------
+   6. CAMPOS
+   Campo do sistema: altura 48, preenchimento canvas-3, hairline, raio pequeno,
+   foco em tinta. O legado usava borda de 1.5px cinza-frio e anel azul de 3px.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .control-label,
+body.__page_booking .form-group > label,
+body.__page_booking .card-info-block label{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  font-weight:var(--eex-w-medium);
+  line-height:1.35;
+  letter-spacing:0;
+  color:var(--eex-text-2);
+  margin:0 0 var(--eex-s2);
+}
+body.__page_booking .form-control,
+body.__page_booking input[type="text"],
+body.__page_booking input[type="tel"],
+body.__page_booking input[type="email"],
+body.__page_booking input[type="number"],
+body.__page_booking input[type="password"],
+body.__page_booking input[type="search"],
+body.__page_booking select,
+body.__page_booking textarea{
+  width:100%;
+  height:48px;
+  padding:0 var(--eex-s4);
+  background:var(--eex-canvas-3);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  box-shadow:none;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-regular);
+  line-height:normal;
+  color:var(--eex-ink);
+  transition:border-color var(--eex-d1) var(--eex-ease),
+             background-color var(--eex-d1) var(--eex-ease);
+  -webkit-appearance:none;
+  appearance:none;
+}
+body.__page_booking textarea,
+body.__page_booking textarea.form-control{
+  height:auto;
+  min-height:112px;
+  padding:var(--eex-s3) var(--eex-s4);
+  line-height:var(--eex-lh-body);
+  resize:vertical;
+}
+body.__page_booking .form-control::placeholder,
+body.__page_booking input::placeholder{
+  color:var(--eex-text-3);
+}
+body.__page_booking .form-control:hover,
+body.__page_booking input:hover,
+body.__page_booking select:hover{
+  border-color:var(--eex-stone-2);
+}
+body.__page_booking .form-control:focus,
+body.__page_booking input:focus,
+body.__page_booking select:focus,
+body.__page_booking textarea:focus{
+  background:var(--eex-surface);
+  border-color:var(--eex-ink);
+  box-shadow:none;
+  outline:1px solid var(--eex-ink);
+  outline-offset:0;
+}
+/* Campo obrigatorio em falta: aviso em tinta de erro, sem preencher de vermelho. */
+body.__page_booking .form-control.is-invalid,
+body.__page_booking .has-error .form-control{
+  border-color:var(--eex-danger);
+}
+/* Rotulo com asterisco de obrigatorio: o asterisco em terracota, discreto. */
+body.__page_booking .control-label sup,
+body.__page_booking label sup{
+  color:var(--eex-accent);
+  font-size:1em;
+  top:0;
+}
+
+/* --- 6.1 O seletor de plataforma (bootstrap-select) ---
+   Este era o defeito mais visivel do checkout. O wrapper .bootstrap-select
+   tambem carrega a classe .form-control, entao recebia borda e padding de
+   campo, e o botao interno recebia outra borda por cima: campo dentro de campo,
+   com 67px uteis dentro de 96px. O ano de validade aparecia como "202".
+   O wrapper volta a ser invisivel e o botao interno passa a ser o campo. */
+body.__page_booking .bootstrap-select.form-control,
+body.__page_booking .dropdown.bootstrap-select{
+  height:auto;
+  padding:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  width:100%;
+}
+body.__page_booking .bootstrap-select > .dropdown-toggle,
+body.__page_booking .bootstrap-select > button.btn{
+  display:flex;
+  align-items:center;
+  width:100%;
+  height:48px;
+  padding:0 var(--eex-s4);
+  background:var(--eex-canvas-3);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  box-shadow:none;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-regular);
+  color:var(--eex-ink);
+  text-align:left;
+  text-transform:none;
+  letter-spacing:0;
+  transition:border-color var(--eex-d1) var(--eex-ease);
+}
+body.__page_booking .bootstrap-select > .dropdown-toggle:hover{
+  border-color:var(--eex-stone-2);
+}
+body.__page_booking .bootstrap-select > .dropdown-toggle:focus,
+body.__page_booking .bootstrap-select.open > .dropdown-toggle{
+  background:var(--eex-surface);
+  border-color:var(--eex-ink);
+  outline:1px solid var(--eex-ink);
+  outline-offset:0;
+}
+body.__page_booking .bootstrap-select .filter-option{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+/* A seta do Bootstrap 3 e um triangulo solido. Vira um chevron em traco fino. */
+body.__page_booking .bootstrap-select .caret{
+  width:9px;
+  height:9px;
+  margin-top:-3px;
+  border:0;
+  border-right:1.5px solid var(--eex-stone);
+  border-bottom:1.5px solid var(--eex-stone);
+  transform:rotate(45deg);
+  right:var(--eex-s4);
+}
+body.__page_booking .bootstrap-select .dropdown-menu{
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  box-shadow:var(--eex-e2);
+  padding:var(--eex-s2) 0;
+  margin-top:var(--eex-s1);
+}
+body.__page_booking .bootstrap-select .dropdown-menu li a{
+  padding:10px var(--eex-s4);
+  font-size:var(--eex-fs-field);
+  color:var(--eex-ink);
+}
+body.__page_booking .bootstrap-select .dropdown-menu li a:hover,
+body.__page_booking .bootstrap-select .dropdown-menu li.selected a{
+  background:var(--eex-canvas-2);
+  color:var(--eex-ink);
+}
+body.__page_booking .bootstrap-select .bs-searchbox .form-control{
+  height:40px;
+}
+
+
+/* ----------------------------------------------------------------------------
+   7. OPCOES DE PAGAMENTO
+   A selecao vinha em azul #007BFF, o azul cru do Bootstrap, com borda de 0.8px.
+   E a decisao mais importante da pagina e merece o tratamento de escolha do
+   sistema: folha sobre canvas, hairline em repouso, tinta cheia quando escolhida.
+
+   NOTA DE ESPECIFICIDADE
+   A plataforma estiliza este bloco por cadeias longas ancoradas em id, do tipo
+   "#booking-checkout-v1 .input-panel .row .form-group .form-check-label .card-list"
+   (1 id + 5 classes). Regras so de classe perdem e o legado resolvia isso com
+   !important em tudo. Aqui a saida e outra: as regras desta secao repetem a
+   profundidade da cadeia da plataforma e ganham por um elemento (body), sem
+   nenhum !important. Por isso os seletores sao longos -- e proposital.
+   ---------------------------------------------------------------------------- */
+body.__page_booking #booking-checkout-v1 .payment-panel > .row{
+  margin:0;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group{
+  padding:0;
+  margin:0 0 var(--eex-s3);
+  border:0;
+  border-radius:0;
+  background:transparent;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group:last-child{
+  margin-bottom:0;
+}
+/* A plataforma repinta a moldura em .form-group.selected (azul #007BFF). A
+   escolha e desenhada no .payment-option-wrp, entao a caixa de fora zera aqui. */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected{
+  border:0;
+  border-radius:0;
+  background:transparent;
+  padding:0;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .payment-option-wrp{
+  position:relative;
+  padding:var(--eex-s5);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  transition:border-color var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group:not(.selected) .payment-option-wrp:hover{
+  border-color:var(--eex-stone-2);
+  cursor:pointer;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected .payment-option-wrp{
+  border-color:var(--eex-ink);
+  box-shadow:inset 0 0 0 1px var(--eex-ink);
+}
+/* A linha do titulo: o radio sai da col-1 estreita e passa a ficar rente ao
+   texto, com o rotulo ocupando toda a largura restante. */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .payment-option-row{
+  display:flex;
+  align-items:flex-start;
+  gap:var(--eex-s4);
+  margin:0;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .payment-option-row > .col-1{
+  flex:0 0 auto;
+  width:auto;
+  max-width:none;
+  padding:0;
+  justify-content:flex-start;
+  padding-top:3px;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .payment-option-row > .col-11,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .payment-option-row > .col{
+  flex:1 1 auto;
+  width:auto;
+  max-width:none;
+  padding:0;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label{
+  display:block;
+  margin:0;
+  cursor:pointer;
+  font-weight:var(--eex-w-regular);
+}
+
+/* --- 7.1 O radio ---
+   Anel em hairline, alvo em tinta quando marcado. */
+body.__page_booking #booking-checkout-v1 input[type="radio"].form-check-input{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+  flex:0 0 auto;
+  width:20px;
+  height:20px;
+  margin:0;
+  padding:0;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-stone-2);
+  border-radius:var(--eex-r-pill);
+  cursor:pointer;
+  transition:border-color var(--eex-d1) var(--eex-ease);
+}
+body.__page_booking #booking-checkout-v1 input[type="radio"].form-check-input:hover{
+  border-color:var(--eex-ink);
+}
+body.__page_booking #booking-checkout-v1 input[type="radio"].form-check-input:checked{
+  border-color:var(--eex-ink);
+}
+body.__page_booking #booking-checkout-v1 input[type="radio"].form-check-input:checked::after{
+  content:"";
+  position:absolute;
+  inset:4px;
+  background:var(--eex-ink);
+  border-radius:var(--eex-r-pill);
+}
+
+/* --- 7.2 Titulo e descricao da opcao --- */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .label-title{
+  display:block;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-lead);
+  font-weight:var(--eex-w-medium);
+  line-height:var(--eex-lh-tight);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label > .resume-value{
+  display:block;
+  font-size:var(--eex-fs-small);
+  color:var(--eex-text-2);
+  margin-top:var(--eex-s1);
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label > .resume-value p{
+  margin:0;
+  font-size:inherit;
+  color:inherit;
+  line-height:var(--eex-lh-body);
+}
+
+/* --- 7.3 Selo do meio de pagamento e bandeiras ---
+   O selo "Cartao de credito" era uma pilula cinza-escuro de plataforma. Vira
+   sobrescrito do sistema. As bandeiras vinham em PNG colorido de 56x35 empilhado
+   na vertical, o elemento mais berrante da pagina: viram uma fila dessaturada
+   que so recupera a cor quando a opcao e escolhida. */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .label-txt{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:var(--eex-s3);
+  margin-top:var(--eex-s4);
+}
+/* O selo dizia "Cartao de credito" logo abaixo do titulo "Cartao de Credito".
+   Repeticao pura: sai da fila e deixa as bandeiras falarem sozinhas. */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .label-txt .label.label-default{
+  display:none;
+  padding:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-medium);
+  line-height:1;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-text-3);
+  margin:0;
+  order:2;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .card-list{
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s2);
+  margin:0;
+  padding:0;
+  list-style:none;
+  order:1;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .card-list .card-it{
+  display:flex;
+  margin:0;
+  padding:0;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .card-list .card-it img{
+  display:block;
+  width:auto;
+  height:22px;
+  border-radius:3px;
+  filter:saturate(0) contrast(.9);
+  opacity:.5;
+  transition:filter var(--eex-d2) var(--eex-ease),
+             opacity var(--eex-d2) var(--eex-ease);
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected .card-list .card-it img{
+  filter:none;
+  opacity:1;
+}
+
+
+/* ----------------------------------------------------------------------------
+   8. O FORMULARIO DO CARTAO
+   Aparece dentro da opcao escolhida. Precisa se ler como uma continuacao da
+   escolha, nao como outra caixa: separador em hairline no lugar de moldura.
+   ---------------------------------------------------------------------------- */
+/* Na opcao nao escolhida o .payment-card-info chega vazio (24px) e mesmo assim
+   somava separador, margem e respiro: quase 80px de nada dentro do cartao. */
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group:not(.selected) .payment-card-info{
+  display:none;
+}
+body.__page_booking .payment-card-info{
+  margin-top:var(--eex-s5);
+  padding-top:var(--eex-s5);
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--eex-hairline-2);
+  border-radius:0;
+}
+body.__page_booking .panel-body-credit-card{
+  padding:0;
+  background:transparent;
+  border:0;
+}
+body.__page_booking .payment-card-info .row{
+  margin-left:0;
+  margin-right:0;
+  row-gap:var(--eex-s5);
+}
+body.__page_booking .panel-body-credit-card > .row{
+  display:block;
+  margin:0;
+}
+/* O bloco dos campos vinha em col-11, deslocado por justify-content-end, o que
+   deixava a coluna do formulario visualmente torta em relacao ao titulo. */
+body.__page_booking .panel-body-credit-card > .row.justify-content-end{
+  justify-content:flex-start !important;
+}
+body.__page_booking .card-info-block{
+  flex:1 1 100%;
+  width:100%;
+  max-width:none;
+  padding:0;
+}
+/* Cada linha de campos e uma grade propria; os rotulos de duas linhas nao
+   desalinham mais os campos porque o alinhamento e pelo fim da celula. */
+body.__page_booking .card-info-block > .row{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  column-gap:var(--eex-s4);
+  row-gap:var(--eex-s5);
+  margin:0 0 var(--eex-s5);
+}
+body.__page_booking .card-info-block > .row:last-child{
+  margin-bottom:0;
+}
+body.__page_booking .card-info-block > .row > [class*="col-"]{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  width:auto;
+  max-width:none;
+  flex:none;
+  padding:0;
+}
+body.__page_booking .card-info-block > .row > .col-sm-6{ grid-column:span 6; }
+body.__page_booking .card-info-block > .row > .col-sm-4{ grid-column:span 4; }
+body.__page_booking .card-info-block > .row > .col-sm-12,
+body.__page_booking .card-info-block > .row > .col-12{ grid-column:span 12; }
+body.__page_booking .card-info-block > .row > .col-6{ grid-column:span 6; }
+body.__page_booking .card-info-block > .row > .col-4{ grid-column:span 4; }
+body.__page_booking .card-info-block > .row > .col-8{ grid-column:span 8; }
+body.__page_booking .card-info-block > .row > .col-3{ grid-column:span 3; }
+body.__page_booking .card-info-block > .row > .col-9{ grid-column:span 9; }
+/* O rotulo empurra o campo para baixo, entao a base dos campos sempre coincide. */
+body.__page_booking .card-info-block label.control-label{
+  margin-top:auto;
+}
+/* O numero do cartao pede tabular para nao dancar enquanto se digita. */
+body.__page_booking #cc_number,
+body.__page_booking #cc_cvv,
+body.__page_booking #document_number,
+body.__page_booking input[name="adrbilling.zip"]{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.02em;
+}
+body.__page_booking #cc_name{
+  text-transform:uppercase;
+}
+/* O subtitulo "Endereco da cobranca" abre uma secao dentro do formulario. */
+body.__page_booking .checkbox-group h4.media-heading{
+  margin:var(--eex-s2) 0 var(--eex-s4) !important;
+  padding-top:var(--eex-s5);
+  border-top:1px solid var(--eex-hairline-2);
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h4);
+  color:var(--eex-ink);
+}
+
+/* --- 8.1 Caixa de marcar --- */
+body.__page_booking .checkbox-group > label,
+body.__page_booking label:has(> input[type="checkbox"]){
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s3);
+  margin:0;
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-regular);
+  color:var(--eex-ink);
+  cursor:pointer;
+}
+body.__page_booking input[type="checkbox"]{
+  appearance:none;
+  -webkit-appearance:none;
+  position:relative;
+  flex:0 0 auto;
+  width:20px;
+  height:20px;
+  margin:0;
+  background:var(--eex-surface);
+  border:1px solid var(--eex-stone-2);
+  border-radius:var(--eex-r-sm);
+  cursor:pointer;
+  transition:background-color var(--eex-d1) var(--eex-ease),
+             border-color var(--eex-d1) var(--eex-ease);
+}
+body.__page_booking input[type="checkbox"]:hover{
+  border-color:var(--eex-ink);
+}
+body.__page_booking input[type="checkbox"]:checked{
+  background:var(--eex-ink);
+  border-color:var(--eex-ink);
+}
+body.__page_booking input[type="checkbox"]:checked::after{
+  content:"";
+  position:absolute;
+  left:6px;
+  top:3px;
+  width:6px;
+  height:11px;
+  border:solid #fff;
+  border-width:0 1.5px 1.5px 0;
+  transform:rotate(40deg);
+}
+
+/* --- 8.2 Selos de confianca ---
+   "criptografia SSL" e "Certificado PCI" vinham como duas pilulas cinzas soltas,
+   com cara de rotulo de sistema. Sao o unico sinal de seguranca da pagina e
+   passam a ser lidos como tal: cadeado, versalete, hairline. */
+body.__page_booking .card-info-block > .row:has(> .col-sm-12 > .label-success){
+  margin-bottom:var(--eex-s5);
+}
+body.__page_booking .card-info-block .col-sm-12:has(.label-success){
+  flex-direction:row;
+  gap:var(--eex-s2);
+  flex-wrap:wrap;
+}
+body.__page_booking .label.label-success{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 10px;
+  background:var(--eex-canvas-2);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-medium);
+  line-height:1;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-text-2);
+}
+body.__page_booking .label.label-success::before{
+  content:"";
+  display:block;
+  width:11px;
+  height:11px;
+  flex:0 0 auto;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17 9V7a5 5 0 0 0-10 0v2H5.5A1.5 1.5 0 0 0 4 10.5v10A1.5 1.5 0 0 0 5.5 22h13a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 18.5 9H17zM9 7a3 3 0 0 1 6 0v2H9V7zm4 9.7V19h-2v-2.3a1.8 1.8 0 1 1 2 0z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17 9V7a5 5 0 0 0-10 0v2H5.5A1.5 1.5 0 0 0 4 10.5v10A1.5 1.5 0 0 0 5.5 22h13a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 18.5 9H17zM9 7a3 3 0 0 1 6 0v2H9V7zm4 9.7V19h-2v-2.3a1.8 1.8 0 1 1 2 0z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+
+/* --- 8.3 A bandeira do cartao ---
+   A plataforma pinta um sprite (credit-card-icons.png) dentro do proprio campo
+   #cc_number: um bloco cinza de 49x33 encostado no canto superior esquerdo,
+   ainda por cima desalinhado da altura do campo. E ela troca a bandeira por
+   classe (#cc_number.visa, .mastercard, .elo, .amex...). A segunda camada do
+   sprite, o "certo" de validado, e posicionada em 210px -- fora de um campo que
+   mede 194px, entao nunca aparece.
+
+   Aqui o sprite sai do campo e a deteccao passa a acontecer onde o hospede ja
+   estava olhando: a fila de bandeiras logo acima. Como a classe cai no
+   #cc_number, :has() resolve tudo sem uma linha de JavaScript -- a bandeira
+   reconhecida acende e as outras recuam.  */
+body.__page_booking #booking-checkout-v1 #cc_number{
+  background-image:none;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.visa) .card-list .card-it img,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.visa_electron) .card-list .card-it img,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.mastercard) .card-list .card-it img,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.maestro) .card-list .card-it img,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.elo) .card-list .card-it img,
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.amex) .card-list .card-it img{
+  filter:saturate(0) contrast(.9);
+  opacity:.28;
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.visa) .card-list img[src*="visa"],
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.visa_electron) .card-list img[src*="visa"],
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.mastercard) .card-list img[src*="master"],
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.maestro) .card-list img[src*="master"],
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.elo) .card-list img[src*="elo"],
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group.selected:has(#cc_number.amex) .card-list img[src*="american"]{
+  filter:none;
+  opacity:1;
+  transform:scale(1.08);
+}
+body.__page_booking #booking-checkout-v1 .payment-panel .form-group .form-check-label .card-list .card-it img{
+  transform-origin:center;
+  transition:filter var(--eex-d2) var(--eex-ease),
+             opacity var(--eex-d2) var(--eex-ease),
+             transform var(--eex-d2) var(--eex-ease);
+}
+
+
+/* ----------------------------------------------------------------------------
+   9. BARRA DE ACAO
+   Os botoes vinham em azul-marinho de raio 10 com 700 de peso. O sistema usa
+   tinta cheia, raio pequeno e versalete em 11px: e a mesma linguagem do "Ver
+   disponibilidade" da pagina do imovel, entao o gesto final do fluxo nao muda
+   de sotaque no ultimo passo.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .bottom-bar{
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s4);
+  flex-wrap:wrap;
+}
+/* O "Voltar" carrega a utilitaria .mr-sm-4, e utilitarias do Bootstrap sao
+   sempre !important -- somava 15px ao gap da barra. Este e um dos poucos
+   lugares do modulo onde !important e a resposta certa: so o mesmo peso
+   desfaz uma utilitaria. O espaco entre as acoes passa a vir so do gap. */
+body.__page_booking #booking-checkout-v1 .bottom-bar > .btn{
+  margin:0 !important;
+}
+body.__page_booking .payment-implement{
+  flex:1 1 auto;
+  padding:0;
+  margin:0;
+  background:transparent;
+  border-radius:0;
+}
+body.__page_booking .payment-implement .doPayment{
+  display:flex;
+}
+body.__page_booking .btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:1px solid transparent;
+  border-radius:var(--eex-r-sm);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-semi);
+  line-height:1;
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+  transition:background-color var(--eex-d2) var(--eex-ease),
+             border-color var(--eex-d2) var(--eex-ease),
+             transform var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+body.__page_booking .bottom-bar .btn,
+body.__page_booking .payment-implement .btn{
+  padding:18px 30px;
+}
+body.__page_booking .btn-primary,
+body.__page_booking button[type="submit"].btn,
+body.__page_booking .payment-implement button[type="submit"]{
+  flex:1 1 auto;
+  background:var(--eex-ink);
+  border-color:var(--eex-ink);
+  color:var(--eex-text-invert);
+  box-shadow:none;
+}
+body.__page_booking .btn-primary:hover,
+body.__page_booking .payment-implement button[type="submit"]:hover{
+  background:var(--eex-ink-2);
+  border-color:var(--eex-ink-2);
+  color:var(--eex-text-invert);
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2);
+}
+body.__page_booking .btn-default,
+body.__page_booking .btn-back{
+  background:var(--eex-surface);
+  border-color:var(--eex-hairline);
+  color:var(--eex-ink);
+}
+body.__page_booking .btn-default:hover,
+body.__page_booking .btn-back:hover{
+  background:var(--eex-surface);
+  border-color:var(--eex-ink);
+  color:var(--eex-ink);
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2);
+}
+body.__page_booking .btn.disabled,
+body.__page_booking .btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+body.__page_booking .btn-sm{
+  padding:10px var(--eex-s4);
+}
+/* O painel que carrega apenas a barra de acao nao precisa ser folha: a acao
+   flutua sobre o canvas, como no resto do site. */
+body.__page_booking #guest-form > .panel.panel-checkout:last-child{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+body.__page_booking #guest-form > .panel.panel-checkout:last-child > .panel-body{
+  padding:var(--eex-s2) 0 0;
+}
+/* Ligacoes na pagina em tinta com sublinhado fino, nao no azul de plataforma. */
+body.__page_booking a{
+  color:var(--eex-ink);
+  text-decoration:underline;
+  text-decoration-color:var(--eex-hairline);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+  transition:text-decoration-color var(--eex-d1) var(--eex-ease);
+}
+body.__page_booking a:hover{
+  color:var(--eex-ink);
+  text-decoration-color:var(--eex-ink);
+}
+body.__page_booking .btn a,
+body.__page_booking a.btn{
+  text-decoration:none;
+}
+
+/* ----------------------------------------------------------------------------
+   10. RESUMO DA RESERVA
+   A coluna da direita e o que segura a confianca do hospede enquanto ele digita
+   o cartao. Ela precisa parar de rolar embora (secao 2) e precisa parecer a
+   ficha do imovel, nao um painel de sistema com fundo #F8F8F8.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .panel.booking-details{
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-lg);
+  box-shadow:var(--eex-e2);
+}
+/* A foto vinha em 150px de altura, cortando a cama pela metade. Proporcao fixa
+   e um vinhado no pe para os botoes de vidro terem contraste. */
+body.__page_booking .booking-details .img-cover{
+  position:relative;
+  height:auto;
+  aspect-ratio:16/10;
+  background-size:cover;
+  background-position:center;
+  border-radius:0;
+}
+body.__page_booking .booking-details .img-cover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(0deg,rgba(20,18,16,.34) 0%,rgba(20,18,16,0) 42%);
+  pointer-events:none;
+}
+/* A plataforma ancora .card-action por #booking-checkout-v1 (bottom:15px,
+   left:15px) e nao define altura, entao a faixa esticava do topo ate o pe da
+   foto e os dois botoes vinham com 123px de altura. Aqui ela volta a ter o
+   tamanho do conteudo, encostada no pe da imagem, sobre o vinhado. */
+body.__page_booking #booking-checkout-v1 .card-action{
+  position:absolute;
+  z-index:2;
+  top:auto;
+  right:auto;
+  bottom:var(--eex-s3);
+  left:var(--eex-s3);
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-start;
+  gap:var(--eex-s2);
+  width:auto;
+  height:auto;
+}
+body.__page_booking #booking-checkout-v1 .card-action .btn-card{
+  height:auto;
+  padding:9px 14px;
+  margin:0;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:0;
+  border-radius:var(--eex-r-pill);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-medium);
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-ink);
+  box-shadow:var(--eex-e1);
+}
+body.__page_booking #booking-checkout-v1 .card-action .btn-card:hover{
+  background:#fff;
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2);
+}
+
+body.__page_booking #reserve-info{
+  padding:clamp(20px,2.2vw,28px);
+  background:var(--eex-surface);
+}
+body.__page_booking #reserve-info > .row{
+  margin:0;
+}
+body.__page_booking #reserve-info [class*="col-"]{
+  padding:0;
+}
+/* Titulo do imovel: serifado, na medida de um h3 pequeno. */
+body.__page_booking #reserve-info .card-title .h4{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h3);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-title);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+}
+/* A lista de localizacao chega com um unico <li> contendo so o alfinete e
+   nenhum texto: uma pilula vazia no meio do resumo. Some quando nao tem nome. */
+body.__page_booking #reserve-info .card-details{
+  margin-top:var(--eex-s2);
+}
+body.__page_booking #reserve-info .card-details .list-inline{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  padding:0;
+  font-size:var(--eex-fs-small);
+  color:var(--eex-text-2);
+}
+body.__page_booking #reserve-info .card-details:not(:has(li:not(:empty))),
+body.__page_booking #reserve-info .card-details .list-inline li:not(:has(*)):empty{
+  display:none;
+}
+
+
+/* --- 10.1 Os blocos do resumo ---
+   Cada bloco chega com um <hr class="hr5"> na frente. Ele vira o divisor de
+   hairline do sistema e passa a ser o unico separador da coluna. */
+body.__page_booking #reserve-info hr,
+body.__page_booking #reserve-info .hr5{
+  border:0;
+  height:1px;
+  background:var(--eex-hairline-2);
+  margin:var(--eex-s5) 0;
+}
+body.__page_booking #reserve-info .title-edit{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--eex-s3);
+  margin-bottom:var(--eex-s4);
+}
+body.__page_booking #reserve-info .title-edit .h4{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h4);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-title);
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+}
+/* O lapis de editar era um botao cinza de plataforma; vira um alvo redondo e
+   silencioso, que so ganha contorno de tinta no hover. */
+body.__page_booking .btn-reservation-edit,
+body.__page_booking .btn-reservation-save{
+  flex:0 0 auto;
+  width:34px;
+  height:34px;
+  padding:0;
+  border-radius:var(--eex-r-pill);
+  background:transparent;
+  border:1px solid var(--eex-hairline);
+  color:var(--eex-text-2);
+  font-size:12px;
+}
+body.__page_booking .btn-reservation-edit:hover,
+body.__page_booking .btn-reservation-save:hover{
+  border-color:var(--eex-ink);
+  color:var(--eex-ink);
+  background:transparent;
+  transform:none;
+  box-shadow:none;
+}
+/* --- 10.2 As linhas de valor ---
+   Rotulo a esquerda em pedra, numero a direita em tinta, na mesma linha de base.
+   Antes as duas colunas eram col-6 e o texto longo quebrava desalinhado. */
+body.__page_booking #reserve-info .content > .row{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:var(--eex-s4);
+  margin:0 0 var(--eex-s3);
+}
+body.__page_booking #reserve-info .content > .row:last-child{
+  margin-bottom:0;
+}
+body.__page_booking #reserve-info .area-1,
+body.__page_booking #reserve-info .area-2{
+  flex:0 1 auto;
+  width:auto;
+  max-width:none;
+  padding:0;
+}
+body.__page_booking #reserve-info .area-2{
+  text-align:right;
+  white-space:nowrap;
+}
+body.__page_booking #reserve-info .content p{
+  margin:0;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-tight);
+  color:var(--eex-text-2);
+}
+body.__page_booking #reserve-info .area-2 p{
+  color:var(--eex-ink);
+  font-variant-numeric:tabular-nums;
+}
+/* --- 10.3 O total ---
+   E o unico numero da pagina que merece a voz do display. */
+body.__page_booking .reserve-details-total .content > .row{
+  align-items:baseline;
+  margin:0;
+}
+body.__page_booking .reserve-details-total #payment-title,
+body.__page_booking .reserve-details-total .payment-title-text{
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-field);
+  font-weight:var(--eex-w-medium);
+  color:var(--eex-ink);
+}
+body.__page_booking .reserve-details-total #payment-amount{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-fact);
+  font-weight:var(--eex-w-regular);
+  line-height:1;
+  letter-spacing:var(--eex-track-title);
+  color:var(--eex-ink);
+  font-variant-numeric:tabular-nums;
+}
+/* --- 10.4 Politica de cancelamento ---
+   Chega envolvida em paragrafos vazios. E a letra miuda que da seguranca:
+   fica em corpo pequeno, sobre a faixa de repouso, com o hairline por cima. */
+body.__page_booking .cancellation-policy{
+  margin-top:var(--eex-s5);
+  padding:var(--eex-s4);
+  background:var(--eex-canvas-2);
+  border-radius:var(--eex-r-md);
+}
+body.__page_booking .cancellation-policy p{
+  margin:0;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  font-weight:var(--eex-w-regular);
+  line-height:var(--eex-lh-body);
+  color:var(--eex-text-2);
+}
+body.__page_booking .cancellation-policy p:empty{
+  display:none;
+}
+
+/* ----------------------------------------------------------------------------
+   11. LIMPEZA
+   Blocos que o inventario devolve vazios e que so abriam buracos: o painel de
+   termos (48px de nada), o bloco de comentario adicional e a linha de cobranca
+   por apartamento.
+   ---------------------------------------------------------------------------- */
+body.__page_booking #terms-block:not(:has(input,label,a,p:not(:empty))){
+  display:none;
+}
+body.__page_booking #additional-comment-block:empty,
+body.__page_booking #chargeElApart:empty{
+  display:none;
+}
+body.__page_booking .panel-checkout:has(> .panel-body > .row > .col-12:empty):not(:has(input,button,label,a)){
+  display:none;
+}
+/* O icone de informacao do total vem com .hidden; nao deve ocupar espaco. */
+body.__page_booking .hidden{
+  display:none !important;
+}
+
+
+/* ----------------------------------------------------------------------------
+   12. COMPATIBILIDADE
+   O legado trazia regras para uma geracao anterior do checkout da plataforma
+   (.payment-item, #payment-form, .card-panel, .panel-group, #antif_*). Nenhuma
+   delas casa com o inventario atual, que usa .payment-option e .panel-checkout.
+   Em vez de arrastar aquelas regras mortas, o essencial e reescrito aqui na
+   linguagem nova: se a plataforma voltar a servir aquele HTML, ele ja nasce
+   no sistema em vez de aparecer sem estilo.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .payment-item,
+body.__page_booking .card-panel{
+  padding:var(--eex-s5);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+}
+body.__page_booking .payment-item.active,
+body.__page_booking .payment-item.selected{
+  border-color:var(--eex-ink);
+  box-shadow:inset 0 0 0 1px var(--eex-ink);
+}
+body.__page_booking .panel-group .panel + .panel{
+  margin-top:var(--eex-s3);
+}
+body.__page_booking [id^="antif_"]{
+  height:48px;
+  padding:0 var(--eex-s4);
+  background:var(--eex-canvas-3);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  font-size:var(--eex-fs-field);
+  color:var(--eex-ink);
+}
+body.__page_booking [id^="antif_"]:focus{
+  background:var(--eex-surface);
+  border-color:var(--eex-ink);
+  outline:1px solid var(--eex-ink);
+}
+body.__page_booking .buyer-data-title{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h4);
+  font-weight:var(--eex-w-regular);
+  color:var(--eex-ink);
+}
+body.__page_booking .alert{
+  padding:var(--eex-s4);
+  background:var(--eex-canvas-2);
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-md);
+  font-size:var(--eex-fs-small);
+  color:var(--eex-text-2);
+}
+body.__page_booking .alert-danger{
+  background:#FBF0EE;
+  border-color:#E8C9C2;
+  color:var(--eex-danger);
+}
+
+/* ----------------------------------------------------------------------------
+   13. MOBILE
+   O checkout era a unica area do site sem uma unica media query: no telefone
+   ele simplesmente encolhia. Aqui as duas colunas empilham (o resumo vem antes,
+   pela ordem do HTML, o que e o certo: o hospede ve o que esta comprando antes
+   de digitar), a grade de campos relaxa e a acao final passa a flutuar.
+   ---------------------------------------------------------------------------- */
+@media (max-width:991px){
+  body.__page_booking .checkout-row > .col-md-5{
+    top:97px;
+  }
+}
+@media (max-width:767px){
+  body.__page_booking #booking-checkout-v1{
+    padding-top:var(--eex-s5);
+    padding-bottom:var(--eex-s6);
+  }
+  body.__page_booking .checkout-row > [class*="col-"]{
+    padding-left:0;
+    padding-right:0;
+  }
+  body.__page_booking .checkout-row > .col-md-5{
+    margin-bottom:var(--eex-s5);
+  }
+  body.__page_booking .booking-details .img-cover{
+    aspect-ratio:16/9;
+  }
+  body.__page_booking .personal-details-resume .panel-body{
+    grid-template-columns:1fr;
+    row-gap:var(--eex-s4);
+  }
+  body.__page_booking .payment-option-wrp{
+    padding:var(--eex-s4);
+  }
+  /* Uma coluna para os pares; mes/ano/CVV seguem lado a lado porque sao curtos. */
+  body.__page_booking .card-info-block > .row > .col-sm-6,
+  body.__page_booking .card-info-block > .row > .col-6,
+  body.__page_booking .card-info-block > .row > .col-8{
+    grid-column:span 12;
+  }
+  body.__page_booking .card-info-block > .row > .col-4{
+    grid-column:span 12;
+  }
+  body.__page_booking .card-info-block > .row{
+    row-gap:var(--eex-s4);
+    margin-bottom:var(--eex-s4);
+  }
+  /* A acao final acompanha a rolagem, como no aplicativo. */
+  body.__page_booking #guest-form > .panel.panel-checkout:last-child{
+    position:sticky;
+    bottom:var(--eex-s3);
+    z-index:var(--eex-z-sticky);
+    background:var(--eex-surface);
+    border:1px solid var(--eex-hairline);
+    border-radius:var(--eex-r-md);
+    box-shadow:var(--eex-e2);
+  }
+  body.__page_booking #guest-form > .panel.panel-checkout:last-child > .panel-body{
+    padding:var(--eex-s3);
+  }
+  /* Com a barra grudada no pe, o navegador precisa saber que existe uma faixa
+     ocupada ao rolar ate um campo em foco -- senao o teclado leva o campo para
+     debaixo do botao. */
+  body.__page_booking,
+  html:has(body.__page_booking){
+    scroll-padding-bottom:104px;
+  }
+  body.__page_booking .bottom-bar{
+    gap:var(--eex-s2);
+  }
+  body.__page_booking .bottom-bar .btn,
+  body.__page_booking .payment-implement .btn{
+    padding:16px var(--eex-s4);
+  }
+  body.__page_booking .btn-back{
+    flex:0 0 auto;
+  }
+}
+@media (max-width:479px){
+  body.__page_booking .card-list .card-it img{
+    height:19px;
+  }
+  body.__page_booking .label-txt{
+    gap:var(--eex-s2);
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   14. MOVIMENTO REDUZIDO
+   ---------------------------------------------------------------------------- */
+@media (prefers-reduced-motion:reduce){
+  body.__page_booking *,
+  body.__page_booking *::before,
+  body.__page_booking *::after{
+    transition-duration:.01ms !important;
+    animation-duration:.01ms !important;
+  }
+}
+
+
+/* ----------------------------------------------------------------------------
+   15. TRILHA DE ETAPAS
+   O checkout tem tres passos e nao dizia em qual deles o hospede estava: a
+   pagina simplesmente trocava de conteudo. A trilha e injetada pelo
+   checkout.js no topo da coluna do formulario.
+   ---------------------------------------------------------------------------- */
+body.__page_booking .eex-ck-steps{
+  margin:0 0 var(--eex-s6);
+}
+body.__page_booking .eex-ck-steps ol{
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s3);
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+body.__page_booking .eex-ck-step{
+  display:flex;
+  align-items:center;
+  gap:var(--eex-s2);
+  flex:0 1 auto;
+  min-width:0;
+}
+/* O tracinho que liga um passo ao proximo. */
+body.__page_booking .eex-ck-step + .eex-ck-step::before{
+  content:"";
+  width:clamp(16px,3vw,40px);
+  height:1px;
+  background:var(--eex-hairline);
+  margin-right:var(--eex-s2);
+  flex:0 0 auto;
+}
+body.__page_booking .eex-ck-step__mark{
+  position:relative;
+  flex:0 0 auto;
+  width:22px;
+  height:22px;
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-pill);
+  background:var(--eex-surface);
+  transition:background-color var(--eex-d2) var(--eex-ease),
+             border-color var(--eex-d2) var(--eex-ease);
+}
+body.__page_booking .eex-ck-step__label{
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-medium);
+  line-height:1;
+  letter-spacing:var(--eex-track-micro);
+  text-transform:uppercase;
+  color:var(--eex-text-3);
+  white-space:nowrap;
+  transition:color var(--eex-d2) var(--eex-ease);
+}
+/* Passo concluido: tinta cheia e um certo. */
+body.__page_booking .eex-ck-step.is-done .eex-ck-step__mark{
+  background:var(--eex-ink);
+  border-color:var(--eex-ink);
+}
+body.__page_booking .eex-ck-step.is-done .eex-ck-step__mark::before{
+  content:"";
+  position:absolute;
+  left:7px;
+  top:4px;
+  width:5px;
+  height:10px;
+  border:solid var(--eex-text-invert);
+  border-width:0 1.5px 1.5px 0;
+  transform:rotate(40deg);
+}
+body.__page_booking .eex-ck-step.is-done .eex-ck-step__label{
+  color:var(--eex-text-2);
+}
+/* Passo atual: anel de tinta com o miolo cheio, igual ao radio escolhido. */
+body.__page_booking .eex-ck-step.is-current .eex-ck-step__mark{
+  border-color:var(--eex-ink);
+}
+body.__page_booking .eex-ck-step.is-current .eex-ck-step__mark::before{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border-radius:var(--eex-r-pill);
+  background:var(--eex-ink);
+}
+body.__page_booking .eex-ck-step.is-current .eex-ck-step__label{
+  color:var(--eex-ink);
+}
+@media (max-width:575px){
+  body.__page_booking .eex-ck-steps{
+    margin-bottom:var(--eex-s5);
+  }
+  body.__page_booking .eex-ck-step:not(.is-current) .eex-ck-step__label{
+    position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip-path:inset(50%);
+    white-space:nowrap;
+  }
+}
