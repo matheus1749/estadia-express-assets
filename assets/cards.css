@@ -51,6 +51,19 @@
   padding-block:var(--eex-section-y) !important;
 }
 
+/* Esse carrossel so tem razao de existir quando ha destaque cadastrado. A
+   plataforma publica o wrapper de qualquer jeito e, vazio, ele deixa de ser
+   uma prateleira: vira uma faixa de fundo com o respiro de secao inteiro,
+   encravada entre o mapa e os depoimentos. Sem um unico slide o bloco
+   colapsa - sem fundo e sem padding. Volta sozinho quando houver destaque. */
+#highlights_slider:not(:has(.swiper-slide)),
+#highlights_slider:not(:has(.swiper-slide)) > div{
+  background:transparent !important;
+}
+#highlights_slider:not(:has(.swiper-slide)) .py-5{
+  padding-block:0 !important;
+}
+
 /* -----------------------------------------------------------------------------
    2. A GRADE DA BUSCA
    Na pagina de resultados os cards vivem numa .row do Bootstrap. O respiro
