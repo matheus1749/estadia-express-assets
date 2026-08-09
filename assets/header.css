@@ -319,17 +319,37 @@ header#header .mobile-menu-toggle .fa{ font-size:20px !important; }
   }
 
   /* --- 7.6 Moeda: pilulas de contorno ------------------------------------- */
+  /* Dois detalhes da plataforma sabotavam este bloco. (1) .visible-xs traz um
+     display:block !important, entao o flex abaixo nunca valia e os itens ficavam
+     inline-block. (2) o proprio <li> ja recebia uma pilula da plataforma (borda,
+     fundo, height:40px, line-height:40px e padding lateral), que aparecia atras
+     da nossa pilula no <a>: duas capsulas desencontradas. O <li> volta a ser so
+     celula da grade e o <a> passa a ser a unica pilula, com metades iguais. */
   header#header .mobile-menu-cur{
-    display:flex;
+    display:flex !important;
     gap:var(--eex-s2);
     list-style:none;
     padding:0 !important;
   }
-  header#header .mobile-menu-cur li{ float:none !important; margin:0 !important; }
+  header#header .mobile-menu-cur li{
+    float:none !important;
+    margin:0 !important;
+    flex:1 1 0 !important;
+    min-width:0 !important;
+    height:auto !important;
+    line-height:normal !important;
+    padding:0 !important;
+    border:0 !important;
+    background:none !important;
+    border-radius:0 !important;
+  }
   header#header .mobile-menu-cur li a{
-    display:inline-flex;
+    display:flex;
+    justify-content:center;
     align-items:center;
-    padding:9px 15px !important;
+    min-height:44px;
+    padding:0 var(--eex-s3) !important;
+    line-height:1.2 !important;
     border:1px solid var(--eex-hairline);
     border-radius:var(--eex-r-pill);
     font-size:var(--eex-fs-micro) !important;
