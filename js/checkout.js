@@ -16,9 +16,9 @@
    imediatamente depois do legacy.js no head_section: a ordem importa.
 
    PARTE 2 - FASE 8 (no fim do arquivo)
-   Acrescimos de interface do redesign do checkout: a trilha de etapas
-   e a limpeza dos restos vazios do resumo. Nao toca em nada do fluxo
-   de pagamento: nao le, nao escreve e nao envia campo nenhum.
+   Acrescimo de interface do redesign do checkout: a limpeza dos
+   restos vazios do resumo. Nao toca em nada do fluxo de pagamento:
+   nao le, nao escreve e nao envia campo nenhum.
    =============================================================== */
 
 /* ===== bloco original: linha 62 ===== */
@@ -1006,8 +1006,8 @@
 /* ===============================================================
    FASE 8 - CHECKOUT PREMIUM (Design System V3)
    Acrescimos de interface. Nada aqui altera o fluxo de pagamento: o modulo nao
-   le, nao escreve e nao envia nenhum campo do formulario. Ele so acrescenta a
-   trilha de etapas e esconde restos vazios do resumo.
+   le, nao escreve e nao envia nenhum campo do formulario. Ele so esconde os
+   restos vazios do resumo.
 
    SOBRE O MOMENTO DE ENTRAR
    Este arquivo e carregado sem defer (a Parte 1 precisa disso), entao ele roda
@@ -1020,60 +1020,9 @@
   'use strict';
   if (window.__eexCheckoutV3) return;
 
-  /* Rotulos escapados para o arquivo continuar legivel em qualquer editor. */
-  var STEPS = ['Seus dados', 'Op\u00e7\u00f5es', 'Pagamento'];
-
   function isCheckout(){
     return !!document.getElementById('booking-checkout-v1') &&
            !!document.getElementById('guest-form');
-  }
-
-  /* Em que etapa estamos. A plataforma nao guarda isso em lugar nenhum: ela so
-     mostra e esconde elementos com as classes step-registration, step-promocode
-     e step-payment-methods. A acao visivel na barra de baixo e o sinal mais
-     confiavel de todos. */
-  function currentStep(){
-    function vis(el){ return !!(el && el.offsetParent !== null); }
-    if (vis(document.querySelector('.bottom-bar .payment-implement'))) return 2;
-    if (vis(document.querySelector('.bottom-bar .btn-to-payment-methods'))) return 1;
-    return 0;
-  }
-
-  function buildRail(){
-    var host = document.getElementById('guest-form');
-    if (!host) return null;
-    var nav = document.createElement('nav');
-    nav.className = 'eex-ck-steps';
-    nav.setAttribute('aria-label', 'Etapas da reserva');
-    var ol = document.createElement('ol');
-    for (var i = 0; i < STEPS.length; i++){
-      var li = document.createElement('li');
-      li.className = 'eex-ck-step';
-      var mark = document.createElement('span');
-      mark.className = 'eex-ck-step__mark';
-      var txt = document.createElement('span');
-      txt.className = 'eex-ck-step__label';
-      txt.textContent = STEPS[i];
-      li.appendChild(mark);
-      li.appendChild(txt);
-      ol.appendChild(li);
-    }
-    nav.appendChild(ol);
-    host.insertBefore(nav, host.firstChild);
-    return nav;
-  }
-
-  function paint(){
-    var nav = document.querySelector('.eex-ck-steps');
-    if (!nav) return;
-    var now = currentStep();
-    var items = nav.querySelectorAll('.eex-ck-step');
-    for (var i = 0; i < items.length; i++){
-      items[i].classList.toggle('is-done', i < now);
-      items[i].classList.toggle('is-current', i === now);
-      if (i === now) items[i].setAttribute('aria-current', 'step');
-      else items[i].removeAttribute('aria-current');
-    }
   }
 
   /* O resumo traz um <li> de localizacao com o alfinete e nenhum nome de cidade:
@@ -1087,17 +1036,15 @@
     if (window.__eexCheckoutV3) return true;
     if (!isCheckout()) return false;
     window.__eexCheckoutV3 = true;
-    if (!document.querySelector('.eex-ck-steps')) buildRail();
-    paint();
     tidy();
-    /* As etapas trocam sem recarregar a pagina; observar o formulario mantem a
-       trilha em dia sem depender dos eventos internos da plataforma. */
+    /* O resumo e remontado sem recarregar a pagina; observar o formulario
+       mantem a limpeza em dia sem depender dos eventos da plataforma. */
     var form = document.getElementById('booking-guest-address-information-form');
     if (form && window.MutationObserver){
       var t = null;
       new MutationObserver(function(){
         clearTimeout(t);
-        t = setTimeout(function(){ paint(); tidy(); }, 90);
+        t = setTimeout(function(){ tidy(); }, 90);
       }).observe(form, { attributes:true, childList:true, subtree:true, attributeFilter:['class','style'] });
     }
     return true;
