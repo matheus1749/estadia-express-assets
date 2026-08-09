@@ -309,6 +309,14 @@ body.__page_error #maincontent .btn.btn-info:hover{
     padding-bottom: var(--eex-s8);
     min-height: 40vh;
   }
+  /* O modal de canais do chat (#livechat-channel) usa .btn do Bootstrap, que
+     vem com white-space:nowrap. A opcao do SAC e uma frase inteira: no telefone
+     ela nao cabia na largura do botao e escapava do proprio modal. Aqui a frase
+     volta a quebrar em linhas; o botao curto continua em uma linha so. */
+  #livechat-channel .modal-body .btn{
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
 }
 
 
