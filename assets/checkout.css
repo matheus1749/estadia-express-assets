@@ -1285,7 +1285,11 @@ body.__page_booking .alert-danger{
    pela ordem do HTML, o que e o certo: o hospede ve o que esta comprando antes
    de digitar), a grade de campos relaxa e a acao final passa a flutuar.
    ---------------------------------------------------------------------------- */
-@media (max-width:991px){
+/* O deslocamento so faz sentido enquanto o resumo esta grudado (sticky, que
+   nasce em min-width:768px). Sem esse piso o `top` tambem valia no telefone,
+   onde a coluna volta a ser estatica: ela descia 97px por cima do formulario
+   e a politica de cancelamento sumia atras de "Dados pessoais e dos hospedes". */
+@media (min-width:768px) and (max-width:991px){
   body.__page_booking .checkout-row > .col-md-5{
     top:97px;
   }
