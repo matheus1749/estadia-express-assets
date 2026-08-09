@@ -41,7 +41,7 @@
    dois estao na regra de movimento reduzido. Todos comentados no lugar.
 
    DEPENDE DE
-   ds.css (tokens) e js/checkout.js (trilha de etapas e limpeza do resumo).
+   ds.css (tokens) e js/checkout.js (limpeza dos restos vazios do resumo).
    ============================================================================ */
 
 
@@ -1374,108 +1374,5 @@ body.__page_booking .alert-danger{
   body.__page_booking *::after{
     transition-duration:.01ms !important;
     animation-duration:.01ms !important;
-  }
-}
-
-
-/* ----------------------------------------------------------------------------
-   15. TRILHA DE ETAPAS
-   O checkout tem tres passos e nao dizia em qual deles o hospede estava: a
-   pagina simplesmente trocava de conteudo. A trilha e injetada pelo
-   checkout.js no topo da coluna do formulario.
-   ---------------------------------------------------------------------------- */
-body.__page_booking .eex-ck-steps{
-  margin:0 0 var(--eex-s6);
-}
-body.__page_booking .eex-ck-steps ol{
-  display:flex;
-  align-items:center;
-  gap:var(--eex-s3);
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-body.__page_booking .eex-ck-step{
-  display:flex;
-  align-items:center;
-  gap:var(--eex-s2);
-  flex:0 1 auto;
-  min-width:0;
-}
-/* O tracinho que liga um passo ao proximo. */
-body.__page_booking .eex-ck-step + .eex-ck-step::before{
-  content:"";
-  width:clamp(16px,3vw,40px);
-  height:1px;
-  background:var(--eex-hairline);
-  margin-right:var(--eex-s2);
-  flex:0 0 auto;
-}
-body.__page_booking .eex-ck-step__mark{
-  position:relative;
-  flex:0 0 auto;
-  width:22px;
-  height:22px;
-  border:1px solid var(--eex-hairline);
-  border-radius:var(--eex-r-pill);
-  background:var(--eex-surface);
-  transition:background-color var(--eex-d2) var(--eex-ease),
-             border-color var(--eex-d2) var(--eex-ease);
-}
-body.__page_booking .eex-ck-step__label{
-  font-family:var(--eex-font-ui);
-  font-size:var(--eex-fs-micro);
-  font-weight:var(--eex-w-medium);
-  line-height:1;
-  letter-spacing:var(--eex-track-micro);
-  text-transform:uppercase;
-  color:var(--eex-text-3);
-  white-space:nowrap;
-  transition:color var(--eex-d2) var(--eex-ease);
-}
-/* Passo concluido: tinta cheia e um certo. */
-body.__page_booking .eex-ck-step.is-done .eex-ck-step__mark{
-  background:var(--eex-ink);
-  border-color:var(--eex-ink);
-}
-body.__page_booking .eex-ck-step.is-done .eex-ck-step__mark::before{
-  content:"";
-  position:absolute;
-  left:7px;
-  top:4px;
-  width:5px;
-  height:10px;
-  border:solid var(--eex-text-invert);
-  border-width:0 1.5px 1.5px 0;
-  transform:rotate(40deg);
-}
-body.__page_booking .eex-ck-step.is-done .eex-ck-step__label{
-  color:var(--eex-text-2);
-}
-/* Passo atual: anel de tinta com o miolo cheio, igual ao radio escolhido. */
-body.__page_booking .eex-ck-step.is-current .eex-ck-step__mark{
-  border-color:var(--eex-ink);
-}
-body.__page_booking .eex-ck-step.is-current .eex-ck-step__mark::before{
-  content:"";
-  position:absolute;
-  inset:4px;
-  border-radius:var(--eex-r-pill);
-  background:var(--eex-ink);
-}
-body.__page_booking .eex-ck-step.is-current .eex-ck-step__label{
-  color:var(--eex-ink);
-}
-@media (max-width:575px){
-  body.__page_booking .eex-ck-steps{
-    margin-bottom:var(--eex-s5);
-  }
-  body.__page_booking .eex-ck-step:not(.is-current) .eex-ck-step__label{
-    position:absolute;
-    width:1px;
-    height:1px;
-    overflow:hidden;
-    clip-path:inset(50%);
-    white-space:nowrap;
   }
 }
