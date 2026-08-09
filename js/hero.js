@@ -327,6 +327,29 @@
     boot();
   }
 
+  /* ---------------------------------------------------------------------------
+     RESTAURACAO PELO HISTORICO (bfcache / back-forward)
+     Numa restauracao de historico o documento nao e reexecutado: nenhum script
+     roda de novo e o boot() acima nunca dispara. Se o DOM restaurado voltar sem
+     a hero montada (aba congelada antes da montagem, rollback ou restauracao
+     parcial), a home reapareceria com a capa nativa antiga.
+     Este handler apenas revalida o estado restaurado e, se a hero faltar,
+     remonta chamando exatamente o mesmo mount() do carregamento normal - mesmo
+     HTML, mesmo CSS, mesmo comportamento. Quando a hero volta integra ele nao
+     faz nada, e fora da home ele nem chega a tentar.
+     --------------------------------------------------------------------------- */
+  window.addEventListener('pageshow', function (ev) {
+    if (!ev.persisted) { return; }
+    if (!isHome(context())) { return; }
+    if (q('#eex-hero')) {
+      D.documentElement.classList.add('eex-hero-active');
+      return;
+    }
+    window.__EEX_HERO_MOUNTED = false;
+    attempts = 0;
+    boot();
+  });
+
   /* Superficie minima de QA. */
   window.EEXHero = {
     version: VERSION,
