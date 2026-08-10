@@ -367,8 +367,15 @@
      --------------------------------------------------------------------------- */
   var attempts = 0;
   function boot() {
+    /* O observer precisa existir antes de qualquer tentativa de montagem. No
+       cenario problematico a Stays so reconstroi #maincontent depois que o boot()
+       ja desistiu, e ate aqui o observer nunca chegava a ser criado porque so
+       era instalado no ramo de sucesso. A funcao ja e idempotente e nao depende
+       de __EEX_HERO_MOUNTED: basta #maincontent existir. */
+    observeMaincontent();
+
     var ctx = context();
-    if (ctx.host && ctx.widget && ctx.grid) { mount(); observeMaincontent(); return; }
+    if (ctx.host && ctx.widget && ctx.grid) { mount(); return; }
     if (attempts++ < 20) { setTimeout(boot, 250); }
   }
 
