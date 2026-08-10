@@ -32,7 +32,10 @@
 (function () {
   'use strict';
 
-  if (window.__EEX_HERO_MOUNTED) { return; }
+  /* O guard de dupla-inclusao passa a exigir a hero no DOM: a flag sozinha
+     permanece true mesmo depois de a Stays destruir o #eex-hero, e nesse estado
+     o modulo precisa poder rodar de novo. */
+  if (window.__EEX_HERO_MOUNTED && document.getElementById('eex-hero')) { return; }
 
   var VERSION = '2.1.0';
 
@@ -86,10 +89,15 @@
      responde em /pt/ e em /pt/hotsite/<id>, e a assinatura cobre os dois.
      --------------------------------------------------------------------------- */
   function context() {
+    /* Ancora estavel. A Stays reconstroi #maincontent desembrulhando os blocos e,
+       nessa arvore, '#maincontent > div' passa a resolver para o wrapper do botao
+       de admin. O pai da grade e o container correto nas duas arvores e, na arvore
+       original, e exatamente o mesmo no que era usado antes. */
+    var grid = q('#anuncio_grid');
     return {
-      host:   q('#maincontent > div'),
+      host:   grid ? grid.parentNode : null,
       widget: q('#basic_availability_search'),
-      grid:   q('#anuncio_grid')
+      grid:   grid
     };
   }
   function isHome(ctx) {
@@ -310,6 +318,49 @@
   }
 
   /* ---------------------------------------------------------------------------
+     RECONSTRUCAO DE #maincontent PELA STAYS
+     Em navegacoes com cache quente (voltar, clicar na logo) o CMS recria os
+     blocos de #maincontent depois que esta hero ja montou: o #eex-hero e
+     descartado junto e a home volta a exibir a capa nativa antiga. A classe no
+     <html> e a flag em window sobrevivem a essa reconstrucao, portanto nenhuma
+     das duas serve de criterio. O unico criterio confiavel e a presenca real de
+     #eex-hero no DOM.
+     O observer abaixo e puramente reativo: sem timer, sem polling e sem
+     tentativa periodica. Ele so age quando o proprio DOM avisa que a hero sumiu.
+     --------------------------------------------------------------------------- */
+  var observer   = null;
+  var remounting = false;
+  var giveUp     = false;
+
+  function heroMissing() { return !D.getElementById('eex-hero'); }
+
+  function onMaincontentMutated() {
+    if (remounting || giveUp) { return; }
+    if (!heroMissing()) { return; }
+    if (!isHome(context())) { return; }
+
+    remounting = true;
+    try { mount(); } finally { remounting = false; }
+
+    /* Um insucesso encerra a remontagem: o rollback do proprio mount() remove a
+       hero de novo e realimentaria este observer indefinidamente. */
+    if (heroMissing()) {
+      giveUp = true;
+      warn('remontagem apos reconstrucao do #maincontent nao concluiu');
+    }
+  }
+
+  function observeMaincontent() {
+    if (observer || window.__EEX_HERO_OBSERVER) { return; }
+    if (typeof MutationObserver !== 'function') { return; }
+    var root = q('#maincontent');
+    if (!root) { return; }
+    observer = new MutationObserver(onMaincontentMutated);
+    observer.observe(root, { childList: true, subtree: true });
+    window.__EEX_HERO_OBSERVER = observer;
+  }
+
+  /* ---------------------------------------------------------------------------
      BOOT
      O script e carregado com defer, portanto o HTML da home ja esta parseado
      na primeira tentativa. O retry limitado cobre renderizacoes tardias.
@@ -317,7 +368,7 @@
   var attempts = 0;
   function boot() {
     var ctx = context();
-    if (ctx.host && ctx.widget && ctx.grid) { mount(); return; }
+    if (ctx.host && ctx.widget && ctx.grid) { mount(); observeMaincontent(); return; }
     if (attempts++ < 20) { setTimeout(boot, 250); }
   }
 
