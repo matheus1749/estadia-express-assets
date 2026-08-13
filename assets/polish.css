@@ -290,6 +290,18 @@ body.__page_error #maincontent .btn.btn-info:hover{
   color: var(--eex-ink);
 }
 
+/* AT-QA-027: mitigacao de overflow horizontal na home mobile.
+   Causa raiz e nativa da Stays, fora do nosso controle: #mobile-menu.closed
+   (drawer off-canvas do menu mobile) e position:fixed mas posicionado via
+   left:375px em vez de transform, com width:336px - isso infla
+   document.documentElement.scrollWidth mesmo com o menu fora da tela
+   visualmente. Reproduz apos rolar a home ate o fim (scrollWidth salta para
+   711px em viewport de 390px). Nao corrigimos o posicionamento do elemento
+   nativo (arriscado, fora do nosso markup); isto so neutraliza o sintoma. */
+html, body{
+  overflow-x: hidden;
+}
+
 
 /* --------------------------------------------------------------------------
    6. MOBILE
