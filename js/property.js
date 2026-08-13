@@ -115,30 +115,7 @@
    anonimos. Transplantado sem uma unica alteracao - o codigo abaixo e
    exatamente o que rodava no legacy.js, so mudou de arquivo.
    ---------------------------------------------------------------------------- */
-(function() {
-		function applyBookingBypass() {
-			if (typeof requirejs === "undefined") return;
-			requirejs(["jquery"], function($) {
-				$(document).off("click", ".bookbutton");
-				$(document).on("click.bypassed", ".bookbutton", function(e) {
-					e.preventDefault();
-					e.stopImmediatePropagation();
-					var bookBtn = $("#panelBook .bookbutton");
-					if (bookBtn.length) {
-						var href = bookBtn.attr("href");
-						if (href) {
-							window.location.href = href;
-							return false;
-						}
-					}
-				});
-			});
-		}
-		setTimeout(applyBookingBypass, 1500);
-		setTimeout(applyBookingBypass, 3000);
-		setTimeout(applyBookingBypass, 5000);
-	})();
-	(function(){
+(function(){
 		// FIX: bypass do modal quebrado no botao "Reserve ja" (usuarios anonimos).
 		// A Stays ja gera, oculto, um link nativo ".bookbutton" dentro de "#panelBook"
 		// com o href correto do checkout (id/datas/hospedes ja inclusos).
