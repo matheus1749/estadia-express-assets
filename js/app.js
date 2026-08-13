@@ -54,6 +54,33 @@ if (!tryFooterInit()) {
 	setTimeout(tryFooterInit, 1500);
 }
 
+/* AT-QA-006: o link "Imoveis Disponiveis" do footer apontava para /pt/search
+   (fixo, retorna lista vazia). O link do header que funciona de fato ja e
+   lido dinamicamente em hero.js (buildFoot, via #header a[href*="imoveis"]) -
+   aplicamos aqui o mesmo padrao dinamico em vez de manter o href fixo. */
+(function() {
+	function fixFooterImoveisLink() {
+		var footer = document.getElementById('ee-custom-footer');
+		if (!footer) return false;
+		var link = footer.querySelector('a[href="/pt/search"]');
+		if (!link) return true;
+		var nav = document.querySelector('#header a[href*="imoveis"]') || document.querySelector('#header a[href*="disponiveis"]');
+		if (!nav) return false;
+		link.setAttribute('href', nav.getAttribute('href'));
+		return true;
+	}
+	if (!fixFooterImoveisLink()) {
+		var _eeFootLinkObs = new MutationObserver(function() {
+			if (fixFooterImoveisLink()) _eeFootLinkObs.disconnect();
+		});
+		_eeFootLinkObs.observe(document.documentElement, { childList: true, subtree: true });
+		setTimeout(function() { _eeFootLinkObs.disconnect(); }, 15000);
+		setTimeout(fixFooterImoveisLink, 100);
+		setTimeout(fixFooterImoveisLink, 500);
+		setTimeout(fixFooterImoveisLink, 1500);
+	}
+})();
+
 (function() {
 		function interceptContactLink() {
 			var navLinks = document.querySelectorAll('nav.main-nav-menu a, .main-nav-menu a, nav a');
