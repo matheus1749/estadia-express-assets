@@ -297,9 +297,24 @@ body.__page_error #maincontent .btn.btn-info:hover{
    document.documentElement.scrollWidth mesmo com o menu fora da tela
    visualmente. Reproduz apos rolar a home ate o fim (scrollWidth salta para
    711px em viewport de 390px). Nao corrigimos o posicionamento do elemento
-   nativo (arriscado, fora do nosso markup); isto so neutraliza o sintoma. */
-html, body{
+   nativo (arriscado, fora do nosso markup); isto so neutraliza o sintoma.
+
+   AT-QA-027 follow-up (Code Review): a regra original era global, em
+   html/body sem qualificacao de pagina, e so declarava overflow-x. Sem um
+   overflow-y explicito, a CSS Overflow spec forca o overflow-y computado de
+   "visible" para "auto" - gatilho conhecido de bug do WebKit/Safari que
+   quebra/faz jitter em position:sticky de ancestrais afetados. Isso alcancava
+   o header sticky (header#header, assets/header.css) e, mais grave, o CTA
+   fixo de finalizar reserva no checkout mobile
+   (#guest-form > .panel.panel-checkout:last-child, assets/checkout.css),
+   alem de .sticky-panel (property.css) e o resumo do checkout, fora do
+   escopo (home) que motivou o fix original. Corrigido em duas frentes:
+   overflow-y:visible explicito impede a conversao automatica, e o seletor
+   passa a ser qualificado a body.__page_index, unica pagina onde o bug de
+   overflow horizontal foi reproduzido. */
+body.__page_index{
   overflow-x: hidden;
+  overflow-y: visible;
 }
 
 
