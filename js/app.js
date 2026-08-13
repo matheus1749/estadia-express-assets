@@ -87,7 +87,7 @@ if (!tryFooterInit()) {
 			var found = false;
 			navLinks.forEach(function(a) {
 				if (a.textContent.trim() === 'Contato' && a.href.indexOf('/contact') !== -1) {
-					a.href = 'javascript:void(0)';
+					a.href = '#ee-custom-footer';
 					a.setAttribute('data-ee-scroll-contact', '1');
 					if (!a._eeContactBound) {
 						a._eeContactBound = true;
@@ -108,7 +108,7 @@ if (!tryFooterInit()) {
 			var footerLinks = document.querySelectorAll('#ee-custom-footer a');
 			footerLinks.forEach(function(a) {
 				if (a.textContent.trim().indexOf('Contato') !== -1 && a.href.indexOf('/contact') !== -1) {
-					a.href = 'javascript:void(0)';
+					a.href = '#ee-custom-footer';
 					if (!a._eeFootContactBound) {
 						a._eeFootContactBound = true;
 						a.addEventListener('click', function(e) {
