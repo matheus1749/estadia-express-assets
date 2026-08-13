@@ -178,11 +178,12 @@
 						};
 						realField.addEventListener('input', reflectRealValue);
 						realField.addEventListener('change', reflectRealValue);
-						var realFieldObs = new MutationObserver(reflectRealValue);
-						realFieldObs.observe(realField, { attributes: true, attributeFilter: ['value'] });
 						/* Rede de seguranca: cobre o caso do Stays atribuir `.value` via JS
-						   puro, sem disparar evento nem tocar o atributo `value` do elemento -
-						   mesmo padrao de reforco por polling ja usado no resto do arquivo. */
+						   puro, sem disparar evento. Um MutationObserver com
+						   attributeFilter:['value'] NAO cobriria esse caso - ele observa o
+						   atributo HTML `value`, nao a propriedade DOM `.value`, e
+						   atribuicoes via `elemento.value = 'x'` nao tocam o atributo nem
+						   disparam esse observer. O polling abaixo e a protecao real. */
 						var syncPoll = setInterval(reflectRealValue, 500);
 						setTimeout(function() { clearInterval(syncPoll); }, 30000);
 					}
