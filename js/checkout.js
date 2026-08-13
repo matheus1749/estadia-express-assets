@@ -151,7 +151,7 @@
 				var realEmail     = document.getElementById('antif_email');
 				var realDocNum    = document.getElementById('antif_document_number');
 				var realPhone     = document.querySelector('input[name="antif_phone"]');
-				function makeSyncedInput(type, placeholder, realField, prefillVal) {
+				function makeSyncedInput(type, placeholder, realField, prefillVal, syncFromReal) {
 					var inp = document.createElement('input');
 					inp.type = type;
 					inp.placeholder = placeholder;
@@ -164,6 +164,28 @@
 							realField.dispatchEvent(new Event('change', {bubbles:true}));
 						}
 					});
+					/* AT-QA-033: sem isto a sincronia so acontecia proxy -> campo real, uma
+					   unica vez, na criacao. Se o Stays preencher/alterar o campo real depois
+					   (autofill, retorno de sessao), o proxy ficava com valor desatualizado
+					   sem o usuario perceber. Aqui refletimos o campo real -> proxy tambem,
+					   sem tocar no sentido proxy -> real acima. */
+					if (syncFromReal && realField) {
+						var lastRealVal = realField.value;
+						var reflectRealValue = function() {
+							if (realField.value === lastRealVal) return;
+							lastRealVal = realField.value;
+							if (document.activeElement !== inp) inp.value = realField.value;
+						};
+						realField.addEventListener('input', reflectRealValue);
+						realField.addEventListener('change', reflectRealValue);
+						var realFieldObs = new MutationObserver(reflectRealValue);
+						realFieldObs.observe(realField, { attributes: true, attributeFilter: ['value'] });
+						/* Rede de seguranca: cobre o caso do Stays atribuir `.value` via JS
+						   puro, sem disparar evento nem tocar o atributo `value` do elemento -
+						   mesmo padrao de reforco por polling ja usado no resto do arquivo. */
+						var syncPoll = setInterval(reflectRealValue, 500);
+						setTimeout(function() { clearInterval(syncPoll); }, 30000);
+					}
 					return inp;
 				}
 				var combinedName = ((realFirstname ? realFirstname.value : '') + ' ' + (realLastname ? realLastname.value : '')).trim() || greetingName;
@@ -180,7 +202,7 @@
 				grid.appendChild(makeWrap('CPF / CNPJ / Passaporte *', docInput));
 				var emailInput = makeSyncedInput('email', 'seu@email.com', realEmail, realEmail ? realEmail.value : '');
 				grid.appendChild(makeWrap('E-mail *', emailInput));
-				var phoneInput = makeSyncedInput('tel', '(00) 00000-0000', realPhone, realPhone ? realPhone.value : '');
+				var phoneInput = makeSyncedInput('tel', '(00) 00000-0000', realPhone, realPhone ? realPhone.value : '', true);
 				grid.appendChild(makeWrap('WhatsApp *', phoneInput));
 			} else {
 				if (firstnameEl && lastnameEl) {
