@@ -291,8 +291,22 @@
        marcacao: a pagina volta ao estado da plataforma, nunca a um estado pior. */
     if (!sw) {
       if (typeof window.Swiper !== 'function') { return; }
-      if (!el.querySelector('.swiper-wrapper')) { return; }
+      var wrapperEl = el.querySelector('.swiper-wrapper');
+      if (!wrapperEl) { return; }
       try {
+        /* AT-QA-035: loop:true fixo quebra quando ha poucos slides (o Swiper
+           precisa de slides suficientes para preencher a maior slidesPerView
+           configurada duas vezes, senao o loop nem preenche a tela). Contamos
+           os slides reais e so habilitamos loop quando ha margem para isso -
+           caso contrario o carrossel roda sem loop, sem quebrar. */
+        var slideCount = wrapperEl.querySelectorAll(':scope > .swiper-slide').length;
+        var maxSlidesPerView = 1.15;
+        Object.keys(breakpoints).forEach(function (bp) {
+          var v = breakpoints[bp].slidesPerView;
+          if (v > maxSlidesPerView) { maxSlidesPerView = v; }
+        });
+        var canLoop = slideCount >= Math.ceil(maxSlidesPerView * 2);
+
         sw = new window.Swiper(el, {
           slidesPerView: 1.15,
           spaceBetween: 16,
@@ -300,7 +314,7 @@
           breakpoints: breakpoints,
           /* Espelha o que a plataforma configura no caminho saudavel, para que a
              pagina se comporte igual tenha sido ela ou nos a inicializar. */
-          loop: true,
+          loop: canLoop,
           autoplay: { delay: 3000, disableOnInteraction: false },
           navigation: {
             nextEl: '#highlights_slider .swiper-button-next',
