@@ -3,56 +3,34 @@
    Fase 6 do Design System V3 - Footer Premium
    --------------------------------------------------------------------------
    RESPONSABILIDADES
-   1. Reposicionar o #ee-custom-footer logo acima do #mainfooter e revela-lo,
-      escondendo o rodape nativo da plataforma.
-   2. Fazer o link "Contato" (do menu e do proprio rodape) rolar suavemente
+   1. Fazer o link "Contato" (do menu e do proprio rodape) rolar suavemente
       ate o rodape em vez de navegar para /contact.
-   3. Remover os emojis do markup, que vem de um template do Stays e nao pode
+   2. Remover os emojis do markup, que vem de um template do Stays e nao pode
       ser editado por aqui.
 
-   Os blocos 1 e 2 sao codigo migrado de js/legacy.js sem uma unica alteracao
-   (bloco original linha 744). Foram recortados linha a linha do arquivo de
-   origem justamente para nao haver risco de transcricao. O bloco 3 e novo e
-   pertence ao redesenho.
+   O bloco 1 (abaixo) e codigo migrado de js/legacy.js sem uma unica
+   alteracao (bloco original linha 744). Foi recortado linha a linha do
+   arquivo de origem justamente para nao haver risco de transcricao. O
+   bloco 2 e novo e pertence ao redesenho.
+
+   D-016: existia aqui um bloco adicional (o antigo "Bloco 1") que localizava
+   um #ee-custom-footer ja presente no DOM e o reposicionava antes do
+   #mainfooter, escondendo o rodape nativo. Removido: js/app.js
+   (initEEFooter) passou a ser a unica fonte de criacao/posicionamento do
+   footer, adotando-e-substituindo qualquer elemento zumbi que ja exista
+   (ver comentario em app.js). Como js/footer.js carrega com defer antes de
+   js/app.js, manter aquele bloco aqui so fazia um trabalho descartado a
+   cada carregamento - app.js remove/recria o elemento logo em seguida.
 
    PAR VISUAL  assets/footer.css
    ========================================================================== */
 
 
 /* --------------------------------------------------------------------------
-   BLOCOS 1 e 2 - COMPORTAMENTO HERDADO (identico ao legado)
+   BLOCO 1 - COMPORTAMENTO HERDADO (identico ao legado)
    -------------------------------------------------------------------------- */
 
 (function() {
-		function initEEFooter() {
-			var footerDiv = document.getElementById('ee-custom-footer');
-			var mainFooter = document.getElementById('mainfooter');
-			if (!footerDiv || !mainFooter) return;
-			if (footerDiv._eeFooterPlaced) return;
-			footerDiv._eeFooterPlaced = true;
-			mainFooter.parentElement.insertBefore(footerDiv, mainFooter);
-			footerDiv.style.display = 'block';
-			mainFooter.style.display = 'none';
-		}
-		function tryFooterInit() {
-			if (document.body && document.getElementById('mainfooter')) {
-				initEEFooter();
-				return true;
-			}
-			return false;
-		}
-		if (!tryFooterInit()) {
-			var _eeFootObs = new MutationObserver(function() {
-				if (tryFooterInit()) _eeFootObs.disconnect();
-			});
-			_eeFootObs.observe(document.documentElement, { childList: true, subtree: true });
-			setTimeout(function() { _eeFootObs.disconnect(); }, 15000);
-			setTimeout(tryFooterInit, 100);
-			setTimeout(tryFooterInit, 500);
-			setTimeout(tryFooterInit, 1500);
-		}
-	})();
-	(function() {
 		function interceptContactLink() {
 			var navLinks = document.querySelectorAll('nav.main-nav-menu a, .main-nav-menu a, nav a');
 			var found = false;
@@ -110,7 +88,7 @@
 	})();
 
 /* --------------------------------------------------------------------------
-   BLOCO 3 - LIMPEZA TIPOGRAFICA (novo na Fase 6)
+   BLOCO 2 - LIMPEZA TIPOGRAFICA (novo na Fase 6)
    -------------------------------------------------------------------------- */
 
 (function () {
@@ -160,10 +138,11 @@
 	function boot() {
 		clean();
 
-		/* O rodape e movido de lugar pelo bloco 1 e pode ainda nao estar no
-		   DOM no primeiro passe. Observamos por um periodo curto, com debounce
-		   por setTimeout - de proposito, e nao por requestAnimationFrame, que
-		   nao dispara quando a aba esta em segundo plano. */
+		/* O rodape e criado/posicionado por js/app.js (initEEFooter) e pode
+		   ainda nao estar no DOM no primeiro passe deste arquivo, que carrega
+		   antes. Observamos por um periodo curto, com debounce por setTimeout
+		   - de proposito, e nao por requestAnimationFrame, que nao dispara
+		   quando a aba esta em segundo plano. */
 		var timer = null;
 		var obs = new MutationObserver(function () {
 			if (timer) return;

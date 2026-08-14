@@ -27,11 +27,23 @@ function eeCreateFromHTML(html) {
 	return wrap.firstElementChild;
 }
 function initEEFooter() {
-	if (document.getElementById("ee-custom-footer")) return;
+	/* D-016: pode existir um #ee-custom-footer "zumbi" colado a mao no
+	   head_section do Stays (fora deste repositorio), que o parser HTML
+	   insere no DOM antes de qualquer script defer rodar. Adotamos-e-
+	   substituimos: se o elemento existente nao tem o marcador que so o
+	   nosso proprio createFromHTML(FOOTER_HTML) adiciona, ele e removido e
+	   recriado a partir da string versionada no Git. O marcador tambem
+	   garante idempotencia - reexecucoes disparadas pelo MutationObserver
+	   abaixo, por timeout ou por qualquer outro motivo encontram o elemento
+	   ja marcado e retornam sem remover/recriar de novo (sem isso, a propria
+	   remocao+insercao poderia realimentar o observer num loop). */
+	var existing = document.getElementById("ee-custom-footer");
+	if (existing && existing.dataset.eeSource === "git") return;
 	var mainFooter = document.getElementById("mainfooter");
 	if (!mainFooter) return;
+	if (existing) existing.parentNode.removeChild(existing);
 	var footerDiv = eeCreateFromHTML(FOOTER_HTML);
-	footerDiv._eeFooterPlaced = true;
+	footerDiv.dataset.eeSource = "git";
 	mainFooter.parentElement.insertBefore(footerDiv, mainFooter);
 	footerDiv.style.display = "block";
 	mainFooter.style.display = "none";
@@ -180,9 +192,16 @@ if (!tryFooterInit()) {
 	})();
 
 function eeInjectFilterModal() {
-	if (document.getElementById("ee-filter-overlay")) return;
+	/* D-016: mesma logica de adotar-e-substituir de initEEFooter, mesma causa
+	   raiz (zumbi estatico do head_section) e mesma garantia de idempotencia
+	   via marcador - ver comentario acima. */
+	var existing = document.getElementById("ee-filter-overlay");
+	if (existing && existing.dataset.eeSource === "git") return;
 	if (!document.body) return;
-	document.body.appendChild(eeCreateFromHTML(FILTER_MODAL_HTML));
+	if (existing) existing.parentNode.removeChild(existing);
+	var overlay = eeCreateFromHTML(FILTER_MODAL_HTML);
+	overlay.dataset.eeSource = "git";
+	document.body.appendChild(overlay);
 }
 if (document.body) {
 	eeInjectFilterModal();
