@@ -62,6 +62,21 @@
     row.classList.add('eex-console__row');
 
     var texts = readLabels();
+
+    /* AT-QA-024: o rotulo visual acima (label(), .eex-console__label) e
+       aria-hidden de proposito - existe so para reproduzir a linguagem
+       visual da Hero, nao para acessibilidade. O campo nativo em si
+       (#datesRange, select.persons) nunca tem nome programatico nenhum,
+       nem placeholder no caso do select. aria-label direto no campo
+       resolve os dois consoles (home e busca) de uma vez, porque os dois
+       decoram o mesmo elemento nativo. */
+    if (dateInput && !dateInput.getAttribute('aria-label')) {
+      dateInput.setAttribute('aria-label', texts.dates);
+    }
+    if (guestSel && !guestSel.getAttribute('aria-label')) {
+      guestSel.setAttribute('aria-label', texts.guests);
+    }
+
     var cells = row.children;
 
     for (var i = 0; i < cells.length; i++) {

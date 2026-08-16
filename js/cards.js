@@ -64,6 +64,18 @@
     return 'pt';
   }
 
+  /* AT-QA-026: os quatro botoes de acao do card (favoritar, remover dos
+     favoritos, enviar por e-mail, compartilhar) sao <div class="btn-card">
+     com so um icone dentro - sem role, sem foco por teclado (nao ha
+     tabindex), sem nome acessivel. O de compartilhar ja tinha um title,
+     mas com o nome do imovel no lugar da acao (repete o que o leitor de
+     tela ja anunciou pelo titulo do card, em vez de dizer "Compartilhar"). */
+  var ACTION_LABELS = {
+    pt: { add: 'Adicionar aos favoritos', remove: 'Remover dos favoritos', send: 'Enviar por e-mail', share: 'Compartilhar' },
+    en: { add: 'Add to favorites', remove: 'Remove from favorites', send: 'Send by email', share: 'Share' },
+    es: { add: 'Agregar a favoritos', remove: 'Quitar de favoritos', send: 'Enviar por correo', share: 'Compartir' }
+  };
+
   function add(el, names) {
     if (!el || !el.classList) { return; }
     var list = names.split(' ');
@@ -82,6 +94,58 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  /* role="button" so torna o elemento identificavel para leitor de tela;
+     tabindex="0" so o coloca na ordem de tabulacao. Nenhum dos dois faz o
+     navegador converter Enter/Espaço em clique automaticamente - isso so
+     acontece de graca em elementos com semantica nativa (<button>,
+     <a href>). Sem esse bridge, um usuario de teclado chega ate o botao,
+     ouve o nome certo, aperta Enter, e nada acontece: WCAG 2.1.1 continua
+     quebrado apesar do aria-label (achado do Code Review). */
+  function bridgeKeyboard(el) {
+    if (el._eexKbBridged) { return; }
+    el._eexKbBridged = true;
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        el.click();
+      }
+    });
+  }
+
+  /* role="button"+tabindex tornam o <div> alcancavel/identificavel;
+     bridgeKeyboard o torna operavel; aria-label (quando informado) da a
+     ele um nome. Nao mexe em atributos que o elemento ja tenha - assume
+     que quem os colocou la sabe o que esta fazendo. */
+  function labelAction(el, text) {
+    if (!el) { return; }
+    if (!el.hasAttribute('role')) { el.setAttribute('role', 'button'); }
+    if (!el.hasAttribute('tabindex')) { el.setAttribute('tabindex', '0'); }
+    if (text && !el.getAttribute('aria-label')) { el.setAttribute('aria-label', text); }
+    bridgeKeyboard(el);
+  }
+
+  function actionLabels(card) {
+    var t = ACTION_LABELS[lang()] || ACTION_LABELS.pt;
+    labelAction(card.querySelector('.btn-add-wishlist'), t.add);
+    labelAction(card.querySelector('.btn-remove-wishlist'), t.remove);
+    labelAction(card.querySelector('.btn-send-wishlist'), t.send);
+    var shr = card.querySelector('.btn-shr');
+    if (shr) {
+      var titleEl = card.querySelector('.card-title .h4, .card-title h4, .card-title .h3, .card-title h3');
+      var name = titleEl ? flatten(titleEl.textContent) : '';
+      var shareText = name ? (t.share + ' ' + name) : t.share;
+      /* Sobrescreve aria-label E title mesmo se ja houver um: o title
+         nativo da plataforma traz so o nome do imovel (sem dizer que a
+         acao e "Compartilhar"), o que confunde tanto quem usa mouse
+         (tooltip) quanto quem usa leitor de tela (nome incompleto) -
+         o guard "so se nao tiver" de labelAction deixaria esse valor
+         errado no lugar, entao setamos os dois direto aqui. */
+      shr.setAttribute('aria-label', shareText);
+      shr.setAttribute('title', shareText);
+      labelAction(shr, null);
+    }
   }
 
   /* ===========================================================================
@@ -148,6 +212,8 @@
       if (target) { overlay.setAttribute('target', target); }
       card.appendChild(overlay);
     }
+
+    actionLabels(card);
   }
 
   /* ===========================================================================

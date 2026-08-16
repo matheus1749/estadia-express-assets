@@ -189,6 +189,12 @@
   /* Separador seguido de "Filtros" e nada mais, no fim da string. */
   var ORPHAN = /\s*[-\u2013\u2014]\s*Filtros\s*$/i;
 
+  /* AT-QA-023: mesmo estilo visualmente-oculto que a Hero ja usa para o H2 do
+     console de busca (hero.css, .eex-hero__sr) - copiado aqui em vez de
+     referenciar a classe porque este modulo nao carrega hero.css. */
+  var SR_ONLY = 'position:absolute!important;width:1px;height:1px;padding:0;' +
+    'margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+
   function clean() {
     var box = document.querySelector('.result-counts-container');
     if (!box) { return; }
@@ -203,6 +209,34 @@
     }
   }
 
+  /* AT-QA-023: a pagina de busca (/pt/search) nao tem nenhum <h1> nativo -
+     confirmado ao vivo (home e imovel ja tem: hero.js injeta o da home,
+     o de imovel e nativo da propria plataforma). O contador de resultados
+     e o maior elemento tipografico real da pagina (comentario da secao
+     acima), entao vira a fonte do H1: injetamos um <h1> visualmente oculto
+     com o mesmo texto ja limpo por clean(), sincronizado pelo mesmo
+     observer que ja cuida do rotulo orfao - nao criamos um segundo
+     observer para o mesmo elemento. */
+  function syncH1() {
+    var box = document.querySelector('.result-counts-container');
+    if (!box) { return; }
+    var text = box.textContent.replace(/\s+/g, ' ').trim();
+    if (!text) { return; }
+    var h1 = document.getElementById('ee-results-h1');
+    if (!h1) {
+      h1 = document.createElement('h1');
+      h1.id = 'ee-results-h1';
+      h1.style.cssText = SR_ONLY;
+      box.parentNode.insertBefore(h1, box);
+    }
+    if (h1.textContent !== text) { h1.textContent = text; }
+  }
+
+  function sync() {
+    clean();
+    syncH1();
+  }
+
   /* A lista chega por AJAX em lotes e a plataforma reescreve o contador a
      cada lote, entao nao basta rodar uma vez. */
   function watch() {
@@ -212,13 +246,13 @@
     var pending = null;
     var obs = new MutationObserver(function () {
       clearTimeout(pending);
-      pending = setTimeout(clean, 60);
+      pending = setTimeout(sync, 60);
     });
     obs.observe(box, { childList: true, characterData: true, subtree: true });
   }
 
   function run() {
-    clean();
+    sync();
     watch();
   }
 
