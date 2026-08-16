@@ -15,6 +15,12 @@
    formulario existir. Por isso este arquivo e carregado SEM defer e
    imediatamente depois do legacy.js no head_section: a ordem importa.
 
+   EXCECAO (2026-08-16, D-022): o bloco 137 nao e mais um recorte
+   literal intocado -- a funcao injectBuyerSection() foi removida dele
+   por estar confirmada morta (nunca executava na estrutura atual do
+   checkout). Ver comentario local no bloco 137 e
+   PROJECTS/estadia-express-site/DECISIONS.md D-022 no repo devbroker-os.
+
    PARTE 2 - FASE 8 (no fim do arquivo)
    Acrescimo de interface do redesign do checkout: a limpeza dos
    restos vazios do resumo. Nao toca em nada do fluxo de pagamento:
@@ -70,7 +76,7 @@
 				payCardInfo.style.background = '#ffffff';
 				payCardInfo.style.border = 'none';
 			}
-			// ---- F) injectBuyerSection() cuida da seção de dados do comprador ----
+			// ---- F) (removido 2026-08-16, D-022: injectBuyerSection() nunca executava, ver bloco 137) ----
 		}
 		// Run on load and watch for dynamic changes
 		if (document.readyState === 'loading') {
@@ -99,151 +105,10 @@
 ;
 /* ===== bloco original: linha 137 ===== */
 (function() {
-		function injectBuyerSection() {
-			if (!document.body.classList.contains('__page_booking')) return;
-			if (document.getElementById('buyer-data-injected')) return;
-			var paymentForm = document.getElementById('payment-form');
-			if (!paymentForm) return;
-			var firstnameEl    = document.getElementById('antif_firstname');
-			var lastnameEl     = document.getElementById('antif_lastname');
-			var emailEl        = document.getElementById('antif_email');
-			var docNumEl       = document.getElementById('antif_document_number');
-			var phoneEl        = document.querySelector('input[name="antif_phone"]') || document.querySelector('.iti input[type="tel"]');
-			var isLoggedIn     = !firstnameEl;
-			var greetingName   = '';
-			var greetingEl     = document.querySelector('#reserve-info .break-word, #reserve-info h4');
-			if (greetingEl) {
-				var m = greetingEl.textContent.match(/Olá,\s*([^!\n]+)!/);
-				if (m) greetingName = m[1].trim();
-			}
-			var section = document.createElement('div');
-			section.id = 'buyer-data-injected';
-			section.style.cssText = 'background:#fff;border-radius:12px;border:1.5px solid #e5e7eb;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05);';
-			var titleEl = document.createElement('h4');
-			titleEl.textContent = 'Dados de quem está comprando';
-			titleEl.style.cssText = 'font-size:17px;font-weight:700;color:#1a1a2e;margin:0 0 20px 0;';
-			section.appendChild(titleEl);
-			var grid = document.createElement('div');
-			grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:16px;';
-			section.appendChild(grid);
-			function styleInput(inp) {
-				inp.style.cssText = 'border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 14px;font-size:14px;height:44px;width:100%;box-sizing:border-box;background:#fff;outline:none;';
-				inp.addEventListener('focus', function() { this.style.borderColor='#1a1a2e'; });
-				inp.addEventListener('blur',  function() { this.style.borderColor='#e5e7eb'; });
-			}
-			function makeLabel(txt) {
-				var lbl = document.createElement('label');
-				lbl.textContent = txt;
-				lbl.style.cssText = 'font-size:12px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;display:block;';
-				return lbl;
-			}
-			function makeWrap(labelTxt, inputEl) {
-				var w = document.createElement('div');
-				w.style.cssText = 'display:flex;flex-direction:column;';
-				w.appendChild(makeLabel(labelTxt));
-				styleInput(inputEl);
-				w.appendChild(inputEl);
-				return w;
-			}
-			if (isLoggedIn) {
-				var realFirstname = document.getElementById('antif_firstname');
-				var realLastname  = document.getElementById('antif_lastname');
-				var realEmail     = document.getElementById('antif_email');
-				var realDocNum    = document.getElementById('antif_document_number');
-				var realPhone     = document.querySelector('input[name="antif_phone"]');
-				function makeSyncedInput(type, placeholder, realField, prefillVal, syncFromReal) {
-					var inp = document.createElement('input');
-					inp.type = type;
-					inp.placeholder = placeholder;
-					if (prefillVal) inp.value = prefillVal;
-					else if (realField && realField.value) inp.value = realField.value;
-					inp.addEventListener('input', function() {
-						if (realField) {
-							realField.value = this.value;
-							realField.dispatchEvent(new Event('input', {bubbles:true}));
-							realField.dispatchEvent(new Event('change', {bubbles:true}));
-						}
-					});
-					/* AT-QA-033: sem isto a sincronia so acontecia proxy -> campo real, uma
-					   unica vez, na criacao. Se o Stays preencher/alterar o campo real depois
-					   (autofill, retorno de sessao), o proxy ficava com valor desatualizado
-					   sem o usuario perceber. Aqui refletimos o campo real -> proxy tambem,
-					   sem tocar no sentido proxy -> real acima. */
-					if (syncFromReal && realField) {
-						var lastRealVal = realField.value;
-						var reflectRealValue = function() {
-							if (realField.value === lastRealVal) return;
-							lastRealVal = realField.value;
-							if (document.activeElement !== inp) inp.value = realField.value;
-						};
-						realField.addEventListener('input', reflectRealValue);
-						realField.addEventListener('change', reflectRealValue);
-						/* Rede de seguranca: cobre o caso do Stays atribuir `.value` via JS
-						   puro, sem disparar evento. Um MutationObserver com
-						   attributeFilter:['value'] NAO cobriria esse caso - ele observa o
-						   atributo HTML `value`, nao a propriedade DOM `.value`, e
-						   atribuicoes via `elemento.value = 'x'` nao tocam o atributo nem
-						   disparam esse observer. O polling abaixo e a protecao real. */
-						var syncPoll = setInterval(reflectRealValue, 500);
-						setTimeout(function() { clearInterval(syncPoll); }, 30000);
-					}
-					return inp;
-				}
-				var combinedName = ((realFirstname ? realFirstname.value : '') + ' ' + (realLastname ? realLastname.value : '')).trim() || greetingName;
-				var nameInput = makeSyncedInput('text', 'Nome completo', null, combinedName);
-				nameInput.addEventListener('input', function() {
-					var parts = this.value.trim().split(' ');
-					var first = parts[0] || '';
-					var last  = parts.slice(1).join(' ') || '';
-					if (realFirstname) { realFirstname.value = first; realFirstname.dispatchEvent(new Event('input', {bubbles:true})); }
-					if (realLastname)  { realLastname.value  = last;  realLastname.dispatchEvent(new Event('input', {bubbles:true})); }
-				});
-				grid.appendChild(makeWrap('Nome completo *', nameInput));
-				var docInput = makeSyncedInput('text', 'Digite seu CPF, CNPJ ou Passaporte', realDocNum, '');
-				grid.appendChild(makeWrap('CPF / CNPJ / Passaporte *', docInput));
-				var emailInput = makeSyncedInput('email', 'seu@email.com', realEmail, realEmail ? realEmail.value : '');
-				grid.appendChild(makeWrap('E-mail *', emailInput));
-				var phoneInput = makeSyncedInput('tel', '(00) 00000-0000', realPhone, realPhone ? realPhone.value : '', true);
-				grid.appendChild(makeWrap('WhatsApp *', phoneInput));
-			} else {
-				if (firstnameEl && lastnameEl) {
-					grid.appendChild(makeWrap('Nome *', firstnameEl));
-					grid.appendChild(makeWrap('Sobrenome *', lastnameEl));
-				} else if (firstnameEl) {
-					var w = makeWrap('Nome completo *', firstnameEl);
-					w.style.gridColumn = '1 / -1';
-					grid.appendChild(w);
-				}
-				if (docNumEl) {
-					grid.appendChild(makeWrap('CPF / CNPJ / Passaporte *', docNumEl));
-				}
-				if (emailEl) {
-					grid.appendChild(makeWrap('E-mail *', emailEl));
-				}
-				if (phoneEl) {
-					var phoneWrap = phoneEl.closest('.iti') || phoneEl.parentElement;
-					var pWrap = document.createElement('div');
-					pWrap.style.cssText = 'display:flex;flex-direction:column;';
-					pWrap.appendChild(makeLabel('WhatsApp *'));
-					pWrap.appendChild(phoneWrap);
-					grid.appendChild(pWrap);
-				}
-				var guestForm = document.getElementById('guest-form');
-				if (guestForm) {
-					guestForm.style.cssText = 'height:0;overflow:hidden;padding:0;margin:0;border:none;opacity:0;pointer-events:none;';
-					var hiddenFields = guestForm.querySelectorAll('[required]');
-					hiddenFields.forEach(function(f) {
-						f.removeAttribute('required');
-						f.setAttribute('data-was-required', '1');
-					});
-				}
-			}
-			var checkRow = document.createElement('div');
-			checkRow.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:8px;';
-			checkRow.innerHTML = '<input type="checkbox" id="reserving-for-other-chk" style="width:16px;height:16px;cursor:pointer;accent-color:#1a1a2e;"><label for="reserving-for-other-chk" style="font-size:14px;color:#374151;cursor:pointer;font-weight:400;margin:0;">Reservando para outra pessoa</label>';
-			grid.appendChild(checkRow);
-			paymentForm.parentNode.insertBefore(section, paymentForm);
-		}
+		/* injectBuyerSection() removida em 2026-08-16 -- confirmada morta (dependia de #payment-form
+		   e antif_*, ausentes em todo o fluxo de checkout sem login, D-020/D-021). Motivo completo
+		   e ressalvas (fluxo logado nao testado) em PROJECTS/estadia-express-site/DECISIONS.md D-022
+		   no repo devbroker-os. Codigo original recuperavel no historico do Git. */
 		function improvePaymentLayout() {
 			if (!document.body.classList.contains('__page_booking')) return;
 			var cardPanel = document.querySelector('.card-panel');
@@ -269,7 +134,6 @@
 			});
 		}
 		function run() {
-			injectBuyerSection();
 			improvePaymentLayout();
 		}
 		if (document.readyState === 'loading') {
