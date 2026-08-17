@@ -2,8 +2,10 @@
    estadia-express - property.js
    Design System V3 - Fase 5: Pagina do imovel
 
-   Faz duas coisas que o CSS nao alcanca e hospeda o bloco de comportamento
-   da pagina do imovel que saiu do legacy.js nesta fase.
+   Faz o que o CSS nao alcanca (corrige o topo sticky, a virgula orfa da
+   localizacao, injeta o CTA de WhatsApp - DESIGN.md 4.4) e hospeda o
+   bloco de comportamento da pagina do imovel que saiu do legacy.js
+   nesta fase.
    ============================================================================ */
 (function () {
   "use strict";
@@ -63,10 +65,116 @@
     }
   }
 
+  /* --------------------------------------------------------------------------
+     3. CTA SECUNDARIO "RESERVAR PELO WHATSAPP"
+     Feature nova, nao redesign (DESIGN.md 4.4/5.6). Mesmo numero do
+     rodape (#ee-custom-footer, +55 62 99695-9797). Mensagem com
+     imovel+datas+hospedes reaproveitando o mesmo dado que o bypass de
+     clique (secao abaixo) ja le do ".bookbutton" nativo: id/from/to/
+     persons vem da query string do proprio href que a Stays gera - nao
+     e uma fonte de dado nova. So aparece quando o CTA primario tambem
+     aparece (".bookbutton" presente = reserva instantanea disponivel
+     para o periodo escolhido); some junto se as datas mudarem para um
+     periodo sem disponibilidade.
+     -------------------------------------------------------------------------- */
+  var WA_NUMBER = "5562996959797";
+  var WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 6.3A8.9 8.9 0 0 0 3.3 16.8L2 22l5.4-1.4A8.9 8.9 0 0 0 12 21.9a8.9 8.9 0 0 0 8.9-8.9 8.9 8.9 0 0 0-3.3-6.7ZM12 20.2a7.3 7.3 0 0 1-3.7-1l-.3-.2-2.8.7.7-2.7-.2-.3a7.3 7.3 0 1 1 6.3 3.5Zm4-5.5c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.8-.1.2-.3.2-.5.1-.2-.1-1-.4-2-1.2-.7-.6-1.2-1.4-1.4-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4L9 8.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9 0 1.1.8 2.2 1 2.4.1.2 1.6 2.5 4 3.4.6.2 1 .4 1.3.5.6.2 1.1.1 1.5.1.5-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1Z"/></svg>';
+
+  function formatDateBR(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
+    return m ? (m[3] + "/" + m[2] + "/" + m[1]) : iso;
+  }
+
+  function parseQuery(href) {
+    var qs = (href.split("?")[1] || "").split("&");
+    var out = {};
+    for (var i = 0; i < qs.length; i++) {
+      var kv = qs[i].split("=");
+      if (kv[0]) out[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || "");
+    }
+    return out;
+  }
+
+  function buildWhatsappLink() {
+    var bookBtn = document.querySelector("#panelBook .bookbutton");
+    var href = bookBtn ? bookBtn.getAttribute("href") : null;
+    if (!href) return null;
+    var params = parseQuery(href);
+    var titleEl = document.querySelector("#buildingDesc h1");
+    var title = titleEl ? titleEl.textContent.trim() : "";
+    if (!title || !params.from || !params.to || !params.persons) return null;
+    var persons = parseInt(params.persons, 10);
+    if (!persons) return null;
+    var guestWord = persons === 1 ? "hóspede" : "hóspedes";
+    var msg = "Olá! Tenho interesse em reservar o " + title + ", de " +
+      formatDateBR(params.from) + " a " + formatDateBR(params.to) +
+      ", para " + persons + " " + guestWord + ".";
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+  }
+
+  function ensureWhatsappCta() {
+    var panel = document.querySelector("#panelBook");
+    if (!panel) return;
+    /* O href do .bookbutton vem da Stays, nao de input do usuario, mas
+       parseQuery() faz decodeURIComponent duas vezes por par - um "%"
+       fora de um escape valido de 2 digitos hex lanca URIError. Sem
+       este guard, uma excecao aqui interromperia run() antes de
+       watchPanelBook() rodar (Code Review, 2026-08-17). */
+    var link;
+    try {
+      link = buildWhatsappLink();
+    } catch (e) {
+      link = null;
+    }
+    var existing = panel.querySelector(".eex-whatsapp-cta");
+    if (!link) {
+      if (existing) existing.parentNode.removeChild(existing);
+      return;
+    }
+    if (existing) {
+      if (existing.getAttribute("href") !== link) existing.setAttribute("href", link);
+      return;
+    }
+    var primary = panel.querySelector(".btn-create-user");
+    if (!primary || !primary.parentNode) return;
+    var a = document.createElement("a");
+    a.className = "eex-whatsapp-cta";
+    a.setAttribute("href", link);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener");
+    a.innerHTML = WA_ICON + "<span>Reservar pelo WhatsApp</span>";
+    primary.parentNode.insertBefore(a, primary.nextSibling);
+  }
+
+  /* O painel tem seu proprio datepicker/seletor de hospedes (o mesmo
+     console reaproveitado da busca) -- o usuario pode trocar as datas
+     sem sair da pagina, bem depois dos 20s em que o observer de boot()
+     (freeStickyTop/fixLocationLine) ja se desligou. Este observer
+     separado, escopado a #panelBook e sem prazo, garante que o CTA do
+     WhatsApp continua sincronizado depois desse desligamento. (Nos
+     primeiros 20s os dois observers acabam rodando em paralelo -- a
+     insercao do CTA tambem e uma mutacao childList que o observer maior
+     nao filtra, so o attributeFilter:"style" dele filtra. Redundante
+     mas inofensivo: ensureWhatsappCta() e idempotente, ver acima.
+     Code Review, 2026-08-17.) */
+  function watchPanelBook() {
+    var panel = document.querySelector("#panelBook");
+    if (!panel || panel.__eexWaWatched) return;
+    panel.__eexWaWatched = true;
+    var timer = null;
+    var mo = new MutationObserver(function () {
+      if (timer) return;
+      timer = setTimeout(function () { timer = null; ensureWhatsappCta(); }, 50);
+    });
+    mo.observe(panel, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "style"] });
+  }
+
   function run() {
     if (!onPage()) return;
     freeStickyTop();
     fixLocationLine();
+    ensureWhatsappCta();
+    watchPanelBook();
   }
 
   function boot() {

@@ -164,6 +164,33 @@ body.__page_apartment #beds .col-xs-12 > div{
   border-radius:var(--eex-r-md);
 }
 
+/* Comodidades (#amenitiesCol "da acomodacao", #amenitiesBuilding "dos
+   arredores"): a marcacao nativa ja e uma lista em duas colunas
+   (ul.row > li.col-sm-6 > p), confirmada ao vivo antes desta regra
+   (DESIGN.md 4.6) -- so falta o acabamento do DS. Dois itens do desenho
+   original ficam de fora, registrados, nao implementados: (a) icone por
+   comodidade -- a marcacao nao tem nenhum icone nem atributo que
+   identifique o tipo, so texto livre; mapear texto->icone via CSS seria
+   frageis e arriscaria icone errado, exigiria JS com uma tabela de
+   equivalencia; (b) botao "Exibir todas as N" -- a lista ja renderiza
+   sempre inteira (sem truncar), nao ha nada para expandir hoje. */
+body.__page_apartment #amenitiesCol,
+body.__page_apartment #amenitiesBuilding{
+  margin:0 !important;
+}
+body.__page_apartment #amenitiesCol li,
+body.__page_apartment #amenitiesBuilding li{
+  padding:var(--eex-s2) 0;
+  border-bottom:1px solid var(--eex-hairline-2);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-body);
+  color:var(--eex-text-2);
+}
+body.__page_apartment #amenitiesCol li p,
+body.__page_apartment #amenitiesBuilding li p{
+  margin:0;
+}
+
 /* ----------------------------------------------------------------------------
    6. O PAINEL DE RESERVA
    Tres defeitos reais aqui, nao so estetica:
@@ -238,6 +265,109 @@ body.__page_apartment .booking-apt-panel .panel-body.booking-apt::after{
   padding:var(--eex-s4) 0;
 }
 body.__page_apartment .booking-apt-panel .panel-body.booking-apt:has(.bookbutton)::after{ display:none !important; }
+
+/* O CTA "Reservar" era o unico elemento do painel sem nenhuma regra do
+   DS -- link/div nativos do Bootstrap, sem token de cor, tipografia ou
+   raio. Mesma receita do botao primario ja usada em checkout.css (raio
+   --eex-r-sm, nao pill -- ver DESIGN.md 5.2/5.4, mesma resposta por
+   consistencia). #panelBook escopa: os dois unicos .btn-primary da
+   pagina inteira estao dentro dele (o link real oculto e o div visivel
+   que o usuario clica). */
+body.__page_apartment #panelBook .btn-primary{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  padding:18px 30px;
+  border:1px solid transparent;
+  border-radius:var(--eex-r-sm);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-semi);
+  line-height:1;
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+  white-space:nowrap;
+  cursor:pointer;
+  background:var(--eex-ink);
+  color:var(--eex-text-invert);
+  box-shadow:none;
+  transition:background-color var(--eex-d2) var(--eex-ease),
+             transform var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+body.__page_apartment #panelBook .btn-primary:hover{
+  background:var(--eex-ink-2);
+  color:var(--eex-text-invert);
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2);
+}
+
+/* "Resumo da reserva" (#subtotal_area): a Stays ja renderiza a quebra
+   de preco em linhas separadas (subtotal, Total, taxas) -- confirmado
+   ao vivo com datas reais selecionadas antes de escrever esta regra
+   (DESIGN.md 4.2). So falta o acabamento tipografico do DS; nenhum
+   valor e calculado ou inventado aqui. */
+body.__page_apartment #subtotal_area{
+  font-family:var(--eex-font-ui);
+}
+body.__page_apartment #subtotal_area .row{
+  font-size:var(--eex-fs-small);
+  color:var(--eex-text-2);
+}
+body.__page_apartment #subtotal_area .row .h4{
+  font-family:var(--eex-font-display);
+  font-size:var(--eex-fs-h4);
+  font-weight:400;
+  color:var(--eex-ink);
+}
+body.__page_apartment #subtotal_area hr{
+  border:0;
+  border-top:1px solid var(--eex-hairline);
+  margin:var(--eex-s4) 0;
+}
+
+/* CTA secundario "Reservar pelo WhatsApp" (injetado por property.js,
+   DESIGN.md 4.4/5.6) -- outline, mesma hierarquia visual que o par
+   cheio+outline ja usado no resto do site (.eex-btn--primary +
+   .eex-btn--ghost, ds.css). */
+body.__page_apartment #panelBook .eex-whatsapp-cta{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  width:100%;
+  margin-top:var(--eex-s3);
+  padding:16px 30px;
+  border:1px solid var(--eex-hairline);
+  border-radius:var(--eex-r-sm);
+  background:var(--eex-surface);
+  color:var(--eex-ink);
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-micro);
+  font-weight:var(--eex-w-semi);
+  line-height:1;
+  letter-spacing:var(--eex-track-cta);
+  text-transform:uppercase;
+  white-space:nowrap;
+  text-decoration:none;
+  cursor:pointer;
+  transition:border-color var(--eex-d2) var(--eex-ease),
+             transform var(--eex-d2) var(--eex-ease),
+             box-shadow var(--eex-d2) var(--eex-ease);
+}
+body.__page_apartment #panelBook .eex-whatsapp-cta:hover{
+  border-color:var(--eex-ink);
+  color:var(--eex-ink);
+  transform:translateY(-1px);
+  box-shadow:var(--eex-e2);
+}
+body.__page_apartment #panelBook .eex-whatsapp-cta svg{
+  width:16px;
+  height:16px;
+  flex:0 0 auto;
+}
 
 /* ----------------------------------------------------------------------------
    7. OS SEMELHANTES
