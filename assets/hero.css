@@ -180,7 +180,7 @@
   background:var(--eex-surface);
   border:1px solid var(--eex-hairline);
   border-radius:var(--eex-r-md);
-  box-shadow:var(--eex-e2);
+  box-shadow:none;
   transition:box-shadow var(--eex-d3) var(--eex-ease), border-color var(--eex-d3) var(--eex-ease);
 }
 .eex-hero__console:hover,

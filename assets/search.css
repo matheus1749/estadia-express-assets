@@ -75,7 +75,7 @@
   margin:0 !important;
   background:var(--eex-surface);
   border:1px solid var(--eex-hairline);
-  border-radius:var(--eex-r-sm);
+  border-radius:var(--eex-r-pill);
   overflow:hidden;
   box-shadow:none;
   transition:box-shadow var(--eex-d2) var(--eex-ease),

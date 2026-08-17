@@ -130,11 +130,17 @@
   flex-direction:column;
   height:100%;
   background:transparent !important;
-  border:0 !important;
-  border-radius:0 !important;
+  border:1px solid var(--eex-hairline) !important;
+  border-radius:var(--eex-r-md) !important;
   box-shadow:none !important;
   margin:0 !important;
   padding:0 !important;
+  transition:box-shadow var(--eex-d2) var(--eex-ease), border-color var(--eex-d2) var(--eex-ease);
+}
+.eex-tile:hover .eex-tile__panel,
+.eex-tile:focus-within .eex-tile__panel{
+  box-shadow:var(--eex-e2) !important;
+  border-color:var(--eex-hairline-2) !important;
 }
 
 /* -----------------------------------------------------------------------------
@@ -175,17 +181,9 @@
   transform:scale(1.045);
 }
 
-/* Aro interno de 1px: impede que fotos claras vazem para dentro do canvas
-   sem precisar de borda visivel. */
-.eex-tile__mediawrap::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  box-shadow:inset 0 0 0 1px rgba(20,18,16,.07);
-  pointer-events:none;
-  z-index:2;
-}
+/* Aro interno de 1px removido (paridade Seazone, DESIGN.md 3.4): o card
+   agora tem uma borda real (.eex-tile__panel), duas molduras seria
+   redundante. */
 
 /* -----------------------------------------------------------------------------
    5. ACOES SOBRE A MIDIA
@@ -259,7 +257,7 @@
   flex-direction:column;
   flex-wrap:nowrap;
   flex:1 1 auto;
-  padding:var(--eex-s4) 0 0 !important;
+  padding:var(--eex-s4) var(--eex-s4) 0 !important;
   margin:0 !important;
   background:transparent !important;
 }
@@ -375,7 +373,7 @@
   justify-content:space-between;
   gap:var(--eex-s4);
   margin-top:auto;
-  padding-top:var(--eex-s4);
+  padding:var(--eex-s4) 0;
   border-top:1px solid var(--eex-hairline);
 }
 /* As duas colunas tambem chegam com flex:0 0 100% do Bootstrap, e .cta-details
@@ -573,6 +571,7 @@
   .eex-tile__foot{
     align-items:center;
     padding-top:var(--eex-s3);
+    padding-bottom:var(--eex-s3);
     gap:var(--eex-s3);
   }
   .eex-tile__meta li{ font-size:12.5px !important; }
@@ -610,5 +609,4 @@
   .eex-tile__overlay,
   #highlights_slider .swiper-button-next,
   #highlights_slider .swiper-button-prev{ display:none !important; }
-  .eex-tile__mediawrap::after{ display:none; }
 }
