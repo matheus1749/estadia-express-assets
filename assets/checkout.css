@@ -1408,3 +1408,29 @@ body.__page_booking .alert-danger{
     animation-duration:.01ms !important;
   }
 }
+
+/* ----------------------------------------------------------------------------
+   15. ACORDEAO "DADOS COMPLEMENTARES" -- indicador de aberto/fechado
+   O toggle criado por ensureAccordion() (checkout.js) e um link de texto sem
+   nenhum indicador visual de estado, embora o proprio script ja alterne
+   aria-expanded no elemento. O chevron abaixo so le esse atributo, nunca
+   escreve nele, e reaproveita a mesma geometria do .caret do bootstrap-select
+   (secao 6) como pseudo-elemento.
+   ---------------------------------------------------------------------------- */
+body.__page_booking [data-ee-complementary-toggle="1"]::after{
+  content:"";
+  display:inline-block;
+  width:9px;
+  height:9px;
+  margin-left:var(--eex-s2);
+  border:0;
+  border-right:1.5px solid var(--eex-stone);
+  border-bottom:1.5px solid var(--eex-stone);
+  vertical-align:middle;
+  transform:rotate(45deg);
+  transition:transform var(--eex-d1) var(--eex-ease);
+}
+/* Aberto: gira 180 graus, o chevron passa a apontar para cima. */
+body.__page_booking [data-ee-complementary-toggle="1"][aria-expanded="true"]::after{
+  transform:rotate(225deg);
+}
