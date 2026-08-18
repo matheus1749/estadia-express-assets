@@ -24,25 +24,35 @@
    ============================================================================= */
 
 /* == 01. TOKENS ============================================================ */
+/* ATENCAO (D-042, 2026-08-18): este bloco duplica os tokens de ds.css e,
+   como hero.css carrega DEPOIS de ds.css (ordem documentada no topo de
+   ds.css), qualquer valor declarado aqui vence o de ds.css para o :root
+   inteiro (nao so para .eex-hero) — nao e escopo, e sobrescrita direta.
+   Descoberto ao aplicar a paleta real da Seazone: sem espelhar a mudanca
+   aqui, a troca de token em ds.css nao teria efeito visivel em lugar
+   nenhum do site. Mantido como duplicata deliberada (ver comentario
+   historico de ds.css, "extraido diretamente da Hero"), mas os dois
+   blocos agora PRECISAM ser editados juntos — nao e mais seguro assumir
+   que mexer so em ds.css basta. Ver DECISIONS.md D-042. */
 :root{
-  /* Cor: canvas quente (bone), tinta quente, terracota da marca */
-  --eex-canvas:      #FBF9F6;
+  /* Cor: paleta real da Seazone (D-042), capturada ao vivo 2026-08-18 */
+  --eex-canvas:      #EBEBF5;
   --eex-canvas-2:    #F5F1EB;
   --eex-canvas-3:    #F7F3ED;
   --eex-surface:     #FFFFFF;
-  --eex-ink:         #141210;
-  --eex-ink-2:       #2A241F;
-  --eex-stone:       #6B635C;
+  --eex-ink:         #080E32;
+  --eex-ink-2:       #0C1640;
+  --eex-stone:       #6B6E84;
   --eex-stone-2:     #948B82;
-  --eex-hairline:    #E4DED6;
+  --eex-hairline:    #CBD5E1;
   --eex-hairline-2:  #EFEAE3;
-  --eex-accent:      #C4744A;  /* terracota aprofundada: passa AA sobre o canvas */
-  --eex-accent-soft: #EEA67F;  /* terracota original da marca, preservada */
-  --eex-accent-tint: #F7E7DC;
-  --eex-cool:        #879DAE;  /* cinza-azul herdado do widget da plataforma */
+  --eex-accent:      #F1605D;  /* coral real (--primary-theme-highlight-new da Seazone) */
+  --eex-accent-soft: #FF6763;  /* coral irmao real (--secondary-theme-highlight da Seazone) */
+  --eex-accent-tint: #FDE4E3;  /* derivado do accent real, sem tint capturado ao vivo */
+  --eex-cool:        #879DAE;  /* sem equivalente na Seazone, token nao usado hoje */
 
-  /* Tipografia: Fraunces no display, Inter na interface */
-  --eex-font-display: "Fraunces", "Lora", Georgia, "Times New Roman", serif;
+  /* Tipografia: Seazone nao usa par serif+sans, tudo em Inter (D-042) */
+  --eex-font-display: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --eex-font-ui: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   /* Escala em PX de proposito. A plataforma define html{font-size:10px},
      portanto rem aqui produziria toda a escala ~37% menor. */
@@ -102,7 +112,7 @@
   z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(115% 85% at 6% -12%,  rgba(238,166,127,.22), rgba(238,166,127,0) 56%),
+    radial-gradient(115% 85% at 6% -12%,  rgba(255,103,99,.22), rgba(255,103,99,0) 56%),
     radial-gradient(85% 70% at 102% -6%,  rgba(135,157,174,.15), rgba(135,157,174,0) 58%),
     linear-gradient(180deg, var(--eex-canvas) 58%, var(--eex-canvas-3) 100%);
 }

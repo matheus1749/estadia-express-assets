@@ -27,13 +27,13 @@
 
 #ee-custom-footer{
   /* Paleta invertida em escopo local: nada disto vaza para o resto do site. */
-  --eexf-bg:        var(--eex-ink, #141210);
+  --eexf-bg:        var(--eex-ink, #080E32);
   --eexf-ink:       #FBF9F6;
   --eexf-ink-2:     rgba(251, 249, 246, 0.62);
   --eexf-ink-3:     rgba(251, 249, 246, 0.38);
   --eexf-line:      rgba(251, 249, 246, 0.13);
   --eexf-line-soft: rgba(251, 249, 246, 0.07);
-  --eexf-accent:    var(--eex-accent-soft, #EEA67F);
+  --eexf-accent:    var(--eex-accent-soft, #FF6763);
 
   /* Nasce oculto de proposito: footer.js o move para cima do #mainfooter e so
      entao revela. Sem isto ele pisca por um instante na posicao original. */
@@ -287,7 +287,7 @@ body.__page_contact main#mainblock{ display: none !important; }
 #ee-custom-footer .ee-foot-social-btn:hover{
   background: var(--eexf-accent);
   border-color: var(--eexf-accent);
-  color: var(--eex-ink, #141210) !important;
+  color: var(--eex-ink, #080E32) !important;
 }
 #ee-custom-footer .ee-foot-social-btn svg{
   display: block;

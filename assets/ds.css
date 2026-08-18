@@ -17,21 +17,25 @@
    ============================================================================= */
 :root{
 
-  /* --- 1.1 Superficies e tinta -------------------------------------------- */
-  --eex-canvas:      #FBF9F6;   /* fundo principal, bone quente               */
-  --eex-canvas-2:    #F5F1EB;   /* faixa alternada / repouso                  */
-  --eex-canvas-3:    #F7F3ED;   /* preenchimento de campo                     */
-  --eex-surface:     #FFFFFF;   /* cartoes, menus, folhas elevadas            */
-  --eex-ink:         #141210;   /* texto primario e superficie solida         */
-  --eex-ink-2:       #2A241F;   /* hover de superficie solida                 */
-  --eex-stone:       #6B635C;   /* texto secundario                           */
-  --eex-stone-2:     #948B82;   /* texto terciario, rotulos                   */
-  --eex-hairline:    #E4DED6;   /* borda padrao 1px                           */
-  --eex-hairline-2:  #EFEAE3;   /* borda interna, divisor suave               */
-  --eex-accent:      #C4744A;   /* terracota AA sobre canvas                  */
-  --eex-accent-soft: #EEA67F;   /* terracota original da marca                */
-  --eex-accent-tint: #F7E7DC;   /* fundo de badge / realce                    */
-  --eex-cool:        #879DAE;   /* cinza-azul herdado da plataforma           */
+  /* --- 1.1 Superficies e tinta --------------------------------------------
+     Paleta real da Seazone (D-042/DECISIONS.md, capturada ao vivo em
+     2026-08-18 via getComputedStyle/CSS custom properties nas 5 telas
+     ja comparadas em ARCHITECTURE.md 6.2.1). Valores anteriores (linha a
+     linha) preservados em DECISIONS.md para historico.                    */
+  --eex-canvas:      #EBEBF5;   /* fundo principal (--background-theme real) */
+  --eex-canvas-2:    #F5F1EB;   /* faixa alternada / repouso (sem equivalente capturado, mantido) */
+  --eex-canvas-3:    #F7F3ED;   /* preenchimento de campo (sem equivalente capturado, mantido) */
+  --eex-surface:     #FFFFFF;   /* cartoes, menus, folhas elevadas (ja batia) */
+  --eex-ink:         #080E32;   /* texto primario (--foreground real, navy)   */
+  --eex-ink-2:       #0C1640;   /* hover de superficie solida (--primary-theme-new real) */
+  --eex-stone:       #6B6E84;   /* texto secundario (--muted-foreground real) */
+  --eex-stone-2:     #948B82;   /* texto terciario, rotulos (sem equivalente capturado, mantido) */
+  --eex-hairline:    #CBD5E1;   /* borda padrao 1px (borda de card real, slate-300) */
+  --eex-hairline-2:  #EFEAE3;   /* borda interna, divisor suave (sem equivalente capturado, mantido) */
+  --eex-accent:      #F1605D;   /* coral real (--primary-theme-highlight-new) */
+  --eex-accent-soft: #FF6763;   /* coral irmao real (--secondary-theme-highlight) */
+  --eex-accent-tint: #FDE4E3;   /* derivado do accent real, sem tint capturado ao vivo (ver D-042) */
+  --eex-cool:        #879DAE;   /* sem equivalente na Seazone (token nao usado por nenhum seletor hoje, ver D-042) */
 
   /* --- 1.2 Aliases semanticos --------------------------------------------- */
   --eex-text:        var(--eex-ink);
@@ -45,8 +49,15 @@
   --eex-danger:      #A33A2B;
   --eex-success:     #4E7A56;
 
-  /* --- 1.3 Familias -------------------------------------------------------- */
-  --eex-font-display: "Fraunces", "Lora", Georgia, "Times New Roman", serif;
+  /* --- 1.3 Familias --------------------------------------------------------
+     Seazone nao usa par serif+sans: h1 (peso 700) e h2 (peso 600/500) da
+     home/busca/detalhe/checkout, todos amostrados ao vivo, saem em Inter,
+     mesma familia do corpo de texto. Sem par editorial na referencia real
+     (D-042) — --eex-font-display deixa de ser serifada e passa a ser a
+     mesma pilha de --eex-font-ui, mantida como token separado (nao removido)
+     porque continua controlando peso/tracking de titulo de forma independente
+     do corpo em varios lugares do CSS.                                     */
+  --eex-font-display: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --eex-font-ui: "Inter", "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
   /* --- 1.4 Escala tipografica ---------------------------------------------
@@ -306,7 +317,7 @@
 .eex-btn--primary:hover{ background:var(--eex-ink-2); transform:translateY(-1px); box-shadow:var(--eex-e2); }
 
 .eex-btn--accent{ background:var(--eex-accent); color:var(--eex-text-invert); }
-.eex-btn--accent:hover{ background:#B5673F; transform:translateY(-1px); box-shadow:var(--eex-e2); }
+.eex-btn--accent:hover{ background:#CD524F; transform:translateY(-1px); box-shadow:var(--eex-e2); } /* --eex-accent (#F1605D) escurecido ~15%, D-043 */
 
 .eex-btn--ghost{ border-color:var(--eex-hairline); background:var(--eex-surface); color:var(--eex-ink); }
 .eex-btn--ghost:hover{ border-color:var(--eex-ink); transform:translateY(-1px); box-shadow:var(--eex-e2); }
@@ -420,7 +431,7 @@
   text-transform:uppercase;
   white-space:nowrap;
 }
-.eex-badge--accent{ background:var(--eex-accent-tint); color:#8E4F2E; }
+.eex-badge--accent{ background:var(--eex-accent-tint); color:#A82E2B; } /* tom escuro do accent novo p/ contraste sobre --eex-accent-tint, D-043 */
 .eex-badge--ink{ background:var(--eex-ink); color:var(--eex-text-invert); }
 .eex-badge--outline{ background:transparent; border:1px solid var(--eex-hairline); }
 .eex-badge--pill{ border-radius:var(--eex-r-pill); padding-inline:12px; }
