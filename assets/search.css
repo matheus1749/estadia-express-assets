@@ -310,11 +310,30 @@
   box-shadow:var(--eex-e3) !important;
   padding:var(--eex-s5) !important;
 }
+/* D-045: a lib (hotel-datepicker) tem width:640px fixo no CSS dela, dimensionado
+   para o padding ORIGINAL (menor) dela. Nosso padding (--eex-s5=24px) + borda
+   1px, dos dois lados, cortavam a area de conteudo pra 590px — 10px a menos que
+   os 600px que os 2 meses lado a lado (300px cada, float) precisam pra caber
+   sem quebrar linha. O 2o mes (float:right) descia pra baixo do 1o em vez de
+   ficar ao lado — 2 paineis empilhados na diagonal, cada um com seu proprio
+   cabecalho de mes/dia-da-semana, lendo como "um painel quebrado" (na real,
+   os dois estao inteiros, so fora do lugar). Cliente reprovou (D-045).
+   Corrigido crescendo a largura externa pra sobrar >=600px de conteudo,
+   com folga (--eex-s4) pra nao depender de arredondamento de subpixel. */
+.hotel-datepicker{
+  width:calc(600px + var(--eex-s4) + (var(--eex-s5) + 1px) * 2) !important;
+}
 .hotel-datepicker__month-name{
   font-family:var(--eex-font-display) !important;
   font-weight:var(--eex-w-regular) !important;
   letter-spacing:var(--eex-track-title);
   color:var(--eex-ink) !important;
+}
+.hotel-datepicker__week-name{
+  color:var(--eex-stone) !important;
+  font-family:var(--eex-font-ui) !important;
+  font-size:var(--eex-fs-micro) !important;
+  letter-spacing:var(--eex-track-micro);
 }
 .hotel-datepicker__month-day--valid:hover{ background:var(--eex-canvas-2) !important; }
 .hotel-datepicker__month-day--selected,
@@ -322,6 +341,14 @@
 .hotel-datepicker__month-day--last-day-selected{
   background:var(--eex-ink) !important;
   color:var(--eex-text-invert) !important;
+}
+/* --selected sozinho e aplicado pela lib a TODO dia do intervalo, nao so as
+   pontas (--first-day-selected/--last-day-selected sao classes ADICIONAIS
+   so nas pontas) — arredondar --selected direto quebraria o bloco continuo
+   do intervalo em circulos soltos. So as pontas ganham a ponta arredondada. */
+.hotel-datepicker__month-day--first-day-selected,
+.hotel-datepicker__month-day--last-day-selected{
+  border-radius:var(--eex-r-pill) !important;
 }
 .hotel-datepicker__month-day--selected-range{
   background:var(--eex-accent-tint) !important;
