@@ -66,6 +66,170 @@ body.__page_apartment .appDetails .swiper-button-next:hover{
 body.__page_apartment .appDetails .swiper-button-prev::after,
 body.__page_apartment .appDetails .swiper-button-next::after{ font-size:15px; }
 
+/* 3.1 GRADE "1 GRANDE + 4 PEQUENAS" (DESIGN.md 12, D-037/D-038)
+   O Swiper nativo continua no DOM, intocado -- so some quando o JS
+   confirma que a grade nova montou com sucesso (classe condicional no
+   body, nunca oculto incondicionalmente, ver property.js ensureGallery()).
+   Layout por data-eex-photo-count: o caso padrao (>=5 fotos) e a base
+   abaixo; N=1..4 colapsam via os blocos seguintes. */
+body.__page_apartment.eex-gallery-ready .appDetails > .container-fluid{
+  display:none !important;
+}
+.eex-gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-template-rows:repeat(2, 1fr);
+  gap:6px;
+  aspect-ratio:2.2 / 1;
+  border-radius:var(--eex-r-md);
+  overflow:hidden;
+  margin-bottom:var(--eex-s7);
+}
+.eex-gallery-cell{
+  position:relative;
+  display:block;
+  padding:0;
+  margin:0;
+  border:0;
+  background:var(--eex-hairline);
+  cursor:pointer;
+  overflow:hidden;
+}
+.eex-gallery-cell--main{ grid-column:1 / 3; grid-row:1 / 3; }
+.eex-gallery-cell img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform var(--eex-d3) var(--eex-ease-out);
+}
+.eex-gallery-cell:hover img,
+.eex-gallery-cell:focus-visible img{ transform:scale(1.03); }
+.eex-gallery-more-badge{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(20,18,16,.55);
+  color:#FFFFFF;
+  font-family:var(--eex-font-ui);
+  font-weight:var(--eex-w-semi);
+  font-size:var(--eex-fs-h4);
+}
+
+/* Colapso por contagem (DESIGN.md 12.6) */
+.eex-gallery-grid[data-eex-photo-count="1"]{ grid-template-columns:1fr; grid-template-rows:1fr; aspect-ratio:16 / 9; }
+.eex-gallery-grid[data-eex-photo-count="1"] .eex-gallery-cell--main{ grid-column:1; grid-row:1; }
+
+.eex-gallery-grid[data-eex-photo-count="2"]{ grid-template-columns:1fr 1fr; grid-template-rows:1fr; aspect-ratio:16 / 6; }
+.eex-gallery-grid[data-eex-photo-count="2"] .eex-gallery-cell--main{ grid-column:auto; grid-row:auto; }
+
+.eex-gallery-grid[data-eex-photo-count="3"]{ grid-template-columns:2fr 1fr; grid-template-rows:1fr 1fr; }
+.eex-gallery-grid[data-eex-photo-count="3"] .eex-gallery-cell--main{ grid-column:1; grid-row:1 / 3; }
+
+.eex-gallery-grid[data-eex-photo-count="4"]{ grid-template-columns:2fr 1fr; grid-template-rows:repeat(3, 1fr); }
+.eex-gallery-grid[data-eex-photo-count="4"] .eex-gallery-cell--main{ grid-column:1; grid-row:1 / 4; }
+
+@media (max-width:767px){
+  .eex-gallery-grid{
+    grid-template-columns:1fr !important;
+    grid-template-rows:1fr !important;
+    aspect-ratio:4 / 3 !important;
+  }
+  .eex-gallery-grid .eex-gallery-cell{ display:none; }
+  .eex-gallery-grid--multi .eex-gallery-cell--main::after{
+    content:"Ver todas as fotos";
+    position:absolute;
+    left:var(--eex-s4);
+    bottom:var(--eex-s4);
+    padding:var(--eex-s2) var(--eex-s4);
+    border-radius:var(--eex-r-pill);
+    background:rgba(20,18,16,.7);
+    color:#FFFFFF;
+    font-family:var(--eex-font-ui);
+    font-size:var(--eex-fs-micro);
+    font-weight:var(--eex-w-semi);
+    letter-spacing:var(--eex-track-micro);
+    text-transform:uppercase;
+  }
+  .eex-gallery-grid .eex-gallery-cell--main{
+    display:block !important;
+    grid-column:1 !important;
+    grid-row:1 !important;
+  }
+}
+
+/* 3.2 LIGHTBOX (DESIGN.md 12.2/12.5) -- modal proprio, sem lib externa.
+   Mesmo vocabulario das setas do Swiper acima (pilula 44px, --eex-surface,
+   hairline, hover scale 1.06), duplicado aqui de proposito (mesma
+   convencao de duplicar em vez de abstrair ja usada entre .eex-whatsapp-cta
+   e #panelBook .btn-primary). Sem overflow:hidden em html/body -- ja
+   quebrou position:sticky uma vez (AT-QA-027/D-015); o modal cobre a
+   viewport inteira, o scroll de fundo fica visualmente irrelevante. */
+.eex-gallery-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(20,18,16,.92);
+}
+.eex-gallery-modal.is-open{ display:flex; }
+.eex-gallery-modal__img{
+  max-width:88vw;
+  max-height:82vh;
+  object-fit:contain;
+}
+.eex-gallery-modal__close,
+.eex-gallery-modal__prev,
+.eex-gallery-modal__next{
+  position:absolute;
+  width:44px; height:44px;
+  border-radius:var(--eex-r-pill);
+  background:var(--eex-surface);
+  border:1px solid var(--eex-hairline);
+  color:var(--eex-ink);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+  transition:transform .3s var(--eex-ease), border-color .3s var(--eex-ease);
+}
+.eex-gallery-modal__close:hover,
+.eex-gallery-modal__prev:hover,
+.eex-gallery-modal__next:hover{
+  transform:scale(1.06);
+  border-color:var(--eex-ink);
+}
+.eex-gallery-modal__close{ top:24px; right:24px; }
+.eex-gallery-modal__prev{ left:24px; top:50%; transform:translateY(-50%); }
+.eex-gallery-modal__prev:hover{ transform:translateY(-50%) scale(1.06); }
+.eex-gallery-modal__next{ right:24px; top:50%; transform:translateY(-50%); }
+.eex-gallery-modal__next:hover{ transform:translateY(-50%) scale(1.06); }
+.eex-gallery-modal__counter{
+  position:absolute;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#FFFFFF;
+  font-family:var(--eex-font-ui);
+  font-size:var(--eex-fs-small);
+  letter-spacing:var(--eex-track-micro);
+}
+@media (max-width:767px){
+  .eex-gallery-modal__prev,
+  .eex-gallery-modal__next{ width:38px; height:38px; }
+  .eex-gallery-modal__prev{ left:10px; }
+  .eex-gallery-modal__next{ right:10px; }
+  .eex-gallery-modal__close{ top:12px; right:12px; }
+}
+
 /* ----------------------------------------------------------------------------
    4. O CABECALHO DO IMOVEL
    O nome do imovel e o maior compromisso da pagina e estava em 22px, menor

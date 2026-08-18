@@ -71,6 +71,10 @@
    -------------------------------------------------------------------------- */
 #resultlist{
   margin-inline:-12px !important;
+  overflow-x:hidden; /* AT-QA-039/D-039: a margem negativa sangra ~8px
+    para fora do viewport em mobile; nada aqui e position:sticky (ao
+    contrario do #header em AT-QA-027/D-015), entao nao ha o acoplamento
+    overflow-x/overflow-y que quebrou o sticky daquela vez. */
 }
 #resultlist > .eex-tile{
   padding-inline:12px !important;
@@ -96,6 +100,8 @@
   max-width:calc(var(--eex-maxw) + var(--eex-gutter) * 2);
   margin-inline:auto;
   padding-inline:calc(var(--eex-gutter) - 12px);
+  overflow-x:hidden; /* AT-QA-039/D-039: mesma sangria de ~8px da .row
+    interna, mesmo raciocinio de #resultlist acima -- sem sticky aqui. */
 }
 #anuncio_grid .row > .eex-tile{
   padding-inline:12px !important;

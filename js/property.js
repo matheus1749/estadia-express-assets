@@ -169,12 +169,269 @@
     mo.observe(panel, { childList: true, subtree: true, attributes: true, attributeFilter: ["href", "style"] });
   }
 
+  /* --------------------------------------------------------------------------
+     4. GALERIA DE FOTOS (grade "1 grande + 4 pequenas" + lightbox)
+     DESIGN.md secao 12, D-037/D-038. Le o DOM do Swiper nativo diretamente
+     (nao a API/instancia do Swiper - mesma categoria de risco ja registrada
+     para window.pageReload/szLoadPay, R-03 em RISKS.md). O Swiper nunca e
+     removido/destruido - so escondido via classe condicional que este
+     script adiciona ao body depois de montar a grade com sucesso (mesmo
+     fallback seguro que ensureWhatsappCta() ja usa: se a extracao falhar,
+     nada muda, o Swiper nativo continua visivel).
+
+     Verificado ao vivo antes de escrever este bloco (3 imoveis reais,
+     PH01I/TP01H/TP08H): container e ".swiper-container" dentro de
+     ".appDetails > .container-fluid"; nenhum tinha ".swiper-slide-duplicate"
+     (loop desligado); img.src vem sempre populado, sem lazy. Mesmo assim
+     o filtro de duplicadas e o fallback de data-src ficam no codigo, por
+     seguranca - nao custam nada e cobrem outra unidade/conta que divirja.
+     -------------------------------------------------------------------------- */
+  var GALLERY_ROOT_SELECTOR = ".appDetails > .container-fluid";
+  var galleryPhotos = [];
+  var galleryIndex = 0;
+  var galleryLastFocus = null;
+
+  function extractGalleryPhotos() {
+    var root = document.querySelector(GALLERY_ROOT_SELECTOR);
+    if (!root) return [];
+    var slides = root.querySelectorAll(".swiper-slide:not(.swiper-slide-duplicate)");
+    var photos = [];
+    for (var i = 0; i < slides.length; i++) {
+      var img = slides[i].querySelector("img");
+      if (!img) continue;
+      var src = img.getAttribute("src") || img.getAttribute("data-src") || img.getAttribute("data-lazy-src");
+      if (!src) {
+        var srcset = img.getAttribute("srcset") || img.getAttribute("data-srcset");
+        if (srcset) src = srcset.split(",")[0].trim().split(/\s+/)[0];
+      }
+      if (!src) continue;
+      var alt = img.getAttribute("alt");
+      photos.push({
+        src: src,
+        alt: alt && alt.trim() ? alt.trim() : ("Foto " + (photos.length + 1) + " do imóvel")
+      });
+    }
+    return photos;
+  }
+
+  function galleryKeydown(e) {
+    if (e.key === "Escape") { closeGallery(); return; }
+    if (e.key === "ArrowLeft") { galleryStep(-1); return; }
+    if (e.key === "ArrowRight") { galleryStep(1); return; }
+    if (e.key === "Tab") {
+      var modal = document.getElementById("eex-gallery-modal");
+      if (!modal) return;
+      /* Com 1 so foto (tabela 12.6, caso comum, nao de borda), prev/next
+         ficam display:none e nao sao focaveis -- querySelectorAll("button")
+         sozinho devolveria os 3 mesmo assim, e o segundo Tab escaparia do
+         modal (Code Review, 2026-08-17). offsetParent!==null exclui os
+         ocultos: com 1 foto so o botao fechar fica na lista, e o ciclo
+         Tab/Shift+Tab passa a sempre voltar para ele mesmo. */
+      var focusable = Array.prototype.filter.call(
+        modal.querySelectorAll("button"),
+        function (el) { return el.offsetParent !== null; }
+      );
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  function ensureGalleryModal() {
+    var modal = document.getElementById("eex-gallery-modal");
+    if (modal) return modal;
+
+    modal = document.createElement("div");
+    modal.id = "eex-gallery-modal";
+    modal.className = "eex-gallery-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", "Galeria de fotos do imóvel");
+    modal.setAttribute("tabindex", "-1");
+
+    var img = document.createElement("img");
+    img.className = "eex-gallery-modal__img";
+    modal.appendChild(img);
+
+    var closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "eex-gallery-modal__close";
+    closeBtn.setAttribute("aria-label", "Fechar");
+    closeBtn.innerHTML = "&times;";
+    closeBtn.addEventListener("click", closeGallery);
+    modal.appendChild(closeBtn);
+
+    var prevBtn = document.createElement("button");
+    prevBtn.type = "button";
+    prevBtn.className = "eex-gallery-modal__prev";
+    prevBtn.setAttribute("aria-label", "Foto anterior");
+    prevBtn.innerHTML = "&lsaquo;";
+    prevBtn.addEventListener("click", function () { galleryStep(-1); });
+    modal.appendChild(prevBtn);
+
+    var nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "eex-gallery-modal__next";
+    nextBtn.setAttribute("aria-label", "Próxima foto");
+    nextBtn.innerHTML = "&rsaquo;";
+    nextBtn.addEventListener("click", function () { galleryStep(1); });
+    modal.appendChild(nextBtn);
+
+    var counter = document.createElement("div");
+    counter.className = "eex-gallery-modal__counter";
+    modal.appendChild(counter);
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) closeGallery();
+    });
+
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  function renderGalleryModal() {
+    var modal = document.getElementById("eex-gallery-modal");
+    if (!modal || !galleryPhotos.length) return;
+    /* Defensivo: se a grade for reconstruida com o modal aberto num indice
+       que nao existe mais no novo array (Code Review, 2026-08-17). */
+    if (galleryIndex >= galleryPhotos.length) galleryIndex = galleryPhotos.length - 1;
+    var photo = galleryPhotos[galleryIndex];
+    var img = modal.querySelector(".eex-gallery-modal__img");
+    img.setAttribute("src", photo.src);
+    img.setAttribute("alt", photo.alt);
+    var counter = modal.querySelector(".eex-gallery-modal__counter");
+    counter.textContent = (galleryIndex + 1) + " de " + galleryPhotos.length;
+    var multi = galleryPhotos.length > 1;
+    modal.querySelector(".eex-gallery-modal__prev").style.display = multi ? "" : "none";
+    modal.querySelector(".eex-gallery-modal__next").style.display = multi ? "" : "none";
+  }
+
+  function galleryStep(delta) {
+    if (!galleryPhotos.length) return;
+    galleryIndex = (galleryIndex + delta + galleryPhotos.length) % galleryPhotos.length;
+    renderGalleryModal();
+  }
+
+  function openGallery(index) {
+    if (!galleryPhotos.length) return;
+    galleryIndex = index;
+    galleryLastFocus = document.activeElement;
+    var modal = ensureGalleryModal();
+    renderGalleryModal();
+    modal.classList.add("is-open");
+    document.addEventListener("keydown", galleryKeydown);
+    modal.focus();
+  }
+
+  function closeGallery() {
+    var modal = document.getElementById("eex-gallery-modal");
+    if (!modal || !modal.classList.contains("is-open")) return;
+    modal.classList.remove("is-open");
+    document.removeEventListener("keydown", galleryKeydown);
+    if (galleryLastFocus && typeof galleryLastFocus.focus === "function") galleryLastFocus.focus();
+    galleryLastFocus = null;
+  }
+
+  function buildGalleryCell(photo, index, total, isMain, isMoreBadge, moreCount) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "eex-gallery-cell" + (isMain ? " eex-gallery-cell--main" : "");
+    btn.setAttribute(
+      "aria-label",
+      isMoreBadge ? ("Ver todas as " + total + " fotos") : ("Ampliar foto " + (index + 1) + " de " + total)
+    );
+    var img = document.createElement("img");
+    img.setAttribute("src", photo.src);
+    img.setAttribute("alt", photo.alt);
+    img.setAttribute("loading", "lazy");
+    btn.appendChild(img);
+    if (isMoreBadge) {
+      var badge = document.createElement("span");
+      badge.className = "eex-gallery-more-badge";
+      badge.setAttribute("aria-hidden", "true");
+      badge.textContent = "+" + moreCount;
+      btn.appendChild(badge);
+    }
+    btn.addEventListener("click", function () { openGallery(index); });
+    return btn;
+  }
+
+  function buildGalleryGrid(photos) {
+    var grid = document.createElement("div");
+    grid.id = "eex-gallery-grid";
+    grid.className = "eex-gallery-grid" + (photos.length > 1 ? " eex-gallery-grid--multi" : "");
+    grid.setAttribute("data-eex-photo-count", String(photos.length));
+    var visibleCount = photos.length >= 5 ? 5 : photos.length;
+    for (var i = 0; i < visibleCount; i++) {
+      var isMain = i === 0;
+      var isMoreBadge = photos.length > 5 && i === 4;
+      grid.appendChild(buildGalleryCell(photos[i], i, photos.length, isMain, isMoreBadge, photos.length - 5));
+    }
+    return grid;
+  }
+
+  function ensureGallery() {
+    var root = document.querySelector(GALLERY_ROOT_SELECTOR);
+    var existing = document.getElementById("eex-gallery-grid");
+
+    /* O container inteiro sumiu do DOM (nao so os slides de dentro) --
+       nao ha onde reconstruir a partir daqui. Limpa o que sobrou em vez
+       de deixar uma grade orfa mostrando fotos antigas para sempre
+       (achado do Code Review, 2026-08-17). */
+    if (!root) {
+      if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+      document.body.classList.remove("eex-gallery-ready");
+      return;
+    }
+
+    var photos;
+    try {
+      photos = extractGalleryPhotos();
+    } catch (e) {
+      photos = [];
+    }
+
+    if (!photos.length) {
+      if (!existing) {
+        /* Nunca teve grade: imovel genuinamente sem fotos extraiveis,
+           Swiper nativo permanece visivel (12.3). */
+        document.body.classList.remove("eex-gallery-ready");
+        return;
+      }
+      /* Ja existia grade: mais provavel a Stays estar no meio de uma
+         reconstrucao momentanea dos slides (remove e ainda nao repos) do
+         que o imovel ter perdido fotos de verdade. Mantem a grade atual
+         em vez de piscar o Swiper de volta -- o proximo disparo de run()
+         reconstroi quando os slides voltarem (Code Review, 2026-08-17). */
+      return;
+    }
+
+    galleryPhotos = photos;
+    var currentCount = existing ? parseInt(existing.getAttribute("data-eex-photo-count"), 10) : -1;
+    if (existing && existing.isConnected && currentCount === photos.length) {
+      return;
+    }
+
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    var grid = buildGalleryGrid(photos);
+    root.insertAdjacentElement("afterend", grid);
+    document.body.classList.add("eex-gallery-ready");
+  }
+
   function run() {
     if (!onPage()) return;
     freeStickyTop();
     fixLocationLine();
     ensureWhatsappCta();
     watchPanelBook();
+    ensureGallery();
   }
 
   function boot() {

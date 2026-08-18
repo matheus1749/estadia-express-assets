@@ -174,6 +174,34 @@ body.__page_booking h4.media-sub-heading{
   font-family:var(--eex-font-ui);
 }
 
+/* 4.1 Chevron do acordeao "Dados complementares da hospedagem"
+   (DESIGN.md 8.1). O toggle (checkout.js, ensureAccordion(), atributo
+   estatico "data-ee-complementary-toggle", nunca reescrito por
+   nukeRequired()/szLoadPay/renomeacao de rotulo -- confirmado por leitura
+   completa do JS antes desta regra) ja alterna aria-expanded sozinho; esta
+   regra so LE o atributo, nunca escreve. Mesma geometria do .caret do
+   bootstrap-select acima (linha ~388), sem introduzir traco novo. */
+body.__page_booking [data-ee-complementary-toggle="1"]{
+  position:relative;
+  padding-right:var(--eex-s5);
+}
+body.__page_booking [data-ee-complementary-toggle="1"]::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  right:2px;
+  width:8px;
+  height:8px;
+  border:0;
+  border-right:1.5px solid var(--eex-stone);
+  border-bottom:1.5px solid var(--eex-stone);
+  transform:translateY(-50%) rotate(45deg);
+  transition:transform var(--eex-d1) var(--eex-ease);
+}
+body.__page_booking [data-ee-complementary-toggle="1"][aria-expanded="true"]::after{
+  transform:translateY(-50%) rotate(225deg);
+}
+
 
 /* --- 3.1 O clearfix herdado do Bootstrap 3 ---
    .row, .panel-body e .form-group trazem ::before e ::after com content:" " e
