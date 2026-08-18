@@ -354,6 +354,34 @@
   background:var(--eex-accent-tint) !important;
   color:var(--eex-ink) !important;
 }
+/* D-045 (continuacao) — mobile real: o painel (666px, fixo) nao tem tratamento
+   responsivo nenhum. Confirmado ao vivo (viewport 390px real, nao emulado):
+   a lib usa position:fixed + width:666px centralizados por JS nativo da Stays,
+   que corta ~138px pra fora de cada lado — sem scroll horizontal disponivel
+   (document.scrollWidth === clientWidth), ou seja, o conteudo cortado e
+   inalcancavel de qualquer jeito, nao so feio. Referencia real (Seazone,
+   mobile): troca pra 1 mes por vez em modal proprio — reproduzir isso
+   exigiria reestruturar a lib via JS (fora de escopo aqui, ver DECISIONS.md).
+   Fix so-CSS equivalente ao espirito do padrao: empilha os 2 meses na
+   vertical (em vez de lado a lado) e encolhe/centraliza o painel pra caber
+   no viewport — sem cortar nada, sem exigir JS novo. Breakpoint 700px = folga
+   de seguranca acima da largura fixa do painel em desktop (666px). */
+@media (max-width:700px){
+  .hotel-datepicker{
+    width:calc(100vw - 40px) !important;
+    max-width:360px !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    padding:var(--eex-s4) !important;
+  }
+  .hotel-datepicker__months{ width:100% !important; }
+  .hotel-datepicker__month{
+    width:100% !important;
+    float:none !important;
+    display:block !important;
+  }
+  .hotel-datepicker__month--month2{ margin-top:var(--eex-s5) !important; }
+}
 
 
 /* =============================================================================
